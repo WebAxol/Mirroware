@@ -108,8 +108,6 @@ class AgentPool{
             return false;
         }   
 
-        console.log(this.#types);
-
         if(!this.#types[typeName]){
             console.error(`Cannot create agent with a type defined as: ${typeName}; the type doesn't exist at AgentPool`);
             return false;

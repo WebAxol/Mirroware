@@ -35,8 +35,8 @@ class CollectionManager {
             return this.#collections[collectionName];
         }
 
-        console.error(`Cannot get unregistered collection '${collectionName}'`)
-        return false;
+        throw Error(`Cannot get unregistered collection '${collectionName}'`);
+
     }
 
     addToCollection(collectionName,object = undefined){
@@ -53,7 +53,7 @@ class CollectionManager {
             return false;
         }
        
-        if(object.isInCollection || object.isInCollection(collectionName)){
+        if(object.isInCollection && object.isInCollection(collectionName)){
             console.error(`The agent is already registered to collection ${collectionName}`);
             return false;
         }

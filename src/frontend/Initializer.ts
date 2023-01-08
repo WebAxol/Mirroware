@@ -131,4 +131,4 @@ const _init = new Initializer(app);
 
 _init.init(appSetUp);
 
-console.log(app);
+export default app;

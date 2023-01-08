@@ -63,15 +63,11 @@ class World {
 
         let agent = this.#agentPool.createAgent(typeName,details);
         
-        /*
-
         let collections = this.#agentPool.getCollectionsOfType(typeName);
 
         collections.forEach((collection) => {
             this.addToCollection(collection, agent);
         });
-
-        */
 
         return agent;
     }

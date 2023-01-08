@@ -1,3 +1,3 @@
-const collections = ['dummy1','dummy2','dummy3'];
+const collections = ['Rays','RaySources','HorizontalWalls','VerticalWalls'];
 
 export default collections;

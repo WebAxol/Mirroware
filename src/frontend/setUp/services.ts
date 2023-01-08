@@ -1,7 +1,7 @@
-import ServiceA from "../Services/ServiceA.js";
+import RayProcessor from "../Services/RayProcessor.js";
 
 const services = {
-    'ServiceA' : new ServiceA()
+    'RayProcessor' : new RayProcessor()
 };
 
 export default services;
