@@ -1,6 +1,6 @@
 import Service from "../Service.js";
 import VariableCalculator from "./VariableCalculator.js";
-import RayCaster from "./RayCaster";
+import RayCaster from "./RayCaster.js";
 
 class RayCastProcessor extends Service{
 
