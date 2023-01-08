@@ -1,7 +1,7 @@
-import RayProcessor from "../Services/RayProcessor.js";
+import RayCastProcessor from "../Services/RayCast/RayCastProcessor";
 
 const services = {
-    'RayProcessor' : new RayProcessor()
+    'RayCastProcessor' : new RayCastProcessor()
 };
 
 export default services;

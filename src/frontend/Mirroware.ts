@@ -18,8 +18,6 @@ for(let i : number = 0; i <= 5; i++){
     rays.push(ray);
 }
 
-
-
 var raysource = app.createAgent('RaySource',{
     'info' : {
         pos    : { x : 10, y : 10},
