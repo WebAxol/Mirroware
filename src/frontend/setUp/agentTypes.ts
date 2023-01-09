@@ -8,9 +8,9 @@ interface HorizontalWall {
 }
 
 interface VerticalWall {
-    startX : number,
-    endX   : number,
-    posY   : number
+    startY : number,
+    endY   : number,
+    posX   : number
 }
 
 interface Ray {
@@ -38,12 +38,12 @@ const horizontalWallPrototype :HorizontalWall = {
 }
 
 const verticalWallPrototype :VerticalWall = {
-    startX : NaN,
-    endX   : NaN,
-    posY   : NaN
+    startY : NaN,
+    endY   : NaN,
+    posX   : NaN
 }
 
-const rayPrototype :Ray = {
+const rayPrototype :Ray = { // Duality, every ray has a source, but a ray can be a source of another one as well
     degree     : NaN,
     slope      : NaN,
     YIntercept : NaN,
@@ -62,8 +62,8 @@ const raySourcePrototype :RaySource = {
 
 const agentTypes : Object = {
 
-    'HorizontalWall' : {'info' : horizontalWallPrototype,  'collections' : ['HorizontalWalls']},
-    'VerticalWall'   : {'info' : verticalWallPrototype,    'collections' : ['VerticalWalls']},
+    'HorizontalWall' : {'info' : horizontalWallPrototype},
+    'VerticalWall'   : {'info' : verticalWallPrototype, },
     'RaySource'      : {'info' : raySourcePrototype,       'collections' : ['RaySources']},
     'Ray'            : {'info' : rayPrototype,             'collections' : ['Rays']}
 };
