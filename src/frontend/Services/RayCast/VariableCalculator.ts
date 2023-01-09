@@ -14,12 +14,97 @@ class VariableCalculator extends Service{
         this.calculateRayProperties();
     }
 
+     // Get the index of the closest wall thea appears before the source in relation to an axis
+
+    public getIndexOfClosestBefore(source){
+
+
+        // Defensive input check
+
+        //
+
+        const verticalWalls   = this.#chief.world.getCollection('VerticalWalls');
+        const horizontalWalls = this.#chief.world.getCollection('HorizontalWalls');
+
+        console.log(source);
+
+        // get closest vertical wall before source - binary search
+
+        let xPositions = verticalWalls.map((wall) =>  wall.posX );
+
+        console.log(xPositions);
+
+        let indexA = this.BinarySearchForClosestSmaller(xPositions,source.pos.x);
+
+        // get closest horizontal wall before source - binary search
+
+        let yPositions = horizontalWalls.map((wall) =>  wall.posY );
+        
+        console.log(yPositions);
+
+        
+        let indexB = this.BinarySearchForClosestSmaller(yPositions,source.pos.y);
+
+
+
+        console.log(indexA,indexB);
+
+        this.#chief.world.pauseExecution();
+
+    }
+
+    public BinarySearchForClosestSmaller(arr, value){
+
+        // the closest smaller value will be the largest index that belongs to a value smaller to the given value
+
+        let leftIndex       = 0;
+        let rightIndex      = arr.length - 1; 
+        let inBetweenIndex  = Math.ceil((leftIndex + rightIndex) / 2);
+        let index = inBetweenIndex;
+        let exec = 0;
+        
+        while(leftIndex < rightIndex && exec < 100){
+
+            exec++;
+
+            if(rightIndex == inBetweenIndex){
+                index = rightIndex;
+                break;
+            }
+
+            if(arr[inBetweenIndex] < value){
+                leftIndex = inBetweenIndex;
+            }
+            else if(arr[inBetweenIndex] > value){
+                rightIndex = inBetweenIndex;
+                index = rightIndex;
+            }
+
+            else if(arr[inBetweenIndex] == value){
+                index = inBetweenIndex;
+                break;
+            };
+            
+            inBetweenIndex  = Math.ceil((leftIndex + rightIndex) / 2);
+   
+        }
+
+         while(arr[index] >= value){
+             index--;
+         }
+
+        // Mechanism to avoid infinite loop issue
+
+        if(exec >= 100) throw Error('Binary Search went out of control');
+    
+        return index;
+    }
+
     public calculateRaySlope(ray) {
 
         // Input check
 
-        if(typeof ray.slope != 'number' || typeof ray.degree != 'number'){
-            console.log(ray);
+        if(typeof ray.slope != 'number' || typeof ray.degree != 'number'){ 
             throw Error('Invalid argument passed as ray');
         }
 
@@ -46,15 +131,26 @@ class VariableCalculator extends Service{
 
     public calculateRayProperties() :boolean{
     
-        const raySources = this.#chief.world.getCollection('RaySources');
+        const raySources :any[] = this.#chief.world.getCollection('RaySources');
 
         raySources.forEach(raySource => {
+
             let rays = raySource.rays;
+
+            // Input check
+
+            if(typeof rays != 'object'){
+                throw Error('Invalid ray array specified for raySource');
+            }
+
+            //
 
             rays.forEach(ray => {
                 this.calculateRaySlope(ray);
                 this.calculateRayYIntercept(raySource.pos, ray);
             });
+
+            this.getIndexOfClosestBefore(raySource);
 
         });
 

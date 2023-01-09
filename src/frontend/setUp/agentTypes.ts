@@ -25,8 +25,7 @@ interface Ray {
 
 interface RaySource{
     pos     : Object,
-    rays    : Ray[],
-    degree  : number
+    rays    : Ray[]
 };
 
 // Prototypes (default attributes)
@@ -54,8 +53,7 @@ const rayPrototype :Ray = { // Duality, every ray has a source, but a ray can be
 
 const raySourcePrototype :RaySource = {
     pos  : { x : NaN, y : NaN },
-    rays    : [],
-    degree  : NaN
+    rays : [],
 }
 
 // Integrated agentTypes 
