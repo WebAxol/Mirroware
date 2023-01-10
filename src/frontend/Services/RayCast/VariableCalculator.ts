@@ -15,8 +15,9 @@ class VariableCalculator extends Service{
     }
 
      // Get the index of the closest wall thea appears before the source in relation to an axis
+     // WARNING - we are assuming that wall collections are properly sorted
 
-    public getIndexOfClosestBefore(source){
+    public getIndicesOfClosestBefore(source){
 
 
         // Defensive input check
@@ -26,34 +27,22 @@ class VariableCalculator extends Service{
         const verticalWalls   = this.#chief.world.getCollection('VerticalWalls');
         const horizontalWalls = this.#chief.world.getCollection('HorizontalWalls');
 
-        console.log(source);
-
-        // get closest vertical wall before source - binary search
+        // get closest vertical wall's index before source - binary search
 
         let xPositions = verticalWalls.map((wall) =>  wall.posX );
 
-        console.log(xPositions);
+        source.wallIndices.vertical  = this.BinarySearchForClosestSmaller(xPositions,source.pos.x);
 
-        let indexA = this.BinarySearchForClosestSmaller(xPositions,source.pos.x);
-
-        // get closest horizontal wall before source - binary search
+        // get closest horizontal wall's index before source - binary search
 
         let yPositions = horizontalWalls.map((wall) =>  wall.posY );
         
-        console.log(yPositions);
-
         
-        let indexB = this.BinarySearchForClosestSmaller(yPositions,source.pos.y);
-
-
-
-        console.log(indexA,indexB);
-
-        this.#chief.world.pauseExecution();
+        source.wallIndices.horizontal = this.BinarySearchForClosestSmaller(yPositions,source.pos.y);
 
     }
 
-    public BinarySearchForClosestSmaller(arr, value){
+    public BinarySearchForClosestSmaller(arr : number[], value : number){
 
         // the closest smaller value will be the largest index that belongs to a value smaller to the given value
 
@@ -150,7 +139,7 @@ class VariableCalculator extends Service{
                 this.calculateRayYIntercept(raySource.pos, ray);
             });
 
-            this.getIndexOfClosestBefore(raySource);
+            this.getIndicesOfClosestBefore(raySource);
 
         });
 

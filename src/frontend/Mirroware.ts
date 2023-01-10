@@ -9,10 +9,10 @@ import app from './Initializer.js';
 
 var rays :object[] = [];
 
-for(let i : number = 0; i <= 5; i++){
+for(let i : number = 0; i < 1; i++){
     let ray = app.createAgent('Ray',{
         'info' : {
-            degree : i
+            degree : 280
         }
     });
 
@@ -21,7 +21,7 @@ for(let i : number = 0; i <= 5; i++){
 
 var raysource = app.createAgent('RaySource',{
     'info' : {
-        pos    : { x : 10, y : 10},
+        pos    : { x : 15, y : 25},
         rays   : rays
     }
 });
@@ -36,7 +36,9 @@ const scene = [
     [[20,20],[20,10]]
 ];
 
-function buildScene(scene){
+// TODO: replace by a module specialized on building scenes
+
+function buildScene(app, scene : Object[]){
     
 
     var horizontal :object[] = [], vertical :object[] = [];
@@ -54,7 +56,6 @@ function buildScene(scene){
         });
 
         return wall;
-            
     };
 
     function buildHorizontalWall(vertexA,vertexB){
@@ -70,40 +71,46 @@ function buildScene(scene){
         });
 
         return wall;
-        
     };
 
     scene.forEach(segment => {
 
         let vertexA = segment[0];
         let vertexB = segment[1];
-        
-        if(vertexA[0] == vertexB[0] && vertexA[1] == vertexB[1]){
-            console.warn(`Invalid vertex pair given: the vertices must be different and colinear`);
-        }
+      
+        if(vertexA[0] == vertexB[0] && vertexA[1] != vertexB[1]){
+            vertical.push(buildVerticalWall(vertexA,vertexB));
+        } 
 
-        else if(vertexA[0] == vertexB[0]) vertical.push(buildVerticalWall(vertexA,vertexB));
-        else if(vertexA[1] == vertexB[1]) horizontal.push(buildHorizontalWall(vertexA,vertexB));
+        else if(vertexA[1] == vertexB[1] && vertexA[0] != vertexB[0]){
+            horizontal.push(buildHorizontalWall(vertexA,vertexB));
+        } 
 
         else{
             console.warn(`Invalid vertex pair given: the vertices must be different and colinear`);
-        }
+        }    
     });
 
+    // Sort wall arrays
+
     horizontal.sort((a : any, b : any ) => {return a.posY - b.posY});
-    vertical.sort((a : any, b : any )   => {return a.posX - b.posX});
+    vertical.sort(  (a : any, b : any ) => {return a.posX - b.posX});
+
+    // Add walls to their respective collections
 
     horizontal.forEach(wall => { app.addToCollection('HorizontalWalls', wall) });
-    vertical.forEach(wall => { app.addToCollection('VerticalWalls', wall) });
+    vertical.forEach(  wall => { app.addToCollection('VerticalWalls', wall) });
 
-} // TODO: replace by a module specialized on building scenes
+}
 
-buildScene(scene);
+buildScene(app,scene);
 
-// Debugging commands (Not for production)
+
+/* ------ Debugging commands (Not for production) ------- */
+
 
 const commands = {
-    'w' : () => { console.log(app) },       // display application instance
+    'w' : () => { console.log(app) },
     'r' : () => { console.log(app.getCollection('RaySources')) },
     'p' : () => { 
         app.pauseExecution(); 

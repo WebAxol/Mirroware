@@ -9,21 +9,21 @@ class CollisionDetector {
             return false;
         }
 
-        if(typeof ray.b != 'number' || typeof ray.slope != 'number' ){
+        if(typeof ray.YIntercept != 'number' || typeof ray.slope != 'number' ){
             console.error("Invalid argument passed as 'ray'");
             return false;
         }
 
-        if(typeof line.startX != 'number' || typeof line.startY != 'number' || typeof line.posY != 'number'){
+        if(typeof line.startX != 'number' || typeof line.endX != 'number' || typeof line.posY != 'number'){
             console.error("Invalid argument passed as 'line'");
             return false;
         }
 
         // "ray.b" stands for the y value of the intesection point with the Y axis
 
-        var colinearXValue : number = (line.posY - ray.b) / ray.slope;
+        var colinearXValue : number = (line.posY - ray.YIntercept) / ray.slope;
 
-        console.log('ray:',ray, ' colinear: ',colinearXValue);
+        console.log('ray:',ray, ' colinear: ',colinearXValue, 'wall', line);
 
         if(line.startX <= colinearXValue && colinearXValue <= line.endX){
 

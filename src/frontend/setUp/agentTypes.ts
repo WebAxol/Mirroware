@@ -1,5 +1,5 @@
 
-// Interfaces
+// HorizontalWall
 
 interface HorizontalWall {
     startX : number,
@@ -7,33 +7,18 @@ interface HorizontalWall {
     posY   : number
 }
 
-interface VerticalWall {
-    startY : number,
-    endY   : number,
-    posX   : number
-}
-
-interface Ray {
-    degree     : number,
-    slope      : number,
-    YIntercept : number,
-    collisions : Object[],
-    reflected  : Object,
-    refracted  : Object
-
-}
-
-interface RaySource{
-    pos     : Object,
-    rays    : Ray[]
-};
-
-// Prototypes (default attributes)
-
 const horizontalWallPrototype :HorizontalWall = {
     startX : NaN,
     endX   : NaN,
     posY   : NaN
+}
+
+// VerticalWall
+
+interface VerticalWall {
+    startY : number,
+    endY   : number,
+    posX   : number
 }
 
 const verticalWallPrototype :VerticalWall = {
@@ -42,19 +27,57 @@ const verticalWallPrototype :VerticalWall = {
     posX   : NaN
 }
 
-const rayPrototype :Ray = { // Duality, every ray has a source, but a ray can be a source of another one as well
-    degree     : NaN,
-    slope      : NaN,
-    YIntercept : NaN,
-    collisions : [],
-    reflected  : {},
-    refracted  : {}
+// Ray
+
+interface Ray {
+    degree     : number,
+    slope      : number,
+    YIntercept : number,
+    collisions : Object[],
+
+    // Children nodes
+
+    reflected  : Object,
+    refracted  : Object
+
+    // product/source duality - A ray has a source but can be the source of other ones
+
+    wallIndices : Object
 }
+
+const rayPrototype :Ray = {
+    degree      : NaN,
+    slope       : NaN,
+    YIntercept  : NaN,
+    collisions  : [],
+    reflected   : {},
+    refracted   : {},
+
+    wallIndices : { 
+        horizontal : NaN, 
+        vertical   : NaN 
+    }
+}
+
+// RaySource
+
+interface RaySource{
+
+    pos         : Object,
+    rays        : Ray[],
+    wallIndices : Object
+};
 
 const raySourcePrototype :RaySource = {
     pos  : { x : NaN, y : NaN },
     rays : [],
+
+    wallIndices : { 
+        horizontal : NaN, 
+        vertical   : NaN 
+    }
 }
+
 
 // Integrated agentTypes 
 

@@ -20,6 +20,7 @@ class RayCastProcessor extends Service{
             
             this.#variableCalculator.execute();
             this.#raycaster.execute();
+            this.world.pauseExecution();
             
             return true;
 
