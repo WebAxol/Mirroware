@@ -11,8 +11,31 @@ class VariableCalculator extends Service{
     }
 
     public execute() {
-        this.calculateRayProperties();
-    }
+
+        const raySources :any[] = this.#chief.world.getCollection('RaySources');
+
+        raySources.forEach(raySource => {
+
+            let rays = raySource.rays;
+
+            // Input check
+
+            if(typeof rays != 'object'){
+                throw Error('Invalid ray array specified for raySource');
+            }
+
+            //
+
+            rays.forEach(ray => {
+                this.calculateRayProperties(raySource.pos,ray);
+            });
+
+            this.getIndicesOfClosestBefore(raySource);
+
+        });
+
+        return true;
+    };
 
      // Get the index of the closest wall thea appears before the source in relation to an axis
      // WARNING - we are assuming that wall collections are properly sorted
@@ -118,33 +141,35 @@ class VariableCalculator extends Service{
 
     }
 
-    public calculateRayProperties() :boolean{
+    public calculateDegreeFromSlope(ray){
+        
+    }
+
+    public calculateRayEnding(pos,ray){    
+
+        let degrees = ((ray.degree / 180) * Math.PI);
+
+        ray.collidesAt.x = pos.x + Math.cos(degrees) * 500; 
+        ray.collidesAt.y = pos.y + Math.sin(degrees) * 500;
+
+    }
     
-        const raySources :any[] = this.#chief.world.getCollection('RaySources');
+    calculateRayProperties(source,ray){
 
-        raySources.forEach(raySource => {
+        if(ray.degree < 0) this.handleNegativeDegrees(ray);
 
-            let rays = raySource.rays;
+        this.calculateRaySlope(ray);
+        this.calculateRayYIntercept(source, ray);
+        this.calculateRayEnding(source,ray);
+    }
 
-            // Input check
-
-            if(typeof rays != 'object'){
-                throw Error('Invalid ray array specified for raySource');
-            }
-
-            //
-
-            rays.forEach(ray => {
-                this.calculateRaySlope(ray);
-                this.calculateRayYIntercept(raySource.pos, ray);
-            });
-
-            this.getIndicesOfClosestBefore(raySource);
-
-        });
-
-        return true;
-    };
+    public handleNegativeDegrees(ray){
+        if(ray.degree < 0){
+            console.log(ray.degree);
+            ray.degree = Math.abs(ray.degree % -360) + 90;
+            console.log(ray.degree);
+        }
+    }
 }
 
 export default VariableCalculator;

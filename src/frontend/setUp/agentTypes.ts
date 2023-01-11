@@ -1,16 +1,17 @@
-
 // HorizontalWall
 
 interface HorizontalWall {
     startX : number,
     endX   : number,
-    posY   : number
+    posY   : number,
+    isMirror : boolean
 }
 
 const horizontalWallPrototype :HorizontalWall = {
     startX : NaN,
     endX   : NaN,
-    posY   : NaN
+    posY   : NaN,
+    isMirror : false
 }
 
 // VerticalWall
@@ -18,22 +19,27 @@ const horizontalWallPrototype :HorizontalWall = {
 interface VerticalWall {
     startY : number,
     endY   : number,
-    posX   : number
+    posX   : number,
+    isMirror : boolean
 }
 
 const verticalWallPrototype :VerticalWall = {
     startY : NaN,
     endY   : NaN,
-    posX   : NaN
+    posX   : NaN,
+    isMirror : false
 }
 
 // Ray
 
 interface Ray {
+    active     : boolean,
+    source     : Object,
     degree     : number,
     slope      : number,
     YIntercept : number,
-    collisions : Object[],
+    collidesAt : Object,
+    collidesWith : Object,
 
     // Children nodes
 
@@ -46,10 +52,13 @@ interface Ray {
 }
 
 const rayPrototype :Ray = {
+    active      : true,
+    source      : {},
     degree      : NaN,
     slope       : NaN,
     YIntercept  : NaN,
-    collisions  : [],
+    collidesAt  : { x : NaN, y : NaN},
+    collidesWith: {},
     reflected   : {},
     refracted   : {},
 
@@ -86,7 +95,7 @@ const agentTypes : Object = {
     'HorizontalWall' : {'info' : horizontalWallPrototype},
     'VerticalWall'   : {'info' : verticalWallPrototype, },
     'RaySource'      : {'info' : raySourcePrototype,       'collections' : ['RaySources']},
-    'Ray'            : {'info' : rayPrototype,             'collections' : ['Rays']}
+    'Ray'            : {'info' : rayPrototype}
 };
 
 export default agentTypes;
