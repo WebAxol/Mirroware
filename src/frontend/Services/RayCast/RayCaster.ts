@@ -1,6 +1,8 @@
+
 import CollisionDetector from "../../utils/CollisionDetector.js";
 import Service from "../Service.js";
-import VariableCalculator from './VariableCalculator';
+import VariableCalculator from './VariableCalculator.js';
+
 
 class RayCaster extends Service {
     
