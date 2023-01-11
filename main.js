@@ -21,7 +21,7 @@ app.use(pageRoutes);
 app.use(express.static(join(__dirname, 'public')));
 app.use(express.static(join(__dirname, 'lib/frontend')));
 app.use(express.static(join(__dirname, 'vendor')));
-
+ 
 
 /* --- Server & DataBase connection --- */
 app.listen(__port, () => {

@@ -18,6 +18,13 @@ class RayCastProcessor extends Service{
     public execute(): boolean { 
         try{
             
+            
+            let source = this.world.getCollection('RaySources')[0];
+
+            source.rays.forEach(ray => {
+                ray.degree =  (ray.degree + 0.5) % 360; 
+            });
+
             this.#variableCalculator.execute();
             this.#raycaster.execute();
             
@@ -29,6 +36,10 @@ class RayCastProcessor extends Service{
             return false;
         }
 
+    }
+
+    public calculateRayProperties(source,ray){
+        return this.#variableCalculator.calculateRayProperties(source,ray);
     }
 }
 

@@ -1,6 +1,7 @@
 class CollisionDetector {
 
-    public static RayVsHorizontalLine(ray : any ,line : any) : any {
+
+    public static RayVsVerticalLine(ray : any ,line : any) : any {
         
         // Input check
 
@@ -9,21 +10,60 @@ class CollisionDetector {
             return false;
         }
 
-        if(typeof ray.b != 'number' || typeof ray.slope != 'number' ){
+        if(typeof ray.YIntercept != 'number' || typeof ray.slope != 'number' ){
             console.error("Invalid argument passed as 'ray'");
             return false;
         }
 
-        if(typeof line.startX != 'number' || typeof line.startY != 'number' || typeof line.posY != 'number'){
+        if(typeof line.startY != 'number' || typeof line.endY != 'number' || typeof line.posX != 'number'){
             console.error("Invalid argument passed as 'line'");
             return false;
         }
 
-        // "ray.b" stands for the y value of the intesection point with the Y axis
+        // In case ray is fully horizontal and has a slope of zero
 
-        var colinearXValue : number = (line.posY - ray.b) / ray.slope;
+        if(ray.degree == 0 || ray.degree == 360){ 
 
-        console.log('ray:',ray, ' colinear: ',colinearXValue);
+            let theyCollide = (line.startY <= ray.YIntercept && ray.YIntercept <= line.endY);
+            
+            return theyCollide ? [line.posX,ray.YIntercept] : false;
+        }
+
+        var colinearYValue : number = (ray.slope * line.posX) + ray.YIntercept;
+
+        //console.log(colinearYValue,line.startY,line.endY);
+
+        if(line.startY <= colinearYValue && colinearYValue <= line.endY){
+
+            return [line.posX,colinearYValue];
+
+        }
+
+        return false;
+    }  
+
+
+    public static RayVsHorizontalLine(ray : any ,line : any) : any {
+        
+        // Input check
+
+        if(typeof ray != 'object' || typeof line != 'object'){
+            console.error("Both 'ray' and 'line' parameters must be objects");
+            console.warn(line);
+            return false;
+        }
+
+        if(typeof ray.YIntercept != 'number' || typeof ray.slope != 'number' ){
+            console.error("Invalid argument passed as 'ray'");
+            return false;
+        }
+
+        if(typeof line.startX != 'number' || typeof line.endX != 'number' || typeof line.posY != 'number'){
+            console.error("Invalid argument passed as 'line'");
+            return false;
+        }
+
+        var colinearXValue : number = (line.posY - ray.YIntercept) / ray.slope;
 
         if(line.startX <= colinearXValue && colinearXValue <= line.endX){
 
