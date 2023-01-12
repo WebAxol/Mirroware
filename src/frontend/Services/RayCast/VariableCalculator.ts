@@ -165,9 +165,7 @@ class VariableCalculator extends Service{
 
     public handleNegativeDegrees(ray){
         if(ray.degree < 0){
-            console.log(ray.degree);
             ray.degree = Math.abs(ray.degree % -360) + 90;
-            console.log(ray.degree);
         }
     }
 }

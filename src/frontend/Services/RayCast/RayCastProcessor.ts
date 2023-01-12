@@ -22,7 +22,7 @@ class RayCastProcessor extends Service{
             let source = this.world.getCollection('RaySources')[0];
 
             source.rays.forEach(ray => {
-                ray.degree =  (ray.degree + 0.5) % 360; 
+                ray.degree =  (ray.degree + 1) % 360; 
             });
 
             this.#variableCalculator.execute();

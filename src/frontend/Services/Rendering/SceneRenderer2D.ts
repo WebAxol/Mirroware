@@ -5,10 +5,10 @@ class SceneRenderer2D extends Service{
     public scale : number
     #context;
 
-    constructor(c){
+    constructor(canvas){
         super();
-        this.#context = c;
-        this.scale = 50;
+        this.#context = canvas.getContext('2d');
+        this.scale = 100;
     }
 
     public execute() {
@@ -17,8 +17,8 @@ class SceneRenderer2D extends Service{
         const verticalWalls = this.world.getCollection('VerticalWalls');
         const raySource = this.world.getCollection('RaySources')[0];
 
-        this.#context.fillStyle = 'rgba(0,0,0,0.1)';
-        this.#context.fillRect(0,0,3000,1500);
+        this.#context.fillStyle = 'rgba(0,0,0,1)';
+        this.#context.fillRect(0,0,3000,3000);
 
         raySource.rays.forEach(ray => {
             this.renderRay(ray,raySource.pos);
@@ -36,10 +36,8 @@ class SceneRenderer2D extends Service{
 
     public renderHorizontalWall(wall){
 
-        this.#context.strokeStyle = 'red';
-        this.#context.lineWidth = 3;
-
-        if(wall.isMirror) this.#context.strokeStyle = 'lawngreen';
+        this.#context.strokeStyle = `rgba(${wall.color},1)`;
+        this.#context.lineWidth = 15;
 
         this.#context.beginPath();
         this.#context.moveTo(wall.startX * this.scale, wall.posY * this.scale);
@@ -51,10 +49,8 @@ class SceneRenderer2D extends Service{
     public renderVerticalWall(wall){
 
 
-        this.#context.strokeStyle = 'red';
-        this.#context.lineWidth = 3;
-
-        if(wall.isMirror) this.#context.strokeStyle = 'lawngreen';
+        this.#context.strokeStyle =  `rgba(${wall.color},1)`;
+        this.#context.lineWidth = 15;
 
         this.#context.beginPath();
         this.#context.moveTo(wall.posX * this.scale, wall.startY * this.scale);
@@ -66,8 +62,12 @@ class SceneRenderer2D extends Service{
 
     public renderRay(ray, source){
 
-        this.#context.strokeStyle = 'white';
-        this.#context.lineWidth = 3;
+        if(ray.reflected.getType && ray.reflected.active){
+            this.renderRay(ray.reflected, ray.collidesAt);
+        }
+
+        this.#context.strokeStyle = ray.level <= 1 ? 'white' : 'red';
+        this.#context.lineWidth = 1;
 
         this.#context.beginPath();
         this.#context.moveTo(source.x * this.scale, source.y * this.scale);
@@ -75,9 +75,6 @@ class SceneRenderer2D extends Service{
         this.#context.closePath();
         this.#context.stroke();
 
-        if(ray.reflected.getType && ray.reflected.active){
-            this.renderRay(ray.reflected, ray.collidesAt);
-        }
     }
 
 }

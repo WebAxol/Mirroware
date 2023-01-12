@@ -12,14 +12,14 @@ var rays :object[] = [];
 
 var raysource = app.createAgent('RaySource',{
     'info' : {
-        pos    : { x : 20, y : 20},
+        pos    : { x : 15, y : 15},
     }
 });
 
 for(let i : number = 0; i < 300; i++){
     let ray = app.createAgent('Ray',{
         'info' : {
-            degree : (i / 8) + 245
+            degree : (i / 3)
         }
     });
 
@@ -33,30 +33,14 @@ raysource.rays = rays;
 // Create a simple scene (composed by horizontal and vertical walls);
 
 const testScene = [
-    [[5,5],[5,25], false],
-    [[10,10],[10,15], false],
-    [[10,17],[10,20], false],
-    [[25,5],[25,25], false],
-    [[0,27],[30,27], false],
-    [[10,10],[15,10], true],
-    [[0,5],[100,5], true]
-
-]
-
-const scene = [
-
-    [[9,6],[12,6],   true],
-    [[9,15],[20,15], true],
-    [[20,15],[20,5], true],
-    [[15,10],[15,0], true],
-    [[25,0],[25,50], true],
-    [[10,20],[25,20],true],
-    //[[10,20],[10,0], true],
-
-
-
-
-
+    [[5,5],[5,25],   1, '255,0,0'],
+    [[5, 5],[25, 5], 0.1, '0,255,100'],
+    [[5, 7],[7, 7],  1, '0,255,100'],
+    [[7, 5],[7, 7],  1, '0,255,200'],
+    [[7, 15],[7, 20],  0.5, '0,155,200'],
+    [[7, 20],[15, 20],  0.5, '0,165,200'],
+    [[25,5],[25,25], 1, '0,0,255'],
+    [[5,25],[25,25], 0.1, '255,255,0']
 ];
 
 // TODO: replace by a module specialized on building scenes
@@ -66,7 +50,7 @@ function buildScene(app, scene : Object[]){
 
     var horizontal :object[] = [], vertical :object[] = [];
 
-    function buildVerticalWall(vertexA,vertexB,isMirror){
+    function buildVerticalWall(vertexA,vertexB,opacity,color){
 
         // Warning: Hardcoded app reference
 
@@ -75,23 +59,25 @@ function buildScene(app, scene : Object[]){
                 startY  : Math.min(vertexA[1],vertexB[1]),
                 endY    : Math.max(vertexA[1],vertexB[1]),
                 posX    : vertexA[0],
-                isMirror: isMirror
+                opacity : opacity || 1,
+                color  : color || 'white' 
             }
         });
 
         return wall;
     };
 
-    function buildHorizontalWall(vertexA,vertexB,isMirror){
+    function buildHorizontalWall(vertexA,vertexB,opacity,color){
 
-          // Warning: Hardcoded app reference
+          // Warning: Hardcoded app referencep
 
         let wall = app.createAgent('HorizontalWall',{
             info : {
                 startX : Math.min(vertexA[0],vertexB[0]),
                 endX   : Math.max(vertexA[0],vertexB[0]),
                 posY   : vertexA[1],
-                isMirror: isMirror
+                opacity: opacity || 1,
+                color  : color || 'white' 
             }
         });
 
@@ -104,11 +90,11 @@ function buildScene(app, scene : Object[]){
         let vertexB = segment[1];
       
         if(vertexA[0] == vertexB[0] && vertexA[1] != vertexB[1]){
-            vertical.push(buildVerticalWall(vertexA,vertexB,segment[2]));
+            vertical.push(buildVerticalWall(vertexA,vertexB,segment[2],segment[3]));
         } 
 
         else if(vertexA[1] == vertexB[1] && vertexA[0] != vertexB[0]){
-            horizontal.push(buildHorizontalWall(vertexA,vertexB,segment[2]));
+            horizontal.push(buildHorizontalWall(vertexA,vertexB,segment[2],segment[3]));
         } 
 
         else{
