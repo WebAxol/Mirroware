@@ -5,9 +5,23 @@
 
 .canvasContainer {
     top: 0;
-    position: absolute;
+    position: relative;
 }
-.canvasContainer canvas {
+.canvasContainer #canvas3d {
+    position: absolute;
     background-color: black;
     width: 100%;
+    height: auto;
+}
+
+.canvasContainer #canvas2d {
+    background-color: black;
+    border: double red 1px;
+    border-radius: 10px;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 20%;
+    height: auto;
+    opacity: 0.8;
 }

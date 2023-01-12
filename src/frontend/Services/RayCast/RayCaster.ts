@@ -52,7 +52,7 @@ class RayCaster extends Service {
             horizontal: (newHorizontalIndex === false ) ? indices.horizontal : newHorizontalIndex
         };
 
-        if((newHorizontalIndex !== false || newVerticalIndex !== false) && (ray.collidesWith.isMirror === true)){
+        if((newHorizontalIndex !== false || newVerticalIndex !== false) && (ray.collidesWith.opacity < 1) && ray.level < 10){
 
             let isClosestHorizontal = ray.collidesWith.getType() == 'HorizontalWall';
             let angleAdd = isClosestHorizontal ? 360 : 180;
@@ -63,6 +63,7 @@ class RayCaster extends Service {
                 ray.reflected.degree = (angleAdd - ray.degree);
                 let reflectedRay = this.#chief.world.createAgent('Ray');
                 reflectedRay.source = ray;
+                reflectedRay.level  = ray.level + 1;
                 ray.reflected = reflectedRay;
 
 

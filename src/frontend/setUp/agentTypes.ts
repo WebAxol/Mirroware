@@ -1,39 +1,44 @@
 // HorizontalWall
 
 interface HorizontalWall {
+    color  : string,
     startX : number,
     endX   : number,
     posY   : number,
-    isMirror : boolean
+    opacity: number
 }
 
 const horizontalWallPrototype :HorizontalWall = {
+    color  : 'white',
     startX : NaN,
     endX   : NaN,
     posY   : NaN,
-    isMirror : false
+    opacity: 1
 }
 
 // VerticalWall
 
 interface VerticalWall {
+    color  : string,
     startY : number,
     endY   : number,
     posX   : number,
-    isMirror : boolean
+    opacity: number
 }
 
 const verticalWallPrototype :VerticalWall = {
+    color  : 'white',
     startY : NaN,
     endY   : NaN,
     posX   : NaN,
-    isMirror : false
+    opacity: 1
 }
 
 // Ray
 
 interface Ray {
     active     : boolean,
+    level      : number,
     source     : Object,
     degree     : number,
     slope      : number,
@@ -53,6 +58,7 @@ interface Ray {
 
 const rayPrototype :Ray = {
     active      : true,
+    level       : 1,
     source      : {},
     degree      : NaN,
     slope       : NaN,
