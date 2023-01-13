@@ -1,4 +1,6 @@
 import app from './Initializer.js';
+import { Camera, camera } from './utils/Camera.js';
+
 
 // Playground
 
@@ -8,37 +10,31 @@ import app from './Initializer.js';
 // First, create a ray array - TODO: Make a more easy and safe way of defining rays with theur raysources
 
 
-var rays :object[] = [];
 
-var raysource = app.createAgent('RaySource',{
-    'info' : {
-        pos    : { x : 15, y : 15},
-    }
-});
+const n = 300;
 
-for(let i : number = 0; i < 300; i++){
+for(let i : number = 0; i < n; i++){
     let ray = app.createAgent('Ray',{
         'info' : {
-            degree : (i / 3)
+            degree : (i * (100 / n))
         }
     });
 
-    ray.source = raysource;
-    rays.push(ray);
+    ray.source = camera;
+    camera.rays.push(ray);
 }
 
-raysource.rays = rays;
 
 
 // Create a simple scene (composed by horizontal and vertical walls);
 
 const testScene = [
     [[5,5],[5,25],   1, '255,0,0'],
-    [[5, 5],[25, 5], 0.1, '0,255,100'],
+    [[5, 5],[25, 5], 0.3, '0,255,100'],
     [[5, 7],[7, 7],  1, '0,255,100'],
     [[7, 5],[7, 7],  1, '0,255,200'],
-    [[7, 15],[7, 20],  0.5, '0,155,200'],
-    [[7, 20],[15, 20],  0.5, '0,165,200'],
+    [[7, 15],[7, 20],  1, '0,155,200'],
+    [[7, 20],[15, 20],  0.1, '0,0,0'],
     [[25,5],[25,25], 1, '0,0,255'],
     [[5,25],[25,25], 0.1, '255,255,0']
 ];
@@ -119,28 +115,29 @@ buildScene(app,testScene);
 
 /* ------ Debugging commands (Not for production) ------- */
 
-
 const commands = {
     'w' : () => { console.log(app) },
     'r' : () => { console.log(app.getCollection('RaySources')) },
     'p' : () => { 
         app.pauseExecution(); 
-        console.log('execution paused');
+        //console.log('execution paused');
     },
     's' : () => {
         app.pause = false;
         app.execute();
-        console.log('execution resumed');
+        //console.log('execution resumed');
     }   
 
 }
+
+/*
 
 window.addEventListener('keydown', (e) => {
 
     if(commands[e.key]) commands[e.key]();
 
 })
-
+*/
 // execute
 
 app.execute();

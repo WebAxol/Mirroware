@@ -1,4 +1,5 @@
 import Service from "../Service.js";
+import { Camera, camera } from "../../utils/Camera.js";
 
 class SceneRenderer2D extends Service{
 
@@ -15,52 +16,38 @@ class SceneRenderer2D extends Service{
         
         const horizontalWalls = this.world.getCollection('HorizontalWalls');
         const verticalWalls = this.world.getCollection('VerticalWalls');
-        const raySource = this.world.getCollection('RaySources')[0];
 
         this.#context.fillStyle = 'rgba(0,0,0,1)';
         this.#context.fillRect(0,0,3000,3000);
 
-        raySource.rays.forEach(ray => {
-            this.renderRay(ray,raySource.pos);
+        camera.rays.forEach(ray => {
+            this.renderRay(ray,camera.pos);
         });
 
         horizontalWalls.forEach(wall => {
-            this.renderHorizontalWall(wall);
+            this.renderWall(wall);
         });
 
         verticalWalls.forEach(wall => {
-            this.renderVerticalWall(wall);
+            this.renderWall(wall);
         });
 
     };
 
-    public renderHorizontalWall(wall){
+    public renderWall(wall){
 
         this.#context.strokeStyle = `rgba(${wall.color},1)`;
         this.#context.lineWidth = 15;
 
         this.#context.beginPath();
-        this.#context.moveTo(wall.startX * this.scale, wall.posY * this.scale);
-        this.#context.lineTo(wall.endX * this.scale,  wall.posY * this.scale);
+        this.#context.moveTo((wall.startX || wall.posX) * this.scale, (wall.posY || wall.startY) * this.scale);
+        this.#context.lineTo((wall.endX   || wall.posX) * this.scale, (wall.posY || wall.endY  ) * this.scale);
         this.#context.closePath();
         this.#context.stroke();
-    }
-
-    public renderVerticalWall(wall){
-
-
-        this.#context.strokeStyle =  `rgba(${wall.color},1)`;
-        this.#context.lineWidth = 15;
-
-        this.#context.beginPath();
-        this.#context.moveTo(wall.posX * this.scale, wall.startY * this.scale);
-        this.#context.lineTo(wall.posX * this.scale, wall.endY * this.scale);
-        this.#context.closePath();
-        this.#context.stroke();
-
     }
 
     public renderRay(ray, source){
+
 
         if(ray.reflected.getType && ray.reflected.active){
             this.renderRay(ray.reflected, ray.collidesAt);

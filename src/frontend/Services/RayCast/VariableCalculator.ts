@@ -1,5 +1,6 @@
 import Service from "../Service.js";
 import World from '/cases/World.js';
+import { Camera, camera } from '../../utils/Camera.js';
 
 class VariableCalculator extends Service{
 
@@ -12,27 +13,23 @@ class VariableCalculator extends Service{
 
     public execute() {
 
-        const raySources :any[] = this.#chief.world.getCollection('RaySources');
 
-        raySources.forEach(raySource => {
+        let rays = camera.rays;
 
-            let rays = raySource.rays;
+        // Input check
 
-            // Input check
+        if(typeof rays != 'object'){
+            throw Error('Invalid ray array specified for raySource');
+        }
 
-            if(typeof rays != 'object'){
-                throw Error('Invalid ray array specified for raySource');
-            }
+        //
 
-            //
-
-            rays.forEach(ray => {
-                this.calculateRayProperties(raySource.pos,ray);
-            });
-
-            this.getIndicesOfClosestBefore(raySource);
-
+        rays.forEach(ray => {
+            this.calculateRayProperties(camera.pos,ray);
         });
+
+        this.getIndicesOfClosestBefore(camera);
+
 
         return true;
     };

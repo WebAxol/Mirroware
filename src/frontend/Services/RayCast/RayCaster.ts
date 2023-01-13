@@ -1,7 +1,8 @@
 
 import CollisionDetector from "../../utils/CollisionDetector.js";
-import Service from "../Service.js";
 import VariableCalculator from './VariableCalculator.js';
+import { Camera, camera } from '../../utils/Camera.js';
+import Service from "../Service.js";
 
 
 class RayCaster extends Service {
@@ -15,26 +16,22 @@ class RayCaster extends Service {
 
     public execute() {
 
-        const raySources = this.#chief.world.getCollection('RaySources');
+        let rays = camera.rays;
 
-        raySources.forEach(raySource => {
-            let rays = raySource.rays;
+        // Input check
 
-            // Input check
+        if(typeof rays != 'object'){
+            throw Error('Invalid ray array specified for raySource');
+        }
 
-            if(typeof rays != 'object'){
-                throw Error('Invalid ray array specified for raySource');
-            }
+        //
 
-            //
-
-            rays.forEach(ray => {
-                this.castRay(raySource.pos , ray , raySource.wallIndices);
-            });
+        rays.forEach(ray => {
+            this.castRay(camera.pos , ray , camera.wallIndices);
         });
     }
 
-    public castRay(pos, ray, indices){
+    public castRay(pos, ray : any, indices){
 
         // Input check
 
@@ -52,7 +49,7 @@ class RayCaster extends Service {
             horizontal: (newHorizontalIndex === false ) ? indices.horizontal : newHorizontalIndex
         };
 
-        if((newHorizontalIndex !== false || newVerticalIndex !== false) && (ray.collidesWith.opacity < 1) && ray.level < 10){
+        if((newHorizontalIndex !== false || newVerticalIndex !== false) && (ray.collidesWith.opacity < 1) && ray.level < 7){
 
             let isClosestHorizontal = ray.collidesWith.getType() == 'HorizontalWall';
             let angleAdd = isClosestHorizontal ? 360 : 180;
@@ -71,6 +68,8 @@ class RayCaster extends Service {
 
             ray.reflected.active = true;
             ray.reflected.degree = (angleAdd - ray.degree);
+            ray.wallIndices = newIndices;
+
             this.#chief.calculateRayProperties(ray.collidesAt,ray.reflected);
 
             //console.log('Ray-------------------------------------------------');
@@ -88,8 +87,6 @@ class RayCaster extends Service {
 
     public testAgainstVerticalWalls(ray,index){
 
-        //return false;
-
         let sense;
         
         // Get sense
@@ -98,17 +95,15 @@ class RayCaster extends Service {
         else if((ray.degree % 360) >= 0   && (ray.degree % 360) < 90)    sense = 1;
         else if((ray.degree % 360) > 90  && (ray.degree % 360) < 270)   sense = -1;
 
-        if(!sense) return false; // Cannot collide; it is totally horizontal
-
-        // console.log('Vertical----------------------------------');
-
-        // console.log('sense:',sense, 'index',index);
+        if(!sense) return false; // Cannot collide; it is totally vertical
 
         const walls = this.#chief.world.getCollection('VerticalWalls');
 
         for(index  += (sense == 1 ? 1 : 0); (index < walls.length && sense == 1) || (index >= 0 && sense == -1) ; index += sense){
 
-            //console.log(walls[index]);
+            if(walls[index].posX <= ray.collidesAt.x && sense == -1) return index;
+            if(walls[index].posX >= ray.collidesAt.x && sense == 1 ) return index - 1;
+
 
             let hasCollided = CollisionDetector.RayVsVerticalLine(ray,walls[index]);
 
@@ -118,17 +113,14 @@ class RayCaster extends Service {
 
                 if(isCloser){
 
-                    //console.log('change');
-
                     ray.collidesAt.x = hasCollided[0];
                     ray.collidesAt.y = hasCollided[1];
                     ray.collidesWith = walls[index];
 
-                    // console.log('so:', ray.collidesAt);
                 }
-
-                index -= (sense == 1 ? 1 : 0) - 1;
-                return index;
+                else return index - 1;
+                
+                return index - (sense == 1 ? 1 : 0);
             }
         }
 
@@ -138,7 +130,6 @@ class RayCaster extends Service {
 
     public testAgainstHorizontalWalls(ray,index){
 
-        //return false;
         let sense = 0;
         
         // Get sense
@@ -147,10 +138,6 @@ class RayCaster extends Service {
         else if(ray.degree > 180 && ray.degree < 360)   sense = -1;
 
         if(!sense) return false; // Cannot collide; it is totally horizontal
-
-        // console.log('Horizontal----------------------------------');
-
-        // console.log('sense:',sense, 'index',index);
 
         const walls = this.#chief.world.getCollection('HorizontalWalls');
 
@@ -161,7 +148,6 @@ class RayCaster extends Service {
             let hasCollided = CollisionDetector.RayVsHorizontalLine(ray,walls[index]);
 
             if(hasCollided){
-                //console.log('ray has collided with wall at', hasCollided);
 
                 let isCloser = this.compareWithClosest(ray,hasCollided);
 
@@ -171,14 +157,10 @@ class RayCaster extends Service {
                     ray.collidesAt.y = hasCollided[1];
                     ray.collidesWith = walls[index];
 
-                    // console.log('so:', ray.collidesAt);
-
-
                 }
+                else return false;
 
-                index -= (sense == 1 ? 1 : 0);
-
-                return index;
+                return index - (sense == 1 ? 1 : 0);
             }
 
         }
