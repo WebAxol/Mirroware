@@ -74,25 +74,6 @@ const rayPrototype :Ray = {
     }
 }
 
-// RaySource
-
-interface RaySource{
-
-    pos         : Object,
-    rays        : Ray[],
-    wallIndices : Object
-};
-
-const raySourcePrototype :RaySource = {
-    pos  : { x : NaN, y : NaN },
-    rays : [],
-
-    wallIndices : { 
-        horizontal : NaN, 
-        vertical   : NaN 
-    }
-}
-
 
 // Integrated agentTypes 
 
@@ -100,7 +81,6 @@ const agentTypes : Object = {
 
     'HorizontalWall' : {'info' : horizontalWallPrototype},
     'VerticalWall'   : {'info' : verticalWallPrototype, },
-    'RaySource'      : {'info' : raySourcePrototype,       'collections' : ['RaySources']},
     'Ray'            : {'info' : rayPrototype}
 };
 

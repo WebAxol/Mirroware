@@ -1,4 +1,5 @@
-import Service from '../Service.js';
+import Service from "../Service.js";
+import { Camera, camera } from "../../utils/Camera.js";
 
 class  SceneRenderer3D extends Service{
     
@@ -15,31 +16,29 @@ class  SceneRenderer3D extends Service{
     public execute(){
 
         this.#context.fillStyle = 'rgba(0,0,0,1)';
-        this.#context.fillRect(0,0,3000,1500);
+        this.#context.fillRect(0,0,this.#canvas.width,this.#canvas.height);
 
         this.#context.fillStyle = 'white';
-        this.#context.fillRect(0,0,3000,1500 / 2);
+        this.#context.fillRect(0,0,this.#canvas.width,this.#canvas.height / 2);
+   
+        this.renderScene(camera);
 
-        const raySource = this.world.getCollection('RaySources')[0];
-        this.renderScene(raySource);
-
-        //this.#context.fillStyle = 'rgba(255,0,0,1)';
-        //this.#context.fillRect(0,750,3000,1);
     }
 
     // The scene is a histogram of rectangles aligned verically to the middle of the canvas
 
-    public renderScene(source){
+    public renderScene(camera : Camera){
  
-        const cameraDegree = source.rays[Math.floor((source.rays.length) / 2)].degree;
+        const cameraDegree = camera.rays[Math.floor((camera.rays.length) / 2)].degree;
         const context = this.#context;
-        const total   = source.rays.length;
+
+        const total   = camera.rays.length;
         const canvasWidth  = this.#canvas.width;
         const canvasHeight = this.#canvas.height;
 
         var index = 0;
 
-        source.rays.forEach((ray , rayIndex) => {
+        camera.rays.forEach((ray , rayIndex) => {
             
             index = rayIndex;
 

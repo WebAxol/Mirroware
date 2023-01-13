@@ -42,7 +42,7 @@ class ServiceManager {
     getService(serviceName){
 
         if(!this.#services[serviceName]){
-            console.error(`Cannot get unregistered service '${serviceName}'`);
+            throw Error(`Cannot get unregistered service '${serviceName}'`);
             return false;
         }
 
