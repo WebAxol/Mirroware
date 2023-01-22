@@ -26,8 +26,22 @@ class CameraMover extends Service{
     }
 
     public execute() {
+        this.rotateCamera(2/3);
+    }
+
+    public rotateCamera(angle){
+
+        camera.rays.forEach(ray => {
+            ray.degree = ray.degree % 360;
+            ray.degree = Math.abs((ray.degree + angle)) % 360;
+        });
+    };
+
+    public translateCamera(){
 
     }
+
+    // EVENTS
 
     public onkeydown(info){
 
@@ -48,21 +62,6 @@ class CameraMover extends Service{
             console.log(this.control);
         }
     }
-
-    public
-
-    public rotateCamera(angle){
-
-        camera.rays.forEach(ray => {
-            ray.degree = ray.degree % 360;
-            ray.degree = Math.abs((ray.degree + angle)) % 360;
-        });
-    };
-
-    public translateCamera(){
-
-    }
-
 }
 
 export default CameraMover;
