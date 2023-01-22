@@ -1,6 +1,6 @@
 import RayCastProcessor from "../Services/RayCast/RayCastProcessor.js";
-import SceneRenderer3D from "../Services/Rendering/SceneRenderer3D.js";
-import SceneRenderer2D from "../Services/Rendering/SceneRenderer2D.js";
+import SceneRenderer3D from "../Services/Rendering/3DRendering/SceneRenderer3D.js";
+import SceneRenderer2D from "../Services/Rendering/2DRendering/SceneRenderer2D.js";
 import CameraMover     from "../Services/Camera/CameraMover.js";
 import InputHandler    from "../Services/Camera/InputHandler.js";
 import { canvas2d,canvas3d } from '../utils/canvas.js';

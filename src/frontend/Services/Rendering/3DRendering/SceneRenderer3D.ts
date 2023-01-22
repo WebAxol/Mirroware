@@ -1,5 +1,8 @@
-import Service from "../Service.js";
-import { Camera, camera } from "../../utils/Camera.js";
+import Service from "../../Service.js";
+import { Camera, camera } from "../../../utils/Camera.js";
+import textures from "../../../utils/Textures.js";
+
+// TODO: Modularize into finer-grained rendering sub-services
 
 class  SceneRenderer3D extends Service{
     
@@ -18,9 +21,9 @@ class  SceneRenderer3D extends Service{
         this.#context.fillStyle = 'rgba(0,0,0,1)';
         this.#context.fillRect(0,0,this.#canvas.width,this.#canvas.height);
 
-        this.#context.fillStyle = 'white';
+        this.#context.fillStyle = 'brown';
         this.#context.fillRect(0,0,this.#canvas.width,this.#canvas.height / 2);
-   
+
         this.renderScene(camera);
 
     }
@@ -49,9 +52,6 @@ class  SceneRenderer3D extends Service{
 
         function _calculateVariables(ray, prevDistance = 0, adjustment : any = undefined){
 
-            //console.log(total,index);
-
-            try{
             let distanceX = Math.abs(Math.abs(ray.collidesAt.x) - Math.abs(ray.source.pos ? ray.source.pos.x : ray.source.collidesAt.x));
             let distanceY = Math.abs(Math.abs(ray.collidesAt.y) - Math.abs(ray.source.pos ? ray.source.pos.y : ray.source.collidesAt.y));
             let distance  = Math.hypot(distanceX,distanceY) + prevDistance;
@@ -77,17 +77,48 @@ class  SceneRenderer3D extends Service{
             _renderRectangle(info);
             
             _renderHorizontalBorders(info);
-            }catch(err){
-                console.log(ray.source.pos);
-                console.error(err);
-            }
+        }
 
+        function _renderRGBA(info){
 
+            context.fillStyle = `rgba(${info.color}, ${info.opacity / (info.distance / 5)}`;
+            context.fillRect(
+                info.leftTop.x,
+                info.leftTop.y, 
+                canvasWidth / total,
+                info.size.y
+            );
+            context.globalAlpha = 1;
+
+        }
+
+        function _renderTexture(info){
+
+            let scale  = info.size.y / 1000;
+            let height = 1000;
+            let texture = textures.get('bricks');
+
+            
+            context.globalAlpha = info.opacity / (info.distance / 5);
+            context.scale(1,scale);
+                
+            context.drawImage(
+                texture,
+                (info.leftTop.x / 2) % 400,
+                0,                 
+                5,                  
+                400,                
+                info.leftTop.x,
+                ((canvasHeight / 2) / scale) - (height / 2),
+                15,                 
+                height
+            );
+
+            context.scale(1, 1 / scale);
         }
 
         function _renderRectangle(info){
 
-            //context.globalAlpha = info.opacity;
             context.fillStyle = `rgba(0,0,0,${info.opacity})`;
             context.fillRect(
                 info.leftTop.x,
@@ -95,27 +126,10 @@ class  SceneRenderer3D extends Service{
                 canvasWidth / total,
                 info.size.y
             );
+
+            _renderTexture(info);
+
             context.globalAlpha = 1;
-
-            context.fillStyle = `rgba(${info.color}, ${info.opacity / (info.distance / 10)}`;
-            context.fillRect(
-                info.leftTop.x,
-                info.leftTop.y,
-                canvasWidth / total,
-                info.size.y
-            );
-            context.globalAlpha = 1;
-
-            /*
-
-            context.fillStyle = `rgba(255,255,255,${info.distance / 30})`;
-            context.fillRect(
-                info.leftTop.x,
-                info.leftTop.y + info.size.y,
-                canvasWidth / total,
-                info.size.y
-            );  
-            */
         }
 
         function _renderHorizontalBorders(info){
@@ -136,7 +150,6 @@ class  SceneRenderer3D extends Service{
             context.stroke();
 
         }
-
     }   
 }
 
