@@ -26,8 +26,8 @@ body{
 
 .canvasContainer #canvas2d {
     background-color: black;
-    border: double red 1px;
-    border-radius: 10px;
+    border: double red 5px;
+    border-radius: 15%;
     position: absolute;
     top: 5px;
     right: 5px;
