@@ -24,7 +24,7 @@ class Texturer extends Service{
         context.scale(1,scale);
             
         context.drawImage(
-            texture,
+           texture,
             (info.leftTop.x / 2) % 400,
             0,                 
             5,                  

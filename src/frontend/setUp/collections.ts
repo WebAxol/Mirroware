@@ -1,3 +1,3 @@
-const collections = ['RaySources','HorizontalWalls','VerticalWalls'];
+const collections = ['HorizontalWalls','VerticalWalls'];
 
 export default collections;
