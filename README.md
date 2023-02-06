@@ -12,6 +12,8 @@ Features to be implemented:
 
 - Sprite rendering
 - Text rendering
+- Input handling
+- Camera free displacement
 
 <h3>Tecnical considerations</h3>
 
@@ -42,5 +44,4 @@ Texturing combined with mirrors
 
 - Raycast optimization
 - Complete and correct texturing system
-- Camera displacement based on user inputs
 - Further test raycasting algorithms
