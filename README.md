@@ -7,6 +7,8 @@ Mirroware is a hybrid between two rendering systems: it takes the idea of tradit
 - Raycasting 
 - Mirrors
 - Textures
+- Darkening effect
+- Texture plus color layer
 
 Features to be implemented:
 
@@ -15,7 +17,7 @@ Features to be implemented:
 - Input handling
 - Camera free displacement
 
-<h3>Tecnical considerations</h3>
+<h3>Technical considerations</h3>
 
 - Implemented with <a href="https://github.com/WebAxol/CASES" >CASES.js</a> framework
     - Offers a microkernel architecture
