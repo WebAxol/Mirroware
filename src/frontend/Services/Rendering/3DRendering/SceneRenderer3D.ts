@@ -35,7 +35,7 @@ class  SceneRenderer3D extends Service{
             this.context.fillStyle = 'rgba(0,0,0,1)';
             this.context.fillRect(0,0,this.canvas.width,this.canvas.height);
     
-            this.context.fillStyle = 'white';
+            this.context.fillStyle = 'brown';
             this.context.fillRect(0,0,this.canvas.width,this.canvas.height / 2);
     
             this.#variableCalculator.executeAsSubordinate();
@@ -49,7 +49,7 @@ class  SceneRenderer3D extends Service{
     public _onvariablesCalculated(info){
 
         this.#rgba.executeAsSubordinate(info);
-        //this.#texturer.executeAsSubordinate(info);
+        this.#texturer.executeAsSubordinate(info);
         this.context.globalAlpha = 1;
     
     }

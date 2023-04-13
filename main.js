@@ -24,7 +24,7 @@ app.use(express.static(join(__dirname, 'vendor')));
  
 
 /* --- Server & DataBase connection --- */
-app.listen(__port, () => {
+app.listen(__port, '0.0.0.0', () => {
     console.log('The server is listening on port', __port);
 });
 app.on('error', (err) => {

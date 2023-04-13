@@ -5,15 +5,85 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./styles/style.css">
+    <link rel="stylesheet" href="./styles/bootstrap/bootstrap-5.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet"/>
     <title>Mirroware</title>
 </head>
 <body>
+    <header>
+        <section class="canvasContainer">
+            <canvas id="canvas3d" width="3000" height="1700"></canvas>
+            <canvas id="canvas2d" width="3000" height="3000"></canvas>
+        </section>
+        <section class="upperLayer">
+            <div class="container" style="width: 50%;">
+                <div class="row">
+                    <div class="col-md-12 mx-auto">
+                        <h1>Mirroware</h1>
+                        <hr style="opacity: 1; border: solid white 1px">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mx-auto">
+                        <p class="text-light"></p>
+                        <div class="alertbox">
+                            <span><b class="text-warning">Warning!</b> This project is under construction, you should't be here yet.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="options row mt-5 mx-auto">
+                    <div class="col-md-6">
+                        <button class="left-button">I understand; I will not proceed.</button>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="right-button">I don't care, let me <b>play!</b></button>
+                    </div>
+                </div>
+                <div class="row mt-5">
+                    <div class="col-md-12 mx-auto">
+                        <hr style="opacity: 1; border: solid white 1px">
+    
+                        <p class="credit text-light text-center mt-4">
+                            Created by 
+                            <b class="text-warning">🌵Gabriel R. Fuente</b>: alias 
+                            <b class="text-danger">WebAxol 🐙</b>, <br> also as 
+                            <b class="text-success">@TheFractaLab 🔥</b>.
+                        </p>
+                        
+                        <div class="social text-center">
+                            <a target="_blank" href="https://github.com/WebAxol" class="social-link">
+                                <i class="fab fa-solid fa-github mx-3"></i></a>
 
-    <div class="canvasContainer">
-        <canvas id="canvas3d" width="3000" height="1700"></canvas>
-        <canvas id="canvas2d" width="3000" height="3000"></canvas>
-    </div>
-
+                            <a href="https://www.instagram.com/thefractalab/" class="social-link">
+                                <i class="fab fa-brands fa-instagram mx-3"></i></a>
+                                
+                            <a target="_blank" href="https://www.hackerrank.com/webaxol" class="social-link">
+                                <i class="fab fa-solid fa-hackerrank mx-3"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </header>
+ 
     <script type="module" src="./Mirroware.js"></script>
+    <script>
+
+        document.addEventListener('mousemove',(e) => {
+
+            let x = e.clientX;
+            let y = e.clientY;
+            let midwidth  = window.innerWidth  / 2;
+            let midheight = window.innerHeight / 2;
+
+            let offsetX = ((x - midwidth)  / midwidth) * 45;
+            let offsetY = ((y - midheight) / midheight) * 45;
+
+
+            document.querySelector('.upperLayer .container').style.transform = `rotateX(${-offsetY}deg) rotateY(${offsetX}deg)`;
+            console.log(sense2);
+        });
+
+    </script>
 </body>
 </html>

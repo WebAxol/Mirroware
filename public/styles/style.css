@@ -1,38 +1,138 @@
+@font-face {
+    font-family: PoiretOne;
+    src: url('../fonts/Poiret_One/PoiretOne-Regular.ttf');
+}
+
 *{
-    background-color: black;
     padding: 0;
     margin: 0;
+    font-family: 'Courier New', Courier, monospace;
 }
 
 body{
-    overflow-y: hidden; 
-    overflow-x: hidden;
+    background: black;
+    height: fit-content;
+    overflow-y: hidden;
+
+}
+header{
+    background: black;
+    position: relative;
+    min-height: 1500px;
+    
 }
 
 .canvasContainer {
+    z-index: -1;
+    background-color: rgba(0, 0, 0, 0.5);
     width: 100%;
     top: 0;
-    position: relative;
-}
-.canvasContainer #canvas3d {
-    position: absolute;
-    background-color: black;
-    width: 100%;
-    height: auto;
-    animation: vibrate;
-    animation-duration: 0.1s;
-    animation-iteration-count: infinite;
 }
 
-.canvasContainer #canvas2d {
+canvas{
     background-color: black;
+}
+
+#canvas3d {
+    width: 100%;
+    height: auto;
+    top: 0;
+}
+
+#canvas2d {
+    position: absolute;
     border: double red 5px;
     border-radius: 15%;
-    position: absolute;
     top: 5px;
     right: 5px;
     width: 20%;
     height: auto;
     opacity: 0.8;
+}
 
+.upperLayer{
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    min-height: 500px;
+    background-color: rgba(180, 0, 0, 0.2);
+    background: linear-gradient(0deg, rgba(0,0,0,0.2) 0%, rgba(9,50,9,0.2) 54%, rgba(0,212,255,0.5) 100%);
+    padding: 50px;
+}
+
+.upperLayer h1{
+    transition: all 0.3s;
+    text-align: center;
+    color: white;
+    font-size: 100px;
+    font-family: PoiretOne;
+    font-weight: lighter;
+    text-shadow: 1px 1px 10px white;
+    animation: blink;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+}
+
+.upperLayer h1 span{
+    margin: 0;
+}
+
+.alertbox{
+    transition: all 0.3s;
+    border: double 5px orange;
+    border-radius: 0px;
+    padding: 10px;
+    background-color: rgba(orange,0.5);
+    text-align: center;
+    color: white;
+    box-shadow: 0px 0px 10px 10px rgb(255, 157, 0,0.5);
+}
+
+.alertbox:hover{
+    transition: all 0.3s;
+    background-color: orange;
+}
+
+.options button{
+    transition: all 0.3s;
+    width: 100%;
+    padding: 5px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    min-height: 80px;
+}
+
+.left-button{
+    border: double rgb(64, 194, 110) 5px;
+    box-shadow: 0px 0px 10px 10px rgba(141, 255, 88, 0.5);
+}
+
+.left-button:hover{
+    background-color: rgb(64, 194, 110);
+}
+
+.right-button{
+    border: double rgb(230, 58, 56) 5px;
+    box-shadow: 0px 0px 10px 10px rgb(255, 0, 47,0.5);
+
+}
+
+.right-button:hover{
+    border: double rgb(230, 58, 56) 5px;
+    background-color: rgb(230, 58, 56);
+}
+
+.social{
+    color: white;
+    font-size: 40px;
+}
+
+.social .social-link{
+    transition: all 0.3s;
+    color: white;
+}
+
+.social .social-link:hover{
+    text-shadow: 1px 1px 10px white;
 }

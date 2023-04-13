@@ -12,6 +12,6 @@ class Camera{
     }
 }
 
-const camera = new Camera({ x : 6, y : 13 });
+const camera = new Camera({ x : 13, y : 13 });
 
 export { Camera, camera };
