@@ -22,7 +22,7 @@ class RGBA extends Service{
         let context     = this.#chief.context;
         let canvasWidth = this.#chief.canvas.width;
 
-        context.fillStyle = `rgba(0,0,0,${info.opacity})`;
+        context.fillStyle = `rgba(10,0,0,${info.opacity})`;
         context.fillRect(
             info.leftTop.x,
             info.leftTop.y,
@@ -32,7 +32,7 @@ class RGBA extends Service{
 
         if(!info.color) return;
         
-        context.fillStyle = `rgba(${info.color}, ${info.opacity / (info.distance / 5)}`;
+        context.fillStyle = `rgba(${info.color}, ${info.opacity / ((info.distance * 5) / 15)}`;
         context.fillRect(
             info.leftTop.x,
             info.leftTop.y, 

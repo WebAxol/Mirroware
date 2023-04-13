@@ -20,7 +20,7 @@ class Texturer extends Service{
         let context = this.#chief.context;
         let canvasHeight = this.#chief.canvas.height;
         
-        context.globalAlpha = info.opacity / (info.distance / 5);
+        context.globalAlpha = info.opacity / (info.distance / 5) / 5;
         context.scale(1,scale);
             
         context.drawImage(

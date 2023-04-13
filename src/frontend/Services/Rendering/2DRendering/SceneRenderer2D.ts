@@ -54,7 +54,7 @@ class SceneRenderer2D extends Service{
         }
 
         this.#context.strokeStyle = ray.level <= 1 ? 'white' : 'red';
-        this.#context.lineWidth = 1;
+        this.#context.lineWidth = 2;
 
         this.#context.beginPath();
         this.#context.moveTo(source.x * this.scale, source.y * this.scale);
