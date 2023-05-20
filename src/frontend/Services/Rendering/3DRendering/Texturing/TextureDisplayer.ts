@@ -1,24 +1,25 @@
-import Service from "../../Service.js";
-import { Camera, camera } from "../../../utils/Camera.js";
-import textures from "../../../utils/Textures.js";
+import Service from '../../../Service.js';
+import textures from '../../../../utils/Textures.js'
 
+class TextureDisplayer extends Service{
 
-class Texturer extends Service{
-
-    #chief;
+    protected chief;
 
     constructor(chief){
         super();
-        this.#chief = chief;
-    }
+        this.chief = chief; 
+    };
 
     public executeAsSubordinate(info){
 
         let scale  = info.size.y / 1000;
         let height = 1000;
         let texture = textures.get('bricks');
-        let context = this.#chief.context;
-        let canvasHeight = this.#chief.canvas.height;
+
+        // TODO: Fix reference-chain antipattern: too many "chief" references chained
+
+        let context = this.chief.chief.context;
+        let canvasHeight = this.chief.chief.canvas.height;
         
         context.globalAlpha = info.opacity / (info.distance / 5) / 5;
         context.scale(1,scale);
@@ -40,4 +41,4 @@ class Texturer extends Service{
 
 }
 
-export default Texturer;
+export default TextureDisplayer;

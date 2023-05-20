@@ -102,7 +102,7 @@ class VariableCalculator extends Service{
              index--;
          }
 
-        // Mechanism to avoid infinite loop issue
+        // Mechanism to avoid infinite loop issue (just in extreme edge case)
 
         if(exec >= 100) throw Error('Binary Search went out of control');
     

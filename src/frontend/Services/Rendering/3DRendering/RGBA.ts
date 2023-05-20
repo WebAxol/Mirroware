@@ -3,11 +3,11 @@ import { Camera, camera } from "../../../utils/Camera.js";
 
 class RGBA extends Service{
 
-    #chief;
+    protected chief;
 
     constructor(chief){
         super();
-        this.#chief = chief;
+        this.chief = chief;
     }
 
     public executeAsSubordinate(info){
@@ -19,8 +19,8 @@ class RGBA extends Service{
 
     public renderRectangle(info){
 
-        let context     = this.#chief.context;
-        let canvasWidth = this.#chief.canvas.width;
+        let context     = this.chief.context;
+        let canvasWidth = this.chief.canvas.width;
 
         context.fillStyle = `rgba(10,0,0,${info.opacity})`;
         context.fillRect(
@@ -43,7 +43,7 @@ class RGBA extends Service{
 
     public renderHorizontalBorders(info){
 
-        let context = this.#chief.context;
+        let context = this.chief.context;
 
         context.strokeStyle = `red`;
         context.lineWidth = 30 / info.distance;

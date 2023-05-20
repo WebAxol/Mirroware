@@ -2,16 +2,16 @@ import Service from "../../Service.js";
 
 // subordinate modules
 
-import VariableCalculator from "./VariableCalculator.js";
+import Dimensioner from "./Dimensioner.js";
 import RGBA from "./RGBA.js";
-import Texturer from "./Texturer.js";
+import Texturer from "./Texturing/Orchestrator.js";
 
 class  SceneRenderer3D extends Service{
     
-    public canvas;
-    public context;
+    protected canvas;
+    protected context;
     
-    #variableCalculator;
+    #dimensioner;
     #rgba;
     #texturer;
 
@@ -22,9 +22,9 @@ class  SceneRenderer3D extends Service{
         this.canvas  = canvas;
         this.context = canvas.getContext('2d');
 
-        // subordinates
+        // subordinates (orchestrated services)
 
-        this.#variableCalculator = new VariableCalculator(this);
+        this.#dimensioner = new Dimensioner(this);
         this.#rgba = new RGBA(this);
         this.#texturer = new Texturer(this);
     }
@@ -38,7 +38,7 @@ class  SceneRenderer3D extends Service{
             this.context.fillStyle = 'brown';
             this.context.fillRect(0,0,this.canvas.width,this.canvas.height / 2);
     
-            this.#variableCalculator.executeAsSubordinate();
+            this.#dimensioner.executeAsSubordinate();
         }
         catch(err){
             console.error(err);
