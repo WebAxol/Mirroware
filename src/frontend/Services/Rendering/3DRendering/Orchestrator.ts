@@ -4,7 +4,7 @@ import Service from "../../Service.js";
 
 import Dimensioner from "./Dimensioner.js";
 import RGBA from "./RGBA.js";
-import Texturer from "./Texturing/Orchestrator.js";
+import Texturer from "./Texturer.js";
 
 class  SceneRenderer3D extends Service{
     
@@ -31,13 +31,18 @@ class  SceneRenderer3D extends Service{
 
     public execute(){
 
-        try{
-            this.context.fillStyle = 'rgba(0,0,0,1)';
-            this.context.fillRect(0,0,this.canvas.width,this.canvas.height);
+        // Render ceiling
+
+        this.context.fillStyle = 'rgba(0,0,0,1)';
+        this.context.fillRect(0,0,this.canvas.width,this.canvas.height);
+
+        // Render floor
     
-            this.context.fillStyle = 'brown';
-            this.context.fillRect(0,0,this.canvas.width,this.canvas.height / 2);
-    
+        this.context.fillStyle = 'brown';
+        this.context.fillRect(0,0,this.canvas.width,this.canvas.height / 2);
+
+
+        try{    
             this.#dimensioner.executeAsSubordinate();
         }
         catch(err){

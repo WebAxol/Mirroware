@@ -41,7 +41,10 @@ class Dimensioner extends Service{
             let leftTop  = { x : ((canvasWidth * index) / total), y : (canvasHeight / 2) - (canvasHeight) / adjustedDistance};
             let size     = { x : canvasWidth / total, y : (canvasHeight * 2) / adjustedDistance};
 
-            let info = {
+            // Create sceneChunck to render
+            // TODO : implement interpolation algorithm to split sceneChunck into more pixel columns
+
+            let sceneChunck = {
 
                 // Spatial and dimensional information
 
@@ -49,17 +52,17 @@ class Dimensioner extends Service{
                 size     : size,
                 distance : distance,
 
-                // Extra information which is required
+                // Information of item with which ray collided
 
-                color    : ray.collidesWith.color,
-                opacity  : ray.collidesWith.opacity
+                point    : ray.collidesAt,
+                item     : ray.collidesWith
             }
 
-            if(info.opacity < 1 && ray.reflected.getType){
+            if(sceneChunck.item.opacity < 1 && ray.reflected.getType){
                 _calculateDimensions(service,ray.reflected,distance, adjustment);
             }
 
-            service.chief._onvariablesCalculated(info); // Internal event notified to chief module
+            service.chief._onvariablesCalculated(sceneChunck); // Internal event notified to chief module
         }
     }
 }

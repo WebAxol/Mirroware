@@ -10,53 +10,64 @@ class RGBA extends Service{
         this.chief = chief;
     }
 
-    public executeAsSubordinate(info){
+    public executeAsSubordinate(sceneChunk){
 
-        this.renderRectangle(info);
-        this.renderHorizontalBorders(info);
+        this.renderRectangle(sceneChunk);
+        this.renderHorizontalBorders(sceneChunk);
 
     }
 
-    public renderRectangle(info){
+    public renderRectangle(sceneChunk){
+
+        // We take into account the properties of the "item" with which the ray collides to render each column
 
         let context     = this.chief.context;
         let canvasWidth = this.chief.canvas.width;
 
-        context.fillStyle = `rgba(10,0,0,${info.opacity})`;
+        // Black opaque background to avoid transparent walls
+
+        context.fillStyle = `rgba(10,0,0,${sceneChunk.item.opacity})`;
+        
         context.fillRect(
-            info.leftTop.x,
-            info.leftTop.y,
+            sceneChunk.leftTop.x,
+            sceneChunk.leftTop.y,
             canvasWidth / camera.rays.length,
-            info.size.y
+            sceneChunk.size.y
         );
 
-        if(!info.color) return;
-        
-        context.fillStyle = `rgba(${info.color}, ${info.opacity / ((info.distance * 5) / 15)}`;
+        // Render wall with its color (if it has)
+
+        if(!sceneChunk.item.color) return;
+
+        context.fillStyle = `rgba(${sceneChunk.item.color}, ${sceneChunk.item.opacity / ((sceneChunk.distance * 5) / 15)}`;
         context.fillRect(
-            info.leftTop.x,
-            info.leftTop.y, 
+            sceneChunk.leftTop.x,
+            sceneChunk.leftTop.y, 
             canvasWidth / camera.rays.length,
-            info.size.y
+            sceneChunk.size.y
         );
     }
 
-    public renderHorizontalBorders(info){
+    public renderHorizontalBorders(sceneChunk){
 
         let context = this.chief.context;
 
         context.strokeStyle = `red`;
-        context.lineWidth = 30 / info.distance;
+        context.lineWidth = 30 / sceneChunk.distance;
         
+        // Top border
+
         context.beginPath();
-        context.moveTo( info.leftTop.x,info.leftTop.y);
-        context.lineTo( info.leftTop.x + info.size.x, info.leftTop.y);
+        context.moveTo( sceneChunk.leftTop.x,sceneChunk.leftTop.y);
+        context.lineTo( sceneChunk.leftTop.x + sceneChunk.size.x, sceneChunk.leftTop.y);
         context.closePath();
         context.stroke();
 
+        // Bottom border
+
         context.beginPath();
-        context.moveTo( info.leftTop.x, (info.leftTop.y + info.size.y));
-        context.lineTo( info.leftTop.x + info.size.x, (info.leftTop.y + info.size.y));
+        context.moveTo( sceneChunk.leftTop.x, (sceneChunk.leftTop.y + sceneChunk.size.y));
+        context.lineTo( sceneChunk.leftTop.x + sceneChunk.size.x, (sceneChunk.leftTop.y + sceneChunk.size.y));
         context.closePath();
         context.stroke();
 
