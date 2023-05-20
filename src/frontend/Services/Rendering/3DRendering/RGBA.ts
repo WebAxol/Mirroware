@@ -3,60 +3,71 @@ import { Camera, camera } from "../../../utils/Camera.js";
 
 class RGBA extends Service{
 
-    #chief;
+    protected chief;
 
     constructor(chief){
         super();
-        this.#chief = chief;
+        this.chief = chief;
     }
 
-    public executeAsSubordinate(info){
+    public executeAsSubordinate(sceneChunk){
 
-        this.renderRectangle(info);
-        this.renderHorizontalBorders(info);
+        this.renderRectangle(sceneChunk);
+        this.renderHorizontalBorders(sceneChunk);
 
     }
 
-    public renderRectangle(info){
+    public renderRectangle(sceneChunk){
 
-        let context     = this.#chief.context;
-        let canvasWidth = this.#chief.canvas.width;
+        // We take into account the properties of the "item" with which the ray collides to render each column
 
-        context.fillStyle = `rgba(10,0,0,${info.opacity})`;
-        context.fillRect(
-            info.leftTop.x,
-            info.leftTop.y,
-            canvasWidth / camera.rays.length,
-            info.size.y
-        );
+        let context     = this.chief.context;
+        let canvasWidth = this.chief.canvas.width;
 
-        if(!info.color) return;
+        // Black opaque background to avoid transparent walls
+
+        context.fillStyle = `rgba(10,0,0,${sceneChunk.item.opacity})`;
         
-        context.fillStyle = `rgba(${info.color}, ${info.opacity / ((info.distance * 5) / 15)}`;
         context.fillRect(
-            info.leftTop.x,
-            info.leftTop.y, 
+            sceneChunk.leftTop.x,
+            sceneChunk.leftTop.y,
             canvasWidth / camera.rays.length,
-            info.size.y
+            sceneChunk.size.y
+        );
+
+        // Render wall with its color (if it has)
+
+        if(!sceneChunk.item.color) return;
+
+        context.fillStyle = `rgba(${sceneChunk.item.color}, ${sceneChunk.item.opacity / ((sceneChunk.distance * 5) / 15)}`;
+        context.fillRect(
+            sceneChunk.leftTop.x,
+            sceneChunk.leftTop.y, 
+            canvasWidth / camera.rays.length,
+            sceneChunk.size.y
         );
     }
 
-    public renderHorizontalBorders(info){
+    public renderHorizontalBorders(sceneChunk){
 
-        let context = this.#chief.context;
+        let context = this.chief.context;
 
         context.strokeStyle = `red`;
-        context.lineWidth = 30 / info.distance;
+        context.lineWidth = 30 / sceneChunk.distance;
         
+        // Top border
+
         context.beginPath();
-        context.moveTo( info.leftTop.x,info.leftTop.y);
-        context.lineTo( info.leftTop.x + info.size.x, info.leftTop.y);
+        context.moveTo( sceneChunk.leftTop.x,sceneChunk.leftTop.y);
+        context.lineTo( sceneChunk.leftTop.x + sceneChunk.size.x, sceneChunk.leftTop.y);
         context.closePath();
         context.stroke();
 
+        // Bottom border
+
         context.beginPath();
-        context.moveTo( info.leftTop.x, (info.leftTop.y + info.size.y));
-        context.lineTo( info.leftTop.x + info.size.x, (info.leftTop.y + info.size.y));
+        context.moveTo( sceneChunk.leftTop.x, (sceneChunk.leftTop.y + sceneChunk.size.y));
+        context.lineTo( sceneChunk.leftTop.x + sceneChunk.size.x, (sceneChunk.leftTop.y + sceneChunk.size.y));
         context.closePath();
         context.stroke();
 

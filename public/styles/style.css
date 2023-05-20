@@ -18,7 +18,7 @@ body{
 header{
     background: black;
     position: relative;
-    min-height: 1500px;
+    min-height: 3000px;
     
 }
 
@@ -55,7 +55,7 @@ canvas{
     position: absolute;
     top: 0;
     width: 100%;
-    min-height: 500px;
+    min-height: 1000px;
     background-color: rgba(180, 0, 0, 0.2);
     background: linear-gradient(0deg, rgba(0,0,0,0.2) 0%, rgba(9,50,9,0.2) 54%, rgba(0,212,255,0.5) 100%);
     padding: 50px;
@@ -81,7 +81,7 @@ canvas{
 .alertbox{
     transition: all 0.3s;
     border: double 5px orange;
-    border-radius: 0px;
+    border-radius: px;
     padding: 10px;
     background-color: rgba(orange,0.5);
     text-align: center;

@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="./styles/style.css">
     <link rel="stylesheet" href="./styles/bootstrap/bootstrap-5.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet"/>
+
     <title>Mirroware</title>
+    
 </head>
 <body>
     <header>
@@ -46,13 +48,16 @@
                         <p class="credit text-light text-center mt-4">
                             Created by 
                             <b class="text-warning">🌵Gabriel R. Fuente</b>: alias 
-                            <b class="text-danger">WebAxol 🐙</b>, <br> also as 
+                            <b class="text-danger">WebAxol ᕒ(^-^)ᓬ</b>, <br> also as 
                             <b class="text-success">@TheFractaLab 🔥</b>.
                         </p>
                         
                         <div class="social text-center">
                             <a target="_blank" href="https://github.com/WebAxol" class="social-link">
-                                <i class="fab fa-solid fa-github mx-3"></i></a>
+
+                                <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="My Projects">
+                                    <i class="fab fa-solid fa-github mx-3"></i></a>
+                                </span>
 
                             <a href="https://www.instagram.com/thefractalab/" class="social-link">
                                 <i class="fab fa-brands fa-instagram mx-3"></i></a>
@@ -65,7 +70,7 @@
             </div>
         </section>
     </header>
- 
+    
     <script type="module" src="./Mirroware.js"></script>
     <script>
 
@@ -81,7 +86,6 @@
 
 
             document.querySelector('.upperLayer .container').style.transform = `rotateX(${-offsetY}deg) rotateY(${offsetX}deg)`;
-            console.log(sense2);
         });
 
     </script>

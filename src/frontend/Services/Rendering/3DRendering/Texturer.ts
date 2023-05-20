@@ -1,43 +1,63 @@
-import Service from "../../Service.js";
-import { Camera, camera } from "../../../utils/Camera.js";
-import textures from "../../../utils/Textures.js";
+import Service from '../../Service.js';
+import textures from '../../../utils/Textures.js'
 
+class TextureDisplayer extends Service{
 
-class Texturer extends Service{
-
-    #chief;
+    protected chief;
 
     constructor(chief){
         super();
-        this.#chief = chief;
-    }
+        this.chief = chief; 
+    };
 
     public executeAsSubordinate(info){
 
         let scale  = info.size.y / 1000;
         let height = 1000;
         let texture = textures.get('bricks');
-        let context = this.#chief.context;
-        let canvasHeight = this.#chief.canvas.height;
+        let percentage :number = this.mapTexture(info);
+
+
+        let context = this.chief.context;
+        let canvasHeight = this.chief.canvas.height;
         
-        context.globalAlpha = info.opacity / (info.distance / 5) / 5;
+        context.globalAlpha = info.item.opacity / (info.distance / 10) / 5;
         context.scale(1,scale);
             
         context.drawImage(
            texture,
-            (info.leftTop.x / 2) % 400,
+            (percentage * 400) % 390,
             0,                 
-            5,                  
+            10,                  
             400,                
             info.leftTop.x,
             ((canvasHeight / 2) / scale) - (height / 2),
-            15,                 
+            3000 / 300,                 
             height
         );
 
         context.scale(1, 1 / scale);
     }
 
+    public mapTexture(info) :number{
+
+        let percentage :number = 0;
+
+        if(info.item.getType() === 'HorizontalWall'){
+
+            let wallLength = info.item.endX - info.item.startX;
+            percentage = Math.abs(((info.point.x - info.item.startX) / (wallLength / 5)) % 1);
+        }
+
+        else if(info.item.getType() === 'VerticalWall'){
+
+            let wallLength = info.item.endY - info.item.startY;
+            percentage = Math.abs((info.point.y - info.item.startY) / (wallLength / 5) % 1);
+        }
+
+        return percentage;
+    }
+
 }
 
-export default Texturer;
+export default TextureDisplayer;

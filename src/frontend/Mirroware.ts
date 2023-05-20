@@ -7,11 +7,11 @@ import { Camera, camera } from './utils/Camera.js';
 // TODO: create abstraction layer to lessen the work of building scenes; for now, we'll imperatively define everything
 // Justification: feasability is a priority; In the future, the project can be enhanced
 
-// First, create a ray array - TODO: Make a more easy and safe way of defining rays with theur raysources
+// First, create an array containing rays - TODO: Make an easier and safer way of defining rays with their raysources
 
 
 
-const n = 200;
+const n = 300;
 
 for(let i : number = 0; i < n; i++){
     let ray = app.createAgent('Ray',{
@@ -27,8 +27,10 @@ for(let i : number = 0; i < n; i++){
 
 
 // Create a simple scene (composed by horizontal and vertical walls);
+// [from, to, opacity, color]
 
-const testScene = [
+const testScene = [ // This is just a template to instance the required walls
+
     [[5,5],[5,25],   1, '0,255,0'],
     [[5, 5],[25, 5], 0.1, '0,255,100'],
     [[5, 7],[7, 7],  1, '0,255,100'],
@@ -75,7 +77,7 @@ function buildScene(app, scene : Object[]){
 
     function buildHorizontalWall(vertexA,vertexB,opacity,color){
 
-          // Warning: Hardcoded app referencep
+          // Warning: Hardcoded app reference
 
         let wall = app.createAgent('HorizontalWall',{
             info : {
