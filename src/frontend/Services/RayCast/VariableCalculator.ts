@@ -1,35 +1,26 @@
 import Service from "../Service.js";
 import World from '/cases/World.js';
 import { Camera, camera } from '../../utils/Camera.js';
+import { Ray } from '../../setUp/agentTypes.js';
 
 class VariableCalculator extends Service{
 
-    #chief : Service;
+    protected chief : Service;
 
     constructor(chief){
         super();
-        this.#chief = chief;
+        this.chief = chief;
     }
 
     public execute() {
 
+        let rays :Ray[] = camera.rays;
 
-        let rays = camera.rays;
-
-        // Input check
-
-        if(typeof rays != 'object'){
-            throw Error('Invalid ray array specified for raySource');
-        }
-
-        //
-
-        rays.forEach(ray => {
+        rays.forEach((ray :Ray) => {
             this.calculateRayProperties(camera.pos,ray);
         });
 
         this.getIndicesOfClosestBefore(camera);
-
 
         return true;
     };
@@ -37,15 +28,10 @@ class VariableCalculator extends Service{
      // Get the index of the closest wall thea appears before the source in relation to an axis
      // WARNING - we are assuming that wall collections are properly sorted
 
-    public getIndicesOfClosestBefore(source){
+    public getIndicesOfClosestBefore(source :Camera){
 
-
-        // Defensive input check
-
-        //
-
-        const verticalWalls   = this.#chief.world.getCollection('VerticalWalls');
-        const horizontalWalls = this.#chief.world.getCollection('HorizontalWalls');
+        const verticalWalls   = this.chief.world.getCollection('VerticalWalls');
+        const horizontalWalls = this.chief.world.getCollection('HorizontalWalls');
 
         // get closest vertical wall's index before source - binary search
 
@@ -56,7 +42,6 @@ class VariableCalculator extends Service{
         // get closest horizontal wall's index before source - binary search
 
         let yPositions = horizontalWalls.map((wall) =>  wall.posY );
-        
         
         source.wallIndices.horizontal = this.BinarySearchForClosestSmaller(yPositions,source.pos.y);
 
@@ -95,13 +80,10 @@ class VariableCalculator extends Service{
             };
             
             inBetweenIndex  = Math.ceil((leftIndex + rightIndex) / 2);
-   
         }
 
-         while(arr[index] >= value){
-             index--;
-         }
-
+         while(arr[index] >= value) index--;
+         
         // Mechanism to avoid infinite loop issue (just in extreme edge case)
 
         if(exec >= 100) throw Error('Binary Search went out of control');
@@ -109,40 +91,16 @@ class VariableCalculator extends Service{
         return index;
     }
 
-    public calculateRaySlope(ray) {
-
-        // Input check
-
-        if(typeof ray.slope != 'number' || typeof ray.degree != 'number'){ 
-            throw Error('Invalid argument passed as ray');
-        }
-
-        //
-
+    public calculateRaySlope(ray :Ray) {
         let degrees = ((ray.degree / 180) * Math.PI);
         ray.slope   = Math.sin(degrees) / Math.cos(degrees);
-        
     }
 
-    public calculateRayYIntercept(pos,ray){
-
-        // Input check
-
-        if(typeof ray.YIntercept != 'number'){
-            throw Error('Invalid argument passed as ray');
-        }
-
-        //
-
+    public calculateRayYIntercept(pos :{ x : number, y :number},ray :Ray){
         ray.YIntercept = pos.y - (ray.slope * pos.x);
-
     }
 
-    public calculateDegreeFromSlope(ray){
-        
-    }
-
-    public calculateRayEnding(pos,ray){    
+    public calculateRayEnding(pos :{ x : number, y :number},ray :Ray){    
 
         let degrees = ((ray.degree / 180) * Math.PI);
 
@@ -151,7 +109,7 @@ class VariableCalculator extends Service{
 
     }
     
-    calculateRayProperties(source,ray){
+    public calculateRayProperties(source :{ x : number, y :number} ,ray :Ray){
 
         if(ray.degree < 0) this.handleNegativeDegrees(ray);
 
@@ -160,7 +118,7 @@ class VariableCalculator extends Service{
         this.calculateRayEnding(source,ray);
     }
 
-    public handleNegativeDegrees(ray){
+    public handleNegativeDegrees(ray :Ray){
         if(ray.degree < 0){
             ray.degree = Math.abs(ray.degree % -360) + 90;
         }

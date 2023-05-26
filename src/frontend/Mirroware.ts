@@ -10,7 +10,6 @@ import { Camera, camera } from './utils/Camera.js';
 // First, create an array containing rays - TODO: Make an easier and safer way of defining rays with their raysources
 
 
-
 const n = 300;
 
 for(let i : number = 0; i < n; i++){
@@ -24,15 +23,13 @@ for(let i : number = 0; i < n; i++){
     camera.rays.push(ray);
 }
 
-
-
 // Create a simple scene (composed by horizontal and vertical walls);
 // [from, to, opacity, color]
 
 const testScene = [ // This is just a template to instance the required walls
 
     [[5,5],[5,25],   1, '0,255,0'],
-    [[5, 5],[25, 5], 0.1, '0,255,100'],
+    [[5, 5],[25, 5], 0.5, '0,255,100'],
     [[5, 7],[7, 7],  1, '0,255,100'],
     [[7, 5],[7, 7],  1, '0,255,200'],
     [[7, 15],[7, 20],  0.1, '0,155,200'],

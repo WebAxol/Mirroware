@@ -2,7 +2,7 @@
 class Camera{
 
     public pos         : { x : number, y : number };
-    public wallIndices : Object;
+    public wallIndices : { vertical : number, horizontal : number};
     public rays        : any[];
 
     constructor(pos){

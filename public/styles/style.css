@@ -39,6 +39,7 @@ canvas{
     top: 0;
 }
 
+
 #canvas2d {
     position: absolute;
     border: double red 5px;
@@ -47,8 +48,18 @@ canvas{
     right: 5px;
     width: 20%;
     height: auto;
-    opacity: 0.8;
+    opacity: 0.9;
 }
+
+.upper-effect {
+    left: 0;
+    top: 0;
+    position: absolute;
+    width: 100%;
+    min-height: 100vh;
+    /*background: radial-gradient(transparent, rgba(255, 0, 0, 0.9));
+    */backdrop-filter: blur(0px);
+  }
 
 .upperLayer{
     z-index: 1;
@@ -57,9 +68,10 @@ canvas{
     width: 100%;
     min-height: 1000px;
     background-color: rgba(180, 0, 0, 0.2);
-    background: linear-gradient(0deg, rgba(0,0,0,0.2) 0%, rgba(9,50,9,0.2) 54%, rgba(0,212,255,0.5) 100%);
-    padding: 50px;
+    /*background: linear-gradient(0deg, rgba(0,0,0,0.2) 0%, rgba(9,50,9,0.2) 34%, rgba(33, 214, 251, 0.8) 100%);
+    */padding: 50px;
 }
+
 
 .upperLayer h1{
     transition: all 0.3s;
@@ -69,9 +81,6 @@ canvas{
     font-family: PoiretOne;
     font-weight: lighter;
     text-shadow: 1px 1px 10px white;
-    animation: blink;
-    animation-duration: 3s;
-    animation-iteration-count: infinite;
 }
 
 .upperLayer h1 span{
