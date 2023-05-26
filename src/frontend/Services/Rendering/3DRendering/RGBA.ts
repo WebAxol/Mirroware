@@ -31,7 +31,7 @@ class RGBA extends Service{
         context.fillRect(
             sceneChunk.leftTop.x,
             sceneChunk.leftTop.y,
-            canvasWidth / camera.rays.length,
+            sceneChunk.size.x,
             sceneChunk.size.y
         );
 
@@ -43,7 +43,7 @@ class RGBA extends Service{
         context.fillRect(
             sceneChunk.leftTop.x,
             sceneChunk.leftTop.y, 
-            canvasWidth / camera.rays.length,
+            sceneChunk.size.x,
             sceneChunk.size.y
         );
     }

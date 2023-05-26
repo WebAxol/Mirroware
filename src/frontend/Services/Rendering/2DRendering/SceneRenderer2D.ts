@@ -19,10 +19,13 @@ class SceneRenderer2D extends Service{
 
         this.#context.fillStyle = 'rgba(0,0,0,1)';
         this.#context.fillRect(0,0,3000,3000);
-
+        /*
         camera.rays.forEach(ray => {
             this.renderRay(ray,camera.pos);
         });
+        */
+
+        this.renderRay(camera.rays[Math.floor(camera.rays.length / 2)],camera.pos);
 
         horizontalWalls.forEach(wall => {
             this.renderWall(wall);
@@ -54,7 +57,7 @@ class SceneRenderer2D extends Service{
         }
 
         this.#context.strokeStyle = ray.level <= 1 ? 'white' : 'red';
-        this.#context.lineWidth = 5;
+        this.#context.lineWidth = 10;
 
         this.#context.beginPath();
         this.#context.moveTo(source.x * this.scale, source.y * this.scale);

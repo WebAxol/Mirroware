@@ -34,27 +34,30 @@ const verticalWallPrototype :VerticalWall = {
     opacity: 1
 }
 
+
 // Ray
 
 interface Ray {
+
     active     : boolean,
     level      : number,
     source     : Object,
     degree     : number,
     slope      : number,
     YIntercept : number,
-    collidesAt : Object,
-    collidesWith : Object,
+    collidesAt : { x : number, y : number},
+    collidesWith : VerticalWall | HorizontalWall | undefined,
 
     // Children nodes
 
     reflected  : Object,
-    refracted  : Object
+    refracted  : Object,
 
     // product/source duality - A ray has a source but can be the source of other ones
 
     wallIndices : Object
 }
+
 
 const rayPrototype :Ray = {
     active      : true,
@@ -64,7 +67,7 @@ const rayPrototype :Ray = {
     slope       : NaN,
     YIntercept  : NaN,
     collidesAt  : { x : NaN, y : NaN},
-    collidesWith: {},
+    collidesWith: undefined,
     reflected   : {},
     refracted   : {},
 
@@ -84,5 +87,6 @@ const agentTypes : Object = {
     'Ray'            : {'info' : rayPrototype}
 };
 
+export { Ray, VerticalWall, HorizontalWall }
 export default agentTypes;
 
