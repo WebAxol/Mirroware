@@ -34,7 +34,6 @@ const verticalWallPrototype :VerticalWall = {
     opacity: 1
 }
 
-
 // Ray
 
 interface Ray {
@@ -50,14 +49,13 @@ interface Ray {
 
     // Children nodes
 
-    reflected  : Object,
-    refracted  : Object,
+    reflected  : {} | Ray,
+    refracted  : {} | Ray,
 
     // product/source duality - A ray has a source but can be the source of other ones
 
-    wallIndices : Object
+    wallIndices : { horizontal : number, vertical : number}
 }
-
 
 const rayPrototype :Ray = {
     active      : true,
@@ -70,13 +68,8 @@ const rayPrototype :Ray = {
     collidesWith: undefined,
     reflected   : {},
     refracted   : {},
-
-    wallIndices : { 
-        horizontal : NaN, 
-        vertical   : NaN 
-    }
+    wallIndices : { horizontal : NaN, vertical   : NaN }
 }
-
 
 // Integrated agentTypes 
 

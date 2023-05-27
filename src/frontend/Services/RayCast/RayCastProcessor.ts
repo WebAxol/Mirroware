@@ -22,18 +22,25 @@ class RayCastProcessor extends Service {
 
     public castRay(pos, ray : any, indices : { horizontal :number, vertical : number }){
 
+        if(ray.reflected) ray.reflected.active = false;
+
         let newHorizontalIndex = this.testAgainstHorizontalWalls(ray,indices.horizontal);
         let newVerticalIndex   = this.testAgainstVerticalWalls(ray,indices.vertical);
+      
+        // new indices imply that the ray has collided, and viceversa
 
-        let newIndices =  { 
-            vertical  : (newVerticalIndex   === false ) ? indices.vertical   : newVerticalIndex, 
-            horizontal: (newHorizontalIndex === false ) ? indices.horizontal : newHorizontalIndex
-        };
+        if(newHorizontalIndex == false && newVerticalIndex == false) return false;
 
-        if((newHorizontalIndex !== false || newVerticalIndex !== false) && (ray.collidesWith.opacity < 1) && ray.level < 10){
+        // Ray has collided; will reflection occur?
 
-            let isClosestHorizontal = ray.collidesWith.getType() == 'HorizontalWall';
-            let angleAdd = isClosestHorizontal ? 360 : 180;
+        if((ray.collidesWith.opacity < 1) && ray.level < 10){
+              
+            let newIndices =  { 
+                vertical  : (newVerticalIndex   === false ) ? indices.vertical   : newVerticalIndex, 
+                horizontal: (newHorizontalIndex === false ) ? indices.horizontal : newHorizontalIndex
+            };
+
+            let angleAdd = (ray.collidesWith.getType() == 'HorizontalWall') ? 360 : 180;
 
             if(!ray.reflected.getType){
 
@@ -50,10 +57,6 @@ class RayCastProcessor extends Service {
 
             this.#chief.calculateRayProperties(ray.collidesAt,ray.reflected);
             this.castRay(ray.collidesAt,ray.reflected,newIndices);
-
-        }else{
-            if(ray.reflected) ray.reflected.active = false;
-            
         }
     }
 
