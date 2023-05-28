@@ -4,6 +4,7 @@ import VariableCalculator from './VariableCalculator.js';
 import { Camera, camera } from '../../utils/Camera.js';
 import { Ray } from "../../setUp/agentTypes.js";
 import Service from "../Service.js";
+import World from '/cases/World.js';
 
 class RayCastProcessor extends Service {
     
@@ -17,7 +18,13 @@ class RayCastProcessor extends Service {
     public execute() {
 
         let rays :Ray[] = camera.rays;
-        for(let i = 0; i < rays.length; i++) this.castRay(camera.pos , rays[i] , camera.wallIndices);
+
+        camera.sceneModel.purge();
+
+        for(let i = 0; i < camera.rays.length; i++) this.castRay(camera.pos , rays[i] , camera.wallIndices);
+
+        //this.#chief.world.pauseExecution();
+
     }
 
     public castRay(pos, ray : any, indices : { horizontal :number, vertical : number }){
@@ -29,7 +36,18 @@ class RayCastProcessor extends Service {
       
         // new indices imply that the ray has collided, and viceversa
 
-        if(newHorizontalIndex == false && newVerticalIndex == false) return false;
+        try{
+            camera.sceneModel.update(ray);
+        }catch(err){
+            console.error(err);
+            console.log(ray)
+            console.log(camera.sceneModel);
+
+            this.#chief.world.pauseExecution();
+
+        }
+
+        if(newHorizontalIndex == false && newVerticalIndex == false) return false; // No collision
 
         // Ray has collided; will reflection occur?
 
@@ -50,6 +68,8 @@ class RayCastProcessor extends Service {
                 reflectedRay.level  = ray.level + 1;
                 ray.reflected = reflectedRay;
             }
+
+            // Prepare reflected ray and cast recursively
 
             ray.reflected.active = true;
             ray.reflected.degree = (angleAdd - ray.degree);
