@@ -4,6 +4,7 @@ import VariableCalculator from './VariableCalculator.js';
 import { Camera, camera } from '../../utils/Camera.js';
 import { Ray } from "../../setUp/agentTypes.js";
 import Service from "../Service.js";
+import World from '/cases/World.js';
 
 class RayCastProcessor extends Service {
     
@@ -17,23 +18,47 @@ class RayCastProcessor extends Service {
     public execute() {
 
         let rays :Ray[] = camera.rays;
-        for(let i = 0; i < rays.length; i++) this.castRay(camera.pos , rays[i] , camera.wallIndices);
+
+        camera.sceneModel.purge();
+
+        for(let i = 0; i < camera.rays.length; i++) this.castRay(camera.pos , rays[i] , camera.wallIndices);
+
+        //this.#chief.world.pauseExecution();
+
     }
 
     public castRay(pos, ray : any, indices : { horizontal :number, vertical : number }){
 
+        if(ray.reflected) ray.reflected.active = false;
+
         let newHorizontalIndex = this.testAgainstHorizontalWalls(ray,indices.horizontal);
         let newVerticalIndex   = this.testAgainstVerticalWalls(ray,indices.vertical);
+      
+        // new indices imply that the ray has collided, and viceversa
 
-        let newIndices =  { 
-            vertical  : (newVerticalIndex   === false ) ? indices.vertical   : newVerticalIndex, 
-            horizontal: (newHorizontalIndex === false ) ? indices.horizontal : newHorizontalIndex
-        };
+        try{
+            camera.sceneModel.update(ray);
+        }catch(err){
+            console.error(err);
+            console.log(ray)
+            console.log(camera.sceneModel);
 
-        if((newHorizontalIndex !== false || newVerticalIndex !== false) && (ray.collidesWith.opacity < 1) && ray.level < 10){
+            this.#chief.world.pauseExecution();
 
-            let isClosestHorizontal = ray.collidesWith.getType() == 'HorizontalWall';
-            let angleAdd = isClosestHorizontal ? 360 : 180;
+        }
+
+        if(newHorizontalIndex == false && newVerticalIndex == false) return false; // No collision
+
+        // Ray has collided; will reflection occur?
+
+        if((ray.collidesWith.opacity < 1) && ray.level < 10){
+              
+            let newIndices =  { 
+                vertical  : (newVerticalIndex   === false ) ? indices.vertical   : newVerticalIndex, 
+                horizontal: (newHorizontalIndex === false ) ? indices.horizontal : newHorizontalIndex
+            };
+
+            let angleAdd = (ray.collidesWith.getType() == 'HorizontalWall') ? 360 : 180;
 
             if(!ray.reflected.getType){
 
@@ -44,16 +69,14 @@ class RayCastProcessor extends Service {
                 ray.reflected = reflectedRay;
             }
 
+            // Prepare reflected ray and cast recursively
+
             ray.reflected.active = true;
             ray.reflected.degree = (angleAdd - ray.degree);
             ray.wallIndices = newIndices;
 
             this.#chief.calculateRayProperties(ray.collidesAt,ray.reflected);
             this.castRay(ray.collidesAt,ray.reflected,newIndices);
-
-        }else{
-            if(ray.reflected) ray.reflected.active = false;
-            
         }
     }
 

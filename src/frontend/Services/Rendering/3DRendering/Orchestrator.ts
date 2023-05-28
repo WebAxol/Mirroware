@@ -14,6 +14,7 @@ class  SceneRenderer3D extends Service{
     #dimensioner;
     #rgba;
     #texturer;
+    #modelPurger;
 
     constructor(canvas){
 
