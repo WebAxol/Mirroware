@@ -21,7 +21,7 @@ Features to be implemented:
 
 <h3>Technical considerations</h3>
 
-- Implemented with <a href="https://github.com/WebAxol/CASES" >CASES.js</a> framework
+- Implemented with <a href="https://github.com/WebAxol/PlugLightJS" >PlugLightJS</a> framework
     - Offers a microkernel architecture
     - Easy to integrate new services/systems
     - Can be a good base to make a new project
