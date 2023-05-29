@@ -18,11 +18,8 @@ class Dimensioner extends Service{
  
         const sceneModel = camera.sceneModel;
 
-        for(let l = sceneModel.layers.length - 1; l >= 0; l--){
-
-            sceneModel[l].forEach(sceneChunk => {
-                this.calculateChunkDimensions(sceneChunk);
-            });
+        for(let l = 0; l >= 0; l--){
+            sceneModel.layers[l].forEach(sceneChunk => { this.calculateChunkDimensions(sceneChunk); });
         }
     }
 
@@ -39,9 +36,9 @@ class Dimensioner extends Service{
         let from :Ray = sceneChunk.from;
         let to   :Ray = sceneChunk.to;
 
-        function calculateRayDetails(ray, prevDistance :number = 0, adjustment :number = 1){
+        function _calculateCorner(ray, prevDistance :number = 0, adjustment :number = 1){
 
-            let index     = Math.floor(ray.degree / camera.rays[camera.rays.length - 1].degree) * camera.rays.length;
+            let index     = Math.floor((ray.degree - camera.rays[0].degree) / (camera.rays[camera.rays.length - 1].degree - camera.rays[0].degree) * camera.rays.length);
             let distanceX = Math.abs(Math.abs(ray.collidesAt.x) - Math.abs(ray.source.pos ? ray.source.pos.x : ray.source.collidesAt.x));
             let distanceY = Math.abs(Math.abs(ray.collidesAt.y) - Math.abs(ray.source.pos ? ray.source.pos.y : ray.source.collidesAt.y));
             let distance  = Math.hypot(distanceX,distanceY) + prevDistance;
@@ -51,31 +48,32 @@ class Dimensioner extends Service{
             adjustment = adjustment || Math.cos(Math.abs((Math.abs(cameraDegree - ray.degree) / 180) * Math.PI));
             let adjustedDistance = distance * adjustment;
 
-            let rayDetails = {
-                leftTop : { x : ((canvasWidth * index) / bruteTotal), y : (canvasHeight / 2) - (canvasHeight) / adjustedDistance},
-                size    : { x : canvasWidth / netTotal, y : (canvasHeight * 2) / adjustedDistance }
+            let corner = { 
+                x : ((canvasWidth * index) / bruteTotal), 
+                y : (canvasHeight / 2) - (canvasHeight) / adjustedDistance,
+                h : (canvasHeight * 2) / adjustedDistance
             }
-
-            return rayDetails;
+            
+            return corner;
         }
+
+        let startCorner = _calculateCorner(from);
+        let endCorner   = _calculateCorner(to);
+        let columns :number = 5;
 
         sceneChunk.details = {
 
-            initial : {
-                leftTop : {}
+            start : startCorner,
+            change  : { 
+                x : (endCorner.x - startCorner.x) / columns, 
+                y : (endCorner.y - startCorner.y) / columns, 
+                h : (endCorner.h - startCorner.h) / columns
             },
-            change : {
-                leftTop : {}
-            },
-
-            columns : NaN
+            columns : columns
         };
-    }
 
-    public interpolateDetails(detailA,detailB){
-        
+        console.log(sceneChunk.details);
     }
-
 }
 
 export default Dimensioner;
