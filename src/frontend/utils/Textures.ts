@@ -4,7 +4,7 @@ class Textures {
     
     #textures = {};
 
-    public add(textureName : string ,src : string) : boolean { // add Texture
+    public addTexture(textureName : string ,src : string) : boolean {
 
         if(typeof textureName !== 'string' || !textureName){
             throw Error(`Invalid texture name given, it must be a non-empty string`);
@@ -28,7 +28,7 @@ class Textures {
         return true;
     }
 
-    public remove(textureName : string) : boolean { // remove Texture
+    public removeTexture(textureName : string) : boolean { // remove Texture
 
         if(!this.#textures[textureName]){
             return false;
@@ -39,7 +39,7 @@ class Textures {
         return true;
     }
 
-    public get(textureName : string){ // get Texture
+    public getTexture(textureName : string){ // get Texture
 
         if(!this.#textures[textureName]){
             return false;
@@ -55,7 +55,7 @@ const textures = new Textures();
 
 // add Textures to 'textures' : textures.add(textureName,src);
 
-textures.add('bricks','bricks.png');
+textures.addTexture('bricks','bricks.png');
 
 //
 

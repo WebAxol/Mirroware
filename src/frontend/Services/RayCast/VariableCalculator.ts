@@ -1,5 +1,5 @@
 import Service from "../Service.js";
-import World from '/cases/World.js';
+import World from '/pluglightjs/World.js';
 import { Camera, camera } from '../../utils/Camera.js';
 import { Ray } from '../../setUp/agentTypes.js';
 
@@ -69,6 +69,7 @@ class VariableCalculator extends Service{
             if(arr[inBetweenIndex] < value){
                 leftIndex = inBetweenIndex;
             }
+            
             else if(arr[inBetweenIndex] > value){
                 rightIndex = inBetweenIndex;
                 index = rightIndex;

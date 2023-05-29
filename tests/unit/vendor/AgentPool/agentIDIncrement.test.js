@@ -1,6 +1,6 @@
 "use strict";
 
-import AgentPool from "../../../../vendor/cases/AgentPool.js";
+import AgentPool from "../../../../vendor/pluglightjs/AgentPool.js";
 const agentPool = new AgentPool({});
 
 agentPool.registerType('dummy',{'info' : {}});

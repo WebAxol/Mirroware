@@ -14,7 +14,7 @@ class TextureDisplayer extends Service{
 
         let scale  = info.size.y / 1000;
         let height = 1000;
-        let texture = textures.get('bricks');
+        let texture = textures.getTexture('bricks');
         let percentage :number = this.mapTexture(info);
 
 
