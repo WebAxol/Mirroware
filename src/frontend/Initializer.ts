@@ -1,4 +1,4 @@
-import World from "/cases/World.js";
+import World from "/pluglightjs/World.js";
 import Service from "./Services/Service.js";
 import {appSetUp, SetUp} from "./setUp/setUp.js";
 

@@ -1,5 +1,5 @@
 import Service from "../Service.js";
-import World from '/cases/World.js';
+import World from '/pluglightjs/World.js';
 import { Camera, camera } from '../../utils/Camera.js';
 import { Ray } from '../../setUp/agentTypes.js';
 

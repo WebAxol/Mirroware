@@ -1,6 +1,3 @@
-import e from "express";
-import { HorizontalWall, Ray, VerticalWall } from "../setUp/agentTypes";
-
 class SceneModel {
 
     protected layers  :any[];
