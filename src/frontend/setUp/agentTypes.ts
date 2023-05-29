@@ -46,11 +46,7 @@ interface Ray {
     YIntercept : number,
     collidesAt : { x : number, y : number},
     collidesWith : VerticalWall | HorizontalWall | undefined,
-
-    // Children nodes
-
     reflected  : {} | Ray,
-    refracted  : {} | Ray,
 
     // product/source duality - A ray has a source but can be the source of other ones
 
@@ -67,7 +63,6 @@ const rayPrototype :Ray = {
     collidesAt  : { x : NaN, y : NaN},
     collidesWith: undefined,
     reflected   : {},
-    refracted   : {},
     wallIndices : { horizontal : NaN, vertical   : NaN }
 }
 

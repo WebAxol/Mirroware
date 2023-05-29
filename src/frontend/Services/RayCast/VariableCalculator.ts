@@ -69,6 +69,7 @@ class VariableCalculator extends Service{
             if(arr[inBetweenIndex] < value){
                 leftIndex = inBetweenIndex;
             }
+            
             else if(arr[inBetweenIndex] > value){
                 rightIndex = inBetweenIndex;
                 index = rightIndex;

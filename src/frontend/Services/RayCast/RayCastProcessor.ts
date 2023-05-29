@@ -18,13 +18,10 @@ class RayCastProcessor extends Service {
     public execute() {
 
         let rays :Ray[] = camera.rays;
-
+        let reflectedRay = this.#chief.world.createAgent('Ray');
         camera.sceneModel.purge();
 
         for(let i = 0; i < camera.rays.length; i++) this.castRay(camera.pos , rays[i] , camera.wallIndices);
-
-        //this.#chief.world.pauseExecution();
-
     }
 
     public castRay(pos, ray : any, indices : { horizontal :number, vertical : number }){
@@ -36,48 +33,37 @@ class RayCastProcessor extends Service {
       
         // new indices imply that the ray has collided, and viceversa
 
-        try{
-            camera.sceneModel.update(ray);
-        }catch(err){
-            console.error(err);
-            console.log(ray)
-            console.log(camera.sceneModel);
-
-            this.#chief.world.pauseExecution();
-
-        }
-
+        camera.sceneModel.update(ray);
+       
         if(newHorizontalIndex == false && newVerticalIndex == false) return false; // No collision
-
-        // Ray has collided; will reflection occur?
-
-        if((ray.collidesWith.opacity < 1) && ray.level < 10){
+        if(!((ray.collidesWith.opacity < 1) && ray.level < 10))      return false;
               
-            let newIndices =  { 
-                vertical  : (newVerticalIndex   === false ) ? indices.vertical   : newVerticalIndex, 
-                horizontal: (newHorizontalIndex === false ) ? indices.horizontal : newHorizontalIndex
-            };
+        let newIndices =  { 
+            vertical  : (newVerticalIndex   === false ) ? indices.vertical   : newVerticalIndex, 
+            horizontal: (newHorizontalIndex === false ) ? indices.horizontal : newHorizontalIndex
+        };
 
-            let angleAdd = (ray.collidesWith.getType() == 'HorizontalWall') ? 360 : 180;
+        let angleAdd = (ray.collidesWith.getType() == 'HorizontalWall') ? 360 : 180;
 
-            if(!ray.reflected.getType){
+        if(!ray.reflected.getType){
 
-                ray.reflected.degree = (angleAdd - ray.degree);
-                let reflectedRay = this.#chief.world.createAgent('Ray');
-                reflectedRay.source = ray;
-                reflectedRay.level  = ray.level + 1;
-                ray.reflected = reflectedRay;
-            }
+            let reflectedRay = this.#chief.world.createAgent('Ray');
 
-            // Prepare reflected ray and cast recursively
-
-            ray.reflected.active = true;
             ray.reflected.degree = (angleAdd - ray.degree);
-            ray.wallIndices = newIndices;
-
-            this.#chief.calculateRayProperties(ray.collidesAt,ray.reflected);
-            this.castRay(ray.collidesAt,ray.reflected,newIndices);
+            reflectedRay.source = ray;
+            reflectedRay.level  = ray.level + 1;
+            ray.reflected = reflectedRay;
         }
+
+        // Prepare reflected ray and cast recursively
+
+        ray.reflected.active = true;
+        ray.reflected.degree = (angleAdd - ray.degree);
+        ray.wallIndices = newIndices;
+
+        this.#chief.calculateRayProperties(ray.collidesAt,ray.reflected);
+        this.castRay(ray.collidesAt,ray.reflected,newIndices);
+        
     }
 
     // WARNING: The following functions assume that wall collections are properly sorted in ascending order
@@ -102,24 +88,19 @@ class RayCastProcessor extends Service {
             if(walls[index].posX <= ray.collidesAt.x && sense == -1) return index;
             if(walls[index].posX >= ray.collidesAt.x && sense == 1 ) return index - 1;
 
-
             let hasCollided = CollisionDetector.RayVsVerticalLine(ray,walls[index]);
 
-            if(hasCollided){
+            if(!hasCollided) continue;
 
-                let isCloser = this.compareWithClosest(ray,hasCollided);
+            let isCloser = this.compareWithClosest(ray,hasCollided);
 
-                if(isCloser){
+            if(!isCloser) return index - 1;
 
-                    ray.collidesAt.x = hasCollided[0];
-                    ray.collidesAt.y = hasCollided[1];
-                    ray.collidesWith = walls[index];
+            ray.collidesAt.x = hasCollided[0];
+            ray.collidesAt.y = hasCollided[1];
+            ray.collidesWith = walls[index];
 
-                }
-                else return index - 1;
-                
-                return index - (sense == 1 ? 1 : 0);
-            }
+            return index - (sense == 1 ? 1 : 0); 
         }
 
         return false;
@@ -144,21 +125,17 @@ class RayCastProcessor extends Service {
 
             let hasCollided = CollisionDetector.RayVsHorizontalLine(ray,walls[index]);
 
-            if(hasCollided){
+            if(!hasCollided) continue;
 
-                let isCloser = this.compareWithClosest(ray,hasCollided);
+            let isCloser = this.compareWithClosest(ray,hasCollided);
 
-                if(isCloser){
-                    ray.collidesAt.x = hasCollided[0];
-                    ray.collidesAt.y = hasCollided[1];
-                    ray.collidesWith = walls[index];
+            if(!isCloser) return false;
+        
+            ray.collidesAt.x = hasCollided[0];
+            ray.collidesAt.y = hasCollided[1];
+            ray.collidesWith = walls[index];
 
-                }
-                else return false;
-
-                return index - (sense == 1 ? 1 : 0);
-            }
-
+            return index - (sense == 1 ? 1 : 0);
         }
 
         return false;
@@ -170,6 +147,7 @@ class RayCastProcessor extends Service {
 
         let distanceToPoint = Math.abs(rayOrigin.x - collisionPoint[0]) + Math.abs(rayOrigin.y - collisionPoint[1]);
         let currentShortest = Math.abs(rayOrigin.x - ray.collidesAt.x)  + Math.abs(rayOrigin.y - ray.collidesAt.y);
+
         return distanceToPoint < currentShortest;
     }
 }
