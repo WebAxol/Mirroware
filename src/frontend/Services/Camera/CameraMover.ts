@@ -7,7 +7,7 @@ class CameraMover extends Service{
     private control;
     private command_KeyMap;
     private keyPressCount :number = 0;
-    private speed :number = 0.41;
+    private speed :number = 0.21;
 
     constructor(){
         super();
@@ -17,8 +17,8 @@ class CameraMover extends Service{
             s : () => { this.translateCamera(0,-1) },
             a : () => { this.translateCamera( 1,0) },
             d : () => { this.translateCamera(-1,0) },
-            k : () => { this.rotateCamera(-5) },
-            ñ : () => { this.rotateCamera( 5) },
+            k : () => { this.rotateCamera(-4) },
+            ñ : () => { this.rotateCamera( 4) },
         }
 
         this.control = {
@@ -54,30 +54,31 @@ class CameraMover extends Service{
     private translateCamera(x :number = 0, y : number = 0){
 
         let midRay = camera.rays[Math.floor(camera.rays.length / 2)];
-        let sense  = (midRay.degree > 270 || midRay.degree < 90) ? 1 : -1;
 
-        let direction = y ? midRay.slope : -Math.pow(midRay.slope,-1);
+        let sense  = (midRay.degree > 270 || midRay.degree < 90)   ?  1 : -1;
+        
+        let direction = y ? midRay.slope : -1 * Math.pow(midRay.slope,-1);
         let normalize = Vector2D.normalize(new Vector2D(1,direction));
 
-        camera.pos.x += normalize.x * sense * (x | y) * this.speed;
-        camera.pos.y += normalize.y * sense * (x | y) * this.speed;
+        let addX :number = (normalize.x * sense * (x | y) * this.speed);
+        let addY :number = (normalize.y * sense * (x | y) * this.speed);
+        
+        if(Math.abs(addX) >= 0) camera.pos.x += addX;
+        if(Math.abs(addY) >= 0) camera.pos.y += addY;
+
     }
 
     // EVENTS
 
     public onkeydown(info){
-
-        if(this.control[info.key] !== undefined && this.control[info.key] !== true){
+        if(this.control[info.key] !== undefined && this.control[info.key] !== true ){
             this.control[info.key] = true;
-            this.keyPressCount++;
         }
     }
 
     public onkeyup(info){
-
-        if(this.control[info.key] !== undefined){
+        if(this.control[info.key] !== undefined && this.control[info.key] !== false){
             this.control[info.key] = false;
-            this.keyPressCount--;
         }
     }
 }
