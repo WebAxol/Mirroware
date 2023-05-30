@@ -1,21 +1,22 @@
 import Service from '../Service.js';
 import { Camera, camera } from '../../utils/Camera.js';
+import Vector2D from '../../utils/Vector2D.js';
 
 class CameraMover extends Service{
 
     private control;
     private command_KeyMap;
     private keyPressCount :number = 0;
-    private speed :number = 0.5;
+    private speed :number = 0.41;
 
     constructor(){
         super();
 
         this.command_KeyMap = {
-            w : () => { this.translateCamera(0, this.speed) },
-            s : () => { this.translateCamera(0,-this.speed) },
-            a : () => { this.translateCamera( this.speed,0) },
-            d : () => { this.translateCamera(-this.speed,0) },
+            w : () => { this.translateCamera(0, 1) },
+            s : () => { this.translateCamera(0,-1) },
+            a : () => { this.translateCamera( 1,0) },
+            d : () => { this.translateCamera(-1,0) },
             k : () => { this.rotateCamera(-5) },
             ñ : () => { this.rotateCamera( 5) },
         }
@@ -40,7 +41,6 @@ class CameraMover extends Service{
                 this.command_KeyMap[key]();
             }
         });
-
     }
 
     private rotateCamera(angle :number = 0){
@@ -53,8 +53,14 @@ class CameraMover extends Service{
 
     private translateCamera(x :number = 0, y : number = 0){
 
-        camera.pos.x += x;
-        camera.pos.y += y;
+        let midRay = camera.rays[Math.floor(camera.rays.length / 2)];
+        let sense  = (midRay.degree > 270 || midRay.degree < 90) ? 1 : -1;
+
+        let direction = y ? midRay.slope : -Math.pow(midRay.slope,-1);
+        let normalize = Vector2D.normalize(new Vector2D(1,direction));
+
+        camera.pos.x += normalize.x * sense * (x | y) * this.speed;
+        camera.pos.y += normalize.y * sense * (x | y) * this.speed;
     }
 
     // EVENTS
