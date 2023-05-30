@@ -1,5 +1,5 @@
 import { Ray } from '../setUp/agentTypes.js';
-import SceneModel from './SceneModel.js';
+import { SceneModel } from './SceneModel.js';
 import Vector2D from './Vector2D.js';
 
 class Camera{

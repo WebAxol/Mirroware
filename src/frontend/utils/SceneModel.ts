@@ -1,8 +1,10 @@
+import { Ray } from "../setUp/agentTypes.js";
+
 class SceneModel {
 
-    protected layers  :any[];
-    protected lastIDs :number[];
-    protected prevIndices :number[];
+    public layers  :any[];
+    public lastIDs :number[];
+    public prevIndices :number[];
 
     constructor(){
         this.layers = []; 
@@ -10,7 +12,6 @@ class SceneModel {
         this.lastIDs     = Array(5).fill(NaN); // per layer
 
         for(let i = 0; i < 5; i++) this.layers.push([]);
-
     }
 
     public update(ray :any){
@@ -35,18 +36,19 @@ class SceneModel {
             let index    = ++this.prevIndices[layer];
             let oldChunk = this.layers[layer][index] || undefined;
 
-            if(oldChunk){   // reuse old scene chunk
+            if(oldChunk){               // reuse old scene chunk
                 oldChunk.item = item,
                 oldChunk.from = ray;
                 oldChunk.to   = ray;
                 oldChunk.old  = true;
             }
-            else{           // allocate new scene chunk
+            else{                       // allocate new scene chunk
                 this.layers[layer].push({
                     item : item,
                     from : ray,
                     to   : ray,
-                    old  : true
+                    old  : true,
+                    details : {}
                 });
             }
         }
@@ -82,10 +84,11 @@ interface SceneLayer {
 }
 
 interface SceneChunk {
-    item    :Object;
-    from    :Object;
-    to      :Object;
-    old     :boolean
+    item       :Object;
+    from       :Ray;
+    to         :Ray;
+    old        :boolean;
+    details    :Object; // Stores dimensions and relevant coordinates for rendering
 }   
 
-export default SceneModel;
+export { SceneModel, SceneChunk, SceneLayer };

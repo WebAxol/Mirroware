@@ -135,9 +135,8 @@ const commands = {
     'r' : () => {
         app.pause = false;
         app.execute();
-        console.log('execution resumed');
-    }   
-
+        //console.log('execution resumed');
+    }
 }
 
 
