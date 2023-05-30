@@ -15,14 +15,18 @@ class CameraMover extends Service{
             w : () => { this.translateCamera(0, this.speed) },
             s : () => { this.translateCamera(0,-this.speed) },
             a : () => { this.translateCamera( this.speed,0) },
-            d : () => { this.translateCamera(-this.speed,0) }
+            d : () => { this.translateCamera(-this.speed,0) },
+            k : () => { this.rotateCamera(-5) },
+            ñ : () => { this.rotateCamera( 5) },
         }
 
         this.control = {
             w : false,
             s : false,
             d : false,
-            a : false
+            a : false,
+            k : false,
+            ñ : false
         }
     }
 
@@ -33,9 +37,6 @@ class CameraMover extends Service{
         keys.forEach((key) => {
 
             if(this.control[key] === true){
-
-                console.log(key);
-
                 this.command_KeyMap[key]();
             }
         });
@@ -43,10 +44,10 @@ class CameraMover extends Service{
     }
 
     private rotateCamera(angle :number = 0){
-
+ 
         camera.rays.forEach(ray => {
-            ray.degree = ray.degree % 360;
             ray.degree = Math.abs((ray.degree + angle)) % 360;
+            if(ray.degree < 0) ray.degree += 360;
         });
     };
 
@@ -54,8 +55,6 @@ class CameraMover extends Service{
 
         camera.pos.x += x;
         camera.pos.y += y;
-
-        console.log(camera.pos);
     }
 
     // EVENTS
@@ -65,8 +64,6 @@ class CameraMover extends Service{
         if(this.control[info.key] !== undefined && this.control[info.key] !== true){
             this.control[info.key] = true;
             this.keyPressCount++;
-
-            console.log(this.keyPressCount);
         }
     }
 
@@ -75,8 +72,6 @@ class CameraMover extends Service{
         if(this.control[info.key] !== undefined){
             this.control[info.key] = false;
             this.keyPressCount--;
-
-            console.log(this.keyPressCount);
         }
     }
 }
