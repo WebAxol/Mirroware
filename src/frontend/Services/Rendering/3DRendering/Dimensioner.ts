@@ -51,7 +51,7 @@ class Dimensioner extends Service{
         let startCorner = _calculateCorner(from);
         let endCorner   = _calculateCorner(to);
 
-        function _calculateCorner(ray, prevDistance :number = 0, adjustment :number = 1){
+        function _calculateCorner(ray, prevDistance :number = 0, adjustment :number = NaN){
 
             // TODO : calculate distance and adjustment during RayCasting and store them at every ray instead of computing them here
 

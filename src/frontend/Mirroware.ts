@@ -10,7 +10,7 @@ import { Camera, camera } from './utils/Camera.js';
 // First, create an array containing rays - TODO: Make an easier and safer way of defining rays with their raysources
 
 
-const n = 50;
+const n = 300;
 
 for(let i : number = 0; i < n; i++){
     let ray = app.createAgent('Ray',{
