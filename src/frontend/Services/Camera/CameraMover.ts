@@ -7,7 +7,7 @@ class CameraMover extends Service{
     private control;
     private command_KeyMap;
     private keyPressCount :number = 0;
-    private speed :number = 0.21;
+    private speed :number = 0.31;
 
     constructor(){
         super();
