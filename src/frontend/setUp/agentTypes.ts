@@ -1,3 +1,4 @@
+import Vector2D from '../utils/Vector2D.js';
 // HorizontalWall
 
 interface HorizontalWall {
@@ -44,7 +45,7 @@ interface Ray {
     degree     : number,
     slope      : number,
     YIntercept : number,
-    collidesAt : { x : number, y : number},
+    collidesAt : Vector2D,
     collidesWith : VerticalWall | HorizontalWall | undefined,
     reflected  : {} | Ray,
 
@@ -55,14 +56,17 @@ interface Ray {
 
 const rayPrototype :Ray = {
     active      : true,
-    level       : 1,
     source      : {},
+    reflected   : {},
+    level       : 1,
     degree      : NaN,
     slope       : NaN,
     YIntercept  : NaN,
-    collidesAt  : { x : NaN, y : NaN},
+
+    // for collision detection and response
+
     collidesWith: undefined,
-    reflected   : {},
+    collidesAt  : (new Vector2D(NaN,NaN)),
     wallIndices : { horizontal : NaN, vertical   : NaN }
 }
 

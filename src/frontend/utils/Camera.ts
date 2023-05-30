@@ -1,16 +1,17 @@
 import { Ray } from '../setUp/agentTypes.js';
 import SceneModel from './SceneModel.js';
+import Vector2D from './Vector2D.js';
 
 class Camera{
 
-    public pos         : { x : number, y : number };
+    public pos         : Vector2D;
     public wallIndices : { vertical : number, horizontal : number};
     public sceneModel  : SceneModel;
     public rays        : Ray[];
 
     constructor(pos){
-        this.pos         = { x : pos.x || 0, y : pos.y || 0 };
         this.wallIndices = { horizontal : 0, vertical : 0 };
+        this.pos         = new Vector2D( pos.x || 0, pos.y || 0 );
         this.sceneModel  = new SceneModel();
         this.rays        = [];
     }

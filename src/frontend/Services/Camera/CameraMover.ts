@@ -46,7 +46,7 @@ class CameraMover extends Service{
     private rotateCamera(angle :number = 0){
  
         camera.rays.forEach(ray => {
-            ray.degree = Math.abs((ray.degree + angle)) % 360;
+            ray.degree = (ray.degree + angle) % 360;
             if(ray.degree < 0) ray.degree += 360;
         });
     };
