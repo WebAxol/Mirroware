@@ -9,23 +9,28 @@ class InputHandler extends Service {
 
     public init() : boolean {
 
-        // Global events
+        // Global window events
 
-        console.log(this.world);
-        window.addEventListener('keydown',  (e) => { this.keydown(e) }  );
+        window.addEventListener('keydown',  (e) => { this.keydown(e) });
+        window.addEventListener('keyup',    (e) => { this.keyup(e)   });
      
         // Internal framework events
 
         this.world.registerEvent('keydown');
-        this.world.registerServiceToEvent('CameraMover','keydown');
+        this.world.registerEvent('keyup');
 
+        this.world.registerServiceToEvent('CameraMover','keydown');
+        this.world.registerServiceToEvent('CameraMover','keyup');
+        
         return true;
     }
 
-    public keydown(e){
-        if(!this.world.pause){
-            this.world.notifyEvent('keydown',{ key : e.key });
-        }
+    private keydown(e){
+        if(!this.world.pause) this.world.notifyEvent('keydown',{ key : e.key });
+    }
+
+    private keyup(e){
+        if(!this.world.pause) this.world.notifyEvent('keyup',{ key : e.key });
 
     }
 

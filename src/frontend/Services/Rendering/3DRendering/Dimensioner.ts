@@ -26,9 +26,7 @@ class Dimensioner extends Service{
 
         // We call 'fraction' to every individual rectangle computed, and we call 'sceneChuck' to every group of fractions that include two rectangles in between which interpolation has occurred
         // We'll store the information of pre-calculated fractions so that when the data from the adjacent ray is calculated, interpolation can be performed to compute sceneChunks
-
-        const fractionQueue = [];
-
+        
         var index :number;
 
         for(index = 0; index < camera.rays.length; index++) _calculateDimensions(this,camera.rays[index]);

@@ -3,33 +3,46 @@ import { Camera, camera } from '../../utils/Camera.js';
 
 class CameraMover extends Service{
 
-    public control;
-    public control_KeyMap;
+    private control;
+    private command_KeyMap;
+    private keyPressCount :number = 0;
+    private speed :number = 0.5;
 
     constructor(){
         super();
 
-        this.control_KeyMap = {
-            w : 'moveFront',
-            s : 'moveBack',
-            k : 'rotateClockwise',
-            ñ : 'rotateAntiClockwise'
+        this.command_KeyMap = {
+            w : () => { this.translateCamera(0, this.speed) },
+            s : () => { this.translateCamera(0,-this.speed) },
+            a : () => { this.translateCamera( this.speed,0) },
+            d : () => { this.translateCamera(-this.speed,0) }
         }
 
         this.control = {
-            moveFront : false,
-            moveBack  : false,
-            rotateClockwise     : false,
-            rotateAntiClockwise : false
+            w : false,
+            s : false,
+            d : false,
+            a : false
         }
-      
     }
 
     public execute() {
-        this.rotateCamera(2/3);
+        
+        let keys = Object.keys(this.control);
+
+        keys.forEach((key) => {
+
+            if(this.control[key] === true){
+
+                console.log(key);
+
+                this.command_KeyMap[key]();
+            }
+        });
+
     }
 
-    public rotateCamera(angle){
+    private rotateCamera(angle :number = 0){
 
         camera.rays.forEach(ray => {
             ray.degree = ray.degree % 360;
@@ -37,29 +50,33 @@ class CameraMover extends Service{
         });
     };
 
-    public translateCamera(){
+    private translateCamera(x :number = 0, y : number = 0){
 
+        camera.pos.x += x;
+        camera.pos.y += y;
+
+        console.log(camera.pos);
     }
 
     // EVENTS
 
     public onkeydown(info){
 
-        let mappedOperation : string  = this.control_KeyMap[info.key];
+        if(this.control[info.key] !== undefined && this.control[info.key] !== true){
+            this.control[info.key] = true;
+            this.keyPressCount++;
 
-        if(mappedOperation && this.control[mappedOperation] !== undefined){
-            this.control[mappedOperation] = true;
-            console.log(this.control);
+            console.log(this.keyPressCount);
         }
     }
 
     public onkeyup(info){
 
-        let mappedOperation : string  = this.control_KeyMap[info.key];
+        if(this.control[info.key] !== undefined){
+            this.control[info.key] = false;
+            this.keyPressCount--;
 
-        if(mappedOperation && this.control[mappedOperation] !== undefined){
-            this.control[mappedOperation] = false;
-            console.log(this.control);
+            console.log(this.keyPressCount);
         }
     }
 }
