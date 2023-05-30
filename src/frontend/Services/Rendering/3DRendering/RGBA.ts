@@ -4,6 +4,7 @@ import { Camera, camera } from "../../../utils/Camera.js";
 class RGBA extends Service{
 
     protected chief;
+    protected pause :boolean = false;
 
     constructor(chief){
         super();
@@ -12,14 +13,32 @@ class RGBA extends Service{
 
     public executeAsSubordinate(sceneChunk){
 
-        this.renderRectangle(sceneChunk);
-        this.renderHorizontalBorders(sceneChunk);
+        if(this.pause){
+            this.chief.world.pauseExecution();
+            return;
+        } 
+
+        for(let f = 0; f < sceneChunk.details.columns; f++){
+
+            this.renderRectangle(sceneChunk);
+            //this.renderHorizontalBorders(sceneChunk);
+            this.incrementalInterpolation(sceneChunk);
+        }
+
+        //this.pause = true;
+    }
+
+    private incrementalInterpolation(sceneChunk){
+
+        let details = sceneChunk.details;
+
+        details.start.x += details.change.x;
+        details.start.y += details.change.y;
+        details.start.h += details.change.h;
 
     }
 
     public renderRectangle(sceneChunk){
-
-        // We take into account the properties of the "item" with which the ray collides to render each column
 
         let context     = this.chief.context;
         let canvasWidth = this.chief.canvas.width;
@@ -27,25 +46,31 @@ class RGBA extends Service{
         // Black opaque background to avoid transparent walls
 
         context.fillStyle = `rgba(10,0,0,${sceneChunk.item.opacity})`;
+
+        let details = sceneChunk.details.start;
         
         context.fillRect(
-            sceneChunk.leftTop.x,
-            sceneChunk.leftTop.y,
-            sceneChunk.size.x,
-            sceneChunk.size.y
+            details.x,
+            details.y,
+            50,
+            details.h
         );
 
         // Render wall with its color (if it has)
 
         if(!sceneChunk.item.color) return;
 
-        context.fillStyle = `rgba(${sceneChunk.item.color}, ${sceneChunk.item.opacity / ((sceneChunk.distance * 5) / 15)}`;
+        let distance = 5;
+
+        context.fillStyle = `rgba(${sceneChunk.item.color}, ${sceneChunk.item.opacity / ((distance * 5) / 15)}`;
         context.fillRect(
-            sceneChunk.leftTop.x,
-            sceneChunk.leftTop.y, 
-            sceneChunk.size.x,
-            sceneChunk.size.y
+            details.x,
+            details.y,
+            20,
+            details.h
         );
+
+        
     }
 
     public renderHorizontalBorders(sceneChunk){

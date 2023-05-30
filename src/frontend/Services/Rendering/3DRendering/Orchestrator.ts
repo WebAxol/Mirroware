@@ -52,11 +52,14 @@ class  SceneRenderer3D extends Service{
         }
     }
 
-    public _onvariablesCalculated(info){
+    public _onchunkReady(sceneChunk){
 
-        this.#rgba.executeAsSubordinate(info);
-        this.#texturer.executeAsSubordinate(info);
+        //console.log(sceneChunk);
+
+        this.#rgba.executeAsSubordinate(sceneChunk);
         this.context.globalAlpha = 1;
+
+        //this.#texturer.executeAsSubordinate(info);
     
     }
 

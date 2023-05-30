@@ -107,7 +107,6 @@ class VariableCalculator extends Service{
 
         ray.collidesAt.x = pos.x + Math.cos(degrees) * 500; 
         ray.collidesAt.y = pos.y + Math.sin(degrees) * 500;
-
     }
     
     public calculateRayProperties(source :{ x : number, y :number} ,ray :Ray){

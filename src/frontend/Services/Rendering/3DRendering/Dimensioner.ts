@@ -19,11 +19,22 @@ class Dimensioner extends Service{
         const sceneModel = camera.sceneModel;
 
         for(let l = 0; l >= 0; l--){
-            sceneModel.layers[l].forEach(sceneChunk => { this.calculateChunkDimensions(sceneChunk); });
+            sceneModel.layers[l].forEach(sceneChunk => { this.computeChunkDetails(sceneChunk); });
         }
     }
 
-    public calculateChunkDimensions(sceneChunk :SceneChunk, prevDistance = 0, adjustment = undefined){
+    private interpolateDetails(start,end,divisor : number){
+        
+        let incrementalChange = { 
+            x : (end.x - start.x) / divisor, 
+            y : (end.y - start.y) / divisor, 
+            h : (end.h - start.h) / divisor
+        }
+
+        return incrementalChange;
+    }
+
+    private computeChunkDetails(sceneChunk :SceneChunk, prevDistance = 0, adjustment = undefined){
 
         const cameraDegree = camera.rays[Math.floor((camera.rays.length) / 2)].degree;
         const context = this.chief.context;
@@ -35,8 +46,14 @@ class Dimensioner extends Service{
 
         let from :Ray = sceneChunk.from;
         let to   :Ray = sceneChunk.to;
+        let columns :number = 50;
+
+        let startCorner = _calculateCorner(from);
+        let endCorner   = _calculateCorner(to);
 
         function _calculateCorner(ray, prevDistance :number = 0, adjustment :number = 1){
+
+            // TODO : calculate distance and adjustment during RayCasting and store them at every ray instead of computing them here
 
             let index     = Math.floor((ray.degree - camera.rays[0].degree) / (camera.rays[camera.rays.length - 1].degree - camera.rays[0].degree) * camera.rays.length);
             let distanceX = Math.abs(Math.abs(ray.collidesAt.x) - Math.abs(ray.source.pos ? ray.source.pos.x : ray.source.collidesAt.x));
@@ -57,22 +74,17 @@ class Dimensioner extends Service{
             return corner;
         }
 
-        let startCorner = _calculateCorner(from);
-        let endCorner   = _calculateCorner(to);
-        let columns :number = 5;
-
         sceneChunk.details = {
 
-            start : startCorner,
-            change  : { 
-                x : (endCorner.x - startCorner.x) / columns, 
-                y : (endCorner.y - startCorner.y) / columns, 
-                h : (endCorner.h - startCorner.h) / columns
-            },
-            columns : columns
+            start    : startCorner,
+            columns  : columns,
+            change   : this.interpolateDetails(startCorner,endCorner,columns)
         };
 
-        console.log(sceneChunk.details);
+        // Notify Orchestrator and pass chunk for rendering 
+
+        this.chief._onchunkReady(sceneChunk);
+
     }
 }
 
