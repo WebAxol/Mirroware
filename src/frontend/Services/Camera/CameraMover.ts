@@ -1,65 +1,84 @@
 import Service from '../Service.js';
 import { Camera, camera } from '../../utils/Camera.js';
+import Vector2D from '../../utils/Vector2D.js';
 
 class CameraMover extends Service{
 
-    public control;
-    public control_KeyMap;
+    private control;
+    private command_KeyMap;
+    private keyPressCount :number = 0;
+    private speed :number = 0.31;
 
     constructor(){
         super();
 
-        this.control_KeyMap = {
-            w : 'moveFront',
-            s : 'moveBack',
-            k : 'rotateClockwise',
-            ñ : 'rotateAntiClockwise'
+        this.command_KeyMap = {
+            w : () => { this.translateCamera(0, 1) },
+            s : () => { this.translateCamera(0,-1) },
+            a : () => { this.translateCamera( 1,0) },
+            d : () => { this.translateCamera(-1,0) },
+            k : () => { this.rotateCamera(-4) },
+            ñ : () => { this.rotateCamera( 4) },
         }
 
         this.control = {
-            moveFront : false,
-            moveBack  : false,
-            rotateClockwise     : false,
-            rotateAntiClockwise : false
+            w : false,
+            s : false,
+            d : false,
+            a : false,
+            k : false,
+            ñ : false
         }
-      
     }
 
     public execute() {
-        this.rotateCamera(2/3);
+        
+        let keys = Object.keys(this.control);
+
+        keys.forEach((key) => {
+
+            if(this.control[key] === true){
+                this.command_KeyMap[key]();
+            }
+        });
     }
 
-    public rotateCamera(angle){
-
+    private rotateCamera(angle :number = 0){
+ 
         camera.rays.forEach(ray => {
-            ray.degree = ray.degree % 360;
-            ray.degree = Math.abs((ray.degree + angle)) % 360;
+            ray.degree = (ray.degree + angle) % 360;
+            if(ray.degree < 0) ray.degree += 360;
         });
     };
 
-    public translateCamera(){
+    private translateCamera(x :number = 0, y : number = 0){
+
+        let midRay = camera.rays[Math.floor(camera.rays.length / 2)];
+
+        let sense  = (midRay.degree > 270 || midRay.degree < 90)   ?  1 : -1;
+        
+        let direction = y ? midRay.slope : -1 * Math.pow(midRay.slope,-1);
+        let normalize = Vector2D.normalize(new Vector2D(1,direction));
+
+        let addX :number = (normalize.x * sense * (x | y) * this.speed);
+        let addY :number = (normalize.y * sense * (x | y) * this.speed);
+        
+        if(Math.abs(addX) >= 0) camera.pos.x += addX;
+        if(Math.abs(addY) >= 0) camera.pos.y += addY;
 
     }
 
     // EVENTS
 
     public onkeydown(info){
-
-        let mappedOperation : string  = this.control_KeyMap[info.key];
-
-        if(mappedOperation && this.control[mappedOperation] !== undefined){
-            this.control[mappedOperation] = true;
-            console.log(this.control);
+        if(this.control[info.key] !== undefined && this.control[info.key] !== true ){
+            this.control[info.key] = true;
         }
     }
 
     public onkeyup(info){
-
-        let mappedOperation : string  = this.control_KeyMap[info.key];
-
-        if(mappedOperation && this.control[mappedOperation] !== undefined){
-            this.control[mappedOperation] = false;
-            console.log(this.control);
+        if(this.control[info.key] !== undefined && this.control[info.key] !== false){
+            this.control[info.key] = false;
         }
     }
 }

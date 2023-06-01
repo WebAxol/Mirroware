@@ -31,11 +31,11 @@ const testScene = [ // This is just a template to instance the required walls
     [[5,5],[5,25],   1, '0,255,0'],
     [[5, 5],[25, 5], 1, '0,255,100'],
     [[5, 7],[7, 7],  1, '0,255,100'],
-    [[7, 5],[7, 7],  0.01, '0,255,200'],
+    [[7, 5],[7, 7],  1, '0,255,200'],
     [[7, 15],[7, 20],  0.2, '0,155,200'],
     [[7, 20],[15, 20],  1, '255,0,0'],
-    [[25,5],[25,26], 0.1, '150,150,150'],
-    [[5,25],[25,25], 1, '255,0,0'],
+    [[25,5],[25,26], 1, '150,150,150'],
+    [[5,25],[25,25], 0.5, '0,255,255'],
     [[15,7],[17,7], 1, '255,0,255'],
     [[15,7],[15,10], 1, '255,155,255'],
     [[15,10],[15.5,10], 1, '255,155,200'],
@@ -43,9 +43,10 @@ const testScene = [ // This is just a template to instance the required walls
     [[17,7],[17,10],1, '255,155,255'],
     [[16.5,7],[16.5,10],1, '255,155,255'],
     [[16.5,10],[17,10],1, '255,155,200'],
-    [[19, 12],[22, 12],  1, '0,255,100'],
-    [[19, 15],[22, 15],  1, '0,255,100'],
-    [[22, 12],[22, 15],  1, '0,255,200']
+    [[19, 12],[22, 12],  0.1, '0,255,100'],
+    [[19, 15],[22, 15],  0.1, '0,255,100'],
+    [[22, 12],[22, 15],  0.1, '0,255,200'],
+    [[19, 12],[19, 15],  0.1, '0,255,200']
 ];
 
 // TODO: replace by a module specialized on building scenes
@@ -125,16 +126,16 @@ buildScene(app,testScene);
 /* ------ Debugging commands (Not for production) ------- */
 
 const commands = {
-    'w' : () => { console.log(app) },
-    'r' : () => { console.log(app.getCollection('RaySources')) },
+    'o' : () => { console.log(app) },
+    'c' : () => { console.log(camera)},
     'p' : () => { 
         app.pauseExecution(); 
-        //console.log('execution paused');
+        console.log('execution paused');
     },
-    's' : () => {
+    'r' : () => {
         app.pause = false;
         app.execute();
-        //console.log('execution resumed');
+        console.log('execution resumed');
     }   
 
 }

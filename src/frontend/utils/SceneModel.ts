@@ -18,6 +18,8 @@ class SceneModel {
         let item  :any = ray.collidesWith || undefined;
         let layer :number = ray.level - 1;
 
+        try{
+
         if(!item) return false;
 
         let sameAsLast = this.lastIDs[layer] >= 0 && item.getID() === this.lastIDs[layer];
@@ -50,6 +52,12 @@ class SceneModel {
         }
 
         this.lastIDs[ray.level - 1] = item.getID();
+
+        }catch(err){
+            console.log(ray);
+            console.error(err);
+            throw Error('error at scene model');
+        }
     }
 
     public purge(){
