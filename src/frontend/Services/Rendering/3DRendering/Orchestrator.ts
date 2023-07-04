@@ -39,7 +39,7 @@ class  SceneRenderer3D extends Service{
 
         // Render floor
     
-        this.context.fillStyle = 'brown';
+        this.context.fillStyle = '#0e020e';
         this.context.fillRect(0,0,this.canvas.width,this.canvas.height / 2);
 
 

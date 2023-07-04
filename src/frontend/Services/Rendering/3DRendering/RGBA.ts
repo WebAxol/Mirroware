@@ -39,7 +39,9 @@ class RGBA extends Service{
 
         if(!sceneChunk.item.color) return;
 
-        context.fillStyle = `rgba(${sceneChunk.item.color}, ${sceneChunk.item.opacity / ((sceneChunk.distance * 5) / 15)}`;
+        let distance = sceneChunk.distance <= 0 ? 0.01 : sceneChunk.distance;
+            
+        context.fillStyle = `rgba(${sceneChunk.item.color}, ${sceneChunk.item.opacity / (((distance) * 5) / 15)}`;
         context.fillRect(
             sceneChunk.leftTop.x,
             sceneChunk.leftTop.y, 
@@ -53,7 +55,7 @@ class RGBA extends Service{
         let context = this.chief.context;
 
         context.strokeStyle = `red`;
-        context.lineWidth = 30 / sceneChunk.distance;
+        context.lineWidth = Math.min(30 / sceneChunk.distance,5);
         
         // Top border
 

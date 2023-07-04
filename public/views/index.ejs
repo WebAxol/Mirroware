@@ -18,7 +18,7 @@
            <div class="upper-effect"></div>
            <canvas id="canvas2d" width="3000" height="3000"></canvas>
         </section>
-        <section class="upperLayer">
+        <section class="upperLayer" style="display: none;">
             <div class="container" style="width: 50%;">
                 <div class="row">
                     <div class="col-md-12 mx-auto">
@@ -39,16 +39,21 @@
                         <button class="left-button">I understand; I will not proceed.</button>
                     </div>
                     <div class="col-md-6">
-                        <button class="right-button">I don't care, let me <b>play!</b></button>
+                        <button class="right-button">I don't care, let me <b>try!</b></button>
                     </div>
                 </div>
-                <div class="row mt-5">
+                <div class="options row mt-5 mx-auto">
+                    <div class="col-md-12 text-center">
+                        <p class="text-white text-center">Made in <span class="text-info" style="font-weight: bold;">TypeScript </span> with own framework: <span class="text-warning" style="font-weight: bold;">PlugLightJS</span></p>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-md-12 mx-auto">
                         <hr style="opacity: 1; border: solid white 1px">
     
                         <p class="credit text-light text-center mt-4">
                             Created by 
-                            <b class="text-warning">🌵Gabriel R. Fuente</b>: alias 
+                            <b class="text-warning">Gabriel R. Fuente</b>: alias 
                             <b class="text-danger">WebAxol ᕒ(^-^)ᓬ</b>, <br> also as 
                             <b class="text-success">@TheFractaLab 🔥</b>.
                         </p>
@@ -72,7 +77,7 @@
         </section>
     </header>
     
-    <script type="module" src="./Mirroware.min.js"></script>
+    <script type="module" src="./Mirroware.js"></script>
     <script>
 
         document.addEventListener('mousemove',(e) => {

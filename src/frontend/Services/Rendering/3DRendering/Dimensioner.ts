@@ -51,6 +51,10 @@ class Dimensioner extends Service{
 
             // Create sceneChunck to render
             // TODO : implement interpolation algorithm to split sceneChunck into more pixel columns
+            
+            let flashLightBrightness = Math.pow(((index - (camera.rays.length / 2))/10),2) / 3;
+
+            //flashLightBrightness = 1;
 
             let sceneChunck = {
 
@@ -58,7 +62,7 @@ class Dimensioner extends Service{
 
                 leftTop  : leftTop,
                 size     : size,
-                distance : distance,
+                distance : distance * Math.max(flashLightBrightness, 1),
 
                 // Information of item with which ray collided
 

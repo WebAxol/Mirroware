@@ -3,17 +3,23 @@
     src: url('../fonts/Poiret_One/PoiretOne-Regular.ttf');
 }
 
+@font-face {
+    font-family: Pixeloid;
+    src: url('../fonts/press-start-2p-font/PressStart2P-vaV7.ttf');
+}
+
+
 *{
     padding: 0;
     margin: 0;
     font-family: 'Courier New', Courier, monospace;
+    font-size: 15px;
 }
 
 body{
     background: black;
     height: fit-content;
     overflow-y: hidden;
-
 }
 header{
     background: black;
@@ -57,8 +63,8 @@ canvas{
     position: absolute;
     width: 100%;
     min-height: 100vh;
-    /*background: radial-gradient(transparent, rgba(255, 0, 0, 0.9));
-    */backdrop-filter: blur(0px);
+    /*background: radial-gradient(transparent, rgba(255, 0, 0, 0.5));
+    /*backdrop-filter: blur(0px);*/
   }
 
 .upperLayer{
@@ -134,6 +140,10 @@ canvas{
 
 .social{
     color: white;
+    font-size: 40px;
+}
+
+.social *{
     font-size: 40px;
 }
 

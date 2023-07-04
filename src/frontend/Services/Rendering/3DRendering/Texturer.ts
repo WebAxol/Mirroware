@@ -21,7 +21,7 @@ class TextureDisplayer extends Service{
         let context = this.chief.context;
         let canvasHeight = this.chief.canvas.height;
         
-        context.globalAlpha = info.item.opacity / (info.distance / 10) / 5;
+        context.globalAlpha = Math.min(info.item.opacity / (info.distance / 10) / 5, 0.5);
         context.scale(1,scale);
             
         context.drawImage(

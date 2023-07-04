@@ -7,7 +7,7 @@ class CameraMover extends Service{
     private control;
     private command_KeyMap;
     private keyPressCount :number = 0;
-    private speed :number = 0.31;
+    private speed :number = 0.41;
 
     constructor(){
         super();
@@ -17,8 +17,8 @@ class CameraMover extends Service{
             s : () => { this.translateCamera(0,-1) },
             a : () => { this.translateCamera( 1,0) },
             d : () => { this.translateCamera(-1,0) },
-            k : () => { this.rotateCamera(-4) },
-            ñ : () => { this.rotateCamera( 4) },
+            k : () => { this.rotateCamera(-3) },
+            ñ : () => { this.rotateCamera( 3) },
         }
 
         this.control = {

@@ -20,6 +20,7 @@ app.use(pageRoutes);
 // Public
 
 app.use(express.static(join(__dirname, 'public')));
+app.use(express.static(join(__dirname,'lib/frontend')));
 app.use(express.static(join(__dirname, 'vendor')));
 app.use(express.static(join(__dirname, 'dist')));
 
