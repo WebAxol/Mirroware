@@ -2,22 +2,22 @@
 
 Mirroware is a hybrid between two rendering systems: it takes the idea of traditional raycasting and combines it with raytracing concepts, such as reflections. This is the perfect combination between retro and modern graphics; you can make a game such as the classic <i>Wolfenstein 3D</i> with the plus of having mirrors in a modern fashion!
 
-![Mirroware - a mirror simulator](https://github.com/WebAxol/Mirroware/blob/main/img/textures.png)
+![Mirroware - a mirror simulator](https://github.com/WebAxol/Mirroware/blob/main/img/image5.png)
 
-<h3>Main features</h3>
+<h3>Main features (experimental)</h3>
 
-- Raycasting 
-- Mirrors
-- Textures
-- Darkening effect
-- Texture plus color layer
+- 🏹 Raycasting 
+- 🪞 Mirrors
+- 🎁 Textures
+- 🌒 Darkening effect
+- 🎨 Texture plus color layer
+- 🎮 Input handling
+- 🎥 Camera free displacement
 
 Features to be implemented:
 
 - Sprite rendering
 - Text rendering
-- Input handling
-- Camera free displacement
 
 <h3>Technical considerations</h3>
 
