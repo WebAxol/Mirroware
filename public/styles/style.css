@@ -63,7 +63,7 @@ canvas{
     position: absolute;
     width: 100%;
     min-height: 100vh;
-    /*background: radial-gradient(transparent, rgba(255, 0, 0, 0.5));
+    background: radial-gradient(transparent, rgba(255, 255, 255,0.5));
     /*backdrop-filter: blur(0px);*/
   }
 
@@ -73,7 +73,7 @@ canvas{
     top: 0;
     width: 100%;
     min-height: 1000px;
-    background-color: rgba(180, 0, 0, 0.2);
+    background-color: rgba(180, 0, 0, 0.5);
     /*background: linear-gradient(0deg, rgba(0,0,0,0.2) 0%, rgba(9,50,9,0.2) 34%, rgba(33, 214, 251, 0.8) 100%);
     */padding: 50px;
 }
