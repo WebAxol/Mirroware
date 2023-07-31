@@ -32,18 +32,9 @@ class  SceneRenderer3D extends Service{
 
     public execute(){
 
-        // Render ceiling
+        // Clear canvas
 
-        this.context.fillStyle = 'rgba(0,0,0,1)';
-        this.context.fillStyle = 'white';
-
-        this.context.fillRect(0,0,this.canvas.width,this.canvas.height);
-
-        // Render floor
-    
-        this.context.fillStyle = '#0e020e';
-        this.context.fillStyle = 'white';
-        this.context.fillRect(0,0,this.canvas.width,this.canvas.height / 2);
+        this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
 
 
         try{    

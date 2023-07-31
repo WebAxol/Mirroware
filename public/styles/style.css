@@ -29,32 +29,9 @@ header{
 }
 
 .canvasContainer {
-    z-index: -1;
-    background-color: rgba(0, 0, 0, 0.5);
     width: 100%;
     top: 0;
-}
-
-canvas{
-    background-color: black;
-}
-
-#canvas3d {
-    width: 100%;
-    height: auto;
-    top: 0;
-}
-
-
-#canvas2d {
-    position: absolute;
-    border: double red 5px;
-    border-radius: 15%;
-    top: 5px;
-    right: 5px;
-    width: 20%;
-    height: auto;
-    opacity: 0.9;
+    position: relative;
 }
 
 .upper-effect {
