@@ -13,7 +13,7 @@ class RGBA extends Service{
     public executeAsSubordinate(sceneChunk){
 
         this.renderRectangle(sceneChunk);
-        this.renderHorizontalBorders(sceneChunk);
+        //this.renderHorizontalBorders(sceneChunk);
 
     }
 

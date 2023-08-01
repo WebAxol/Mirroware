@@ -4,6 +4,7 @@ import SceneRenderer2D  from "../Services/Rendering/2DRendering/SceneRenderer2D.
 import CameraMover      from "../Services/Camera/CameraMover.js";
 import InputHandler     from "../Services/Camera/InputHandler.js";
 import LightningEffects from '../Services/Rendering/2DRendering/LightningEffects.js';
+import RainEffect       from "../Services/Rendering/2DRendering/RainEffect.js";
 import canvases         from "./canvases.js";
 
 
@@ -11,7 +12,8 @@ const services = {
     'RayCastProcessor' : new RayCaster(),
     'SceneRenderer3D'  : new SceneRenderer3D(canvases.canvas3d),
     'LightningEffects' : new LightningEffects(canvases.background),
-    //'SceneRenderer2D'  : new SceneRenderer2D(canvas2d),
+    //'RainEffect'        : new RainEffect(canvases.frontground),
+    //'SceneRenderer2D'  : new SceneRenderer2D(canvases.canvas2d),
     'CameraMover'      : new CameraMover(),
     'InputHandler'     : new InputHandler()
 };

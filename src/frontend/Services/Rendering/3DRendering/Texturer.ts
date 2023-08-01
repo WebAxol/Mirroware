@@ -12,11 +12,15 @@ class TextureDisplayer extends Service{
 
     public executeAsSubordinate(info){
 
+        const textureSpan = 2;
+        
         let scale  = info.size.y / 1000;
         let height = 1000;
-        let texture = textures.getTexture('bricks');
-        let percentage :number = this.mapTexture(info);
-
+        let roll = ['dirt','netherrack','bricks'];
+        
+        let pixelNum :number = this.mapTexture(info);
+        let percentage :number = pixelNum / textureSpan % 1;
+        let texture = textures.getTexture(roll[Math.floor(pixelNum / textureSpan) % 3]);
 
         let context = this.chief.context;
         let canvasHeight = this.chief.canvas.height;
@@ -26,7 +30,7 @@ class TextureDisplayer extends Service{
             
         context.drawImage(
            texture,
-            (percentage * 400) % 390,
+            (percentage * 390) % 390,
             0,                 
             10,                  
             400,                
@@ -46,13 +50,13 @@ class TextureDisplayer extends Service{
         if(info.item.getType() === 'HorizontalWall'){
 
             let wallLength = info.item.endX - info.item.startX;
-            percentage = Math.abs(((info.point.x - info.item.startX) / (wallLength / 5)) % 1);
+            percentage = Math.abs(((info.point.x - info.item.startX)));
         }
 
         else if(info.item.getType() === 'VerticalWall'){
 
             let wallLength = info.item.endY - info.item.startY;
-            percentage = Math.abs((info.point.y - info.item.startY) / (wallLength / 5) % 1);
+            percentage = Math.abs((info.point.y - info.item.startY));
         }
 
         return percentage;

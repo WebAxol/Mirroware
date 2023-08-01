@@ -20,7 +20,7 @@ const canvases = {
         style : {
             zIndex : 1,
             width  : '100%',
-            background : 'white'
+            background : 'url(https://t3.ftcdn.net/jpg/03/01/35/54/360_F_301355492_a8MJpnsU9oS1M05g7dXDuY1v9RsIvcWL.jpg)'
         }
     }),
 
@@ -30,11 +30,11 @@ const canvases = {
         height : 1700,
         style : {
             zIndex : 2,
-            width  : '100%',
+            width  : '100%'
         }
-    })
-
-    /*canvas2d : CanvasManager.createCanvas({
+    }),
+    /*
+    canvas2d : CanvasManager.createCanvas({
         id : 'canvas2d',
         width : 3000,
         height : 3000,
@@ -48,7 +48,7 @@ const canvases = {
             width: '20%',
             height: 'auto',
             opacity: '0.9',
-            display : 'none'
+            ///display : 'none'
         }
     })*/
 }
