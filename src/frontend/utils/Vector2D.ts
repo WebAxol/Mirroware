@@ -98,6 +98,15 @@ class Vector2D {
 
         return { x : v.x / mag, y : v.y / mag }
     }
+
+    public static between(v1,v2,percentil){
+        return new Vector2D( v1.x + (v2.x - v1.x) * percentil, v1.y + (v2.y - v1.y) * percentil);
+    }
+
+    public static perpendicular(v :Vector2D){
+
+        return new Vector2D(-1 * v.y, -1 * v.x);
+    }
 }
 
 export default Vector2D;
