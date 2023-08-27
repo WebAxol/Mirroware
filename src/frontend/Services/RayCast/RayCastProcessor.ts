@@ -1,10 +1,9 @@
 
-import CollisionDetector from "../../utils/CollisionDetector.js";
-import VariableCalculator from './VariableCalculator.js';
-import { Camera, camera } from '../../utils/Camera.js';
-import { Ray } from "../../setUp/agentTypes.js";
-import Service from "../Service.js";
-import World from '/pluglightjs/World.js';
+import CollisionDetector    from "../../utils/CollisionDetector.js";
+import VariableCalculator   from './VariableCalculator.js';
+import { Camera, camera }   from '../../utils/Camera.js';
+import { Ray }              from "../../types/Ray.js";
+import Service              from "../Service.js";
 
 class RayCastProcessor extends Service {
     
@@ -30,14 +29,14 @@ class RayCastProcessor extends Service {
 
         let newHorizontalIndex = this.testAgainstHorizontalWalls(ray,indices.horizontal);
         let newVerticalIndex   = this.testAgainstVerticalWalls(ray,indices.vertical);
-      
+
         // new indices imply that the ray has collided, and viceversa
 
         camera.sceneModel.update(ray);
-       
+
         if(newHorizontalIndex == false && newVerticalIndex == false) return false; // No collision
         if(!((ray.collidesWith.opacity < 1) && ray.level < 3))      return false;
-              
+        
         let newIndices =  { 
             vertical  : (newVerticalIndex   === false ) ? indices.vertical   : newVerticalIndex, 
             horizontal: (newHorizontalIndex === false ) ? indices.horizontal : newHorizontalIndex

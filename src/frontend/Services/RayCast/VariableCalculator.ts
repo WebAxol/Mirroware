@@ -1,7 +1,6 @@
 import Service from "../Service.js";
-import World from '/pluglightjs/World.js';
 import { Camera, camera } from '../../utils/Camera.js';
-import { Ray } from '../../setUp/agentTypes.js';
+import { Ray } from '../../types/Ray.js';
 
 class VariableCalculator extends Service{
 
