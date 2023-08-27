@@ -34,7 +34,7 @@ const canvases = {
             width  : '100%'
         }
     }),
-    /*
+    
     canvas2d : CanvasManager.createCanvas({
         id : 'canvas2d',
         width : 3000,
@@ -51,7 +51,7 @@ const canvases = {
             opacity: '0.9',
             ///display : 'none'
         }
-    })*/
+    })
 }
 
 export default canvases

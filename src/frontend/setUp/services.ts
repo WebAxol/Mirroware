@@ -13,7 +13,7 @@ const services = {
     'SceneRenderer3D'  : new SceneRenderer3D(canvases.canvas3d),
     //'LightningEffects' : new LightningEffects(canvases.background),
     //'RainEffect'        : new RainEffect(canvases.frontground),
-    //'SceneRenderer2D'  : new SceneRenderer2D(canvases.canvas2d),
+    'SceneRenderer2D'  : new SceneRenderer2D(canvases.canvas2d),
     'CameraMover'      : new CameraMover(),
     'InputHandler'     : new InputHandler()
 };
