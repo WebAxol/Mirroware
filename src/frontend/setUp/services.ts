@@ -11,7 +11,7 @@ import canvases         from "./canvases.js";
 const services = {
     'RayCastProcessor' : new RayCaster(),
     'SceneRenderer3D'  : new SceneRenderer3D(canvases.canvas3d),
-    'LightningEffects' : new LightningEffects(canvases.background),
+    //'LightningEffects' : new LightningEffects(canvases.background),
     //'RainEffect'        : new RainEffect(canvases.frontground),
     //'SceneRenderer2D'  : new SceneRenderer2D(canvases.canvas2d),
     'CameraMover'      : new CameraMover(),
