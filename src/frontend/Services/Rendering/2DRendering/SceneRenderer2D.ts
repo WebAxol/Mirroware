@@ -15,7 +15,8 @@ class SceneRenderer2D extends Service{
     public execute() {
         
         const horizontalWalls = this.world.getCollection('HorizontalWalls');
-        const verticalWalls = this.world.getCollection('VerticalWalls');
+        const verticalWalls   = this.world.getCollection('VerticalWalls');
+        const circles         = this.world.getCollection('Circles');
 
         this.#context.fillStyle = 'rgba(0,0,0,1)';
         this.#context.fillRect(0,0,3000,3000);
@@ -28,6 +29,10 @@ class SceneRenderer2D extends Service{
 
         verticalWalls.forEach(wall => {
             this.renderWall(wall);
+        });
+
+        circles.forEach(circle => {
+            this.renderCircle(circle);
         });
 
     };
@@ -58,6 +63,17 @@ class SceneRenderer2D extends Service{
         this.#context.moveTo(source.x * this.scale, source.y * this.scale);
         this.#context.lineTo(ray.collidesAt.x * this.scale,  ray.collidesAt.y * this.scale);
         this.#context.closePath();
+        this.#context.stroke();
+
+    }
+
+    public renderCircle(circle){
+    
+        this.#context.strokeStyle = 'white';
+        this.#context.lineWidth = 10;
+
+        this.#context.beginPath();
+        this.#context.arc(circle.center.x * this.scale, circle.center.y * this.scale, circle.radius * this.scale, 0, 2 * Math.PI);
         this.#context.stroke();
 
     }

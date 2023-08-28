@@ -30,7 +30,7 @@ class Dimensioner extends Service{
         var index :number;
 
         for(index = 0; index < camera.rays.length; index++) _calculateDimensions(this,camera.rays[index]);
-     
+    
         // Each fraction is a portion of the bruteTotal length of the canvas horizontally
 
         function _calculateDimensions(service, ray, prevDistance = 0, adjustment : any = undefined){
@@ -44,7 +44,7 @@ class Dimensioner extends Service{
             // Fish-eye effect is fixed with this adjustment to the distance
 
             adjustment = adjustment || Math.cos(Math.abs((Math.abs(cameraDegree - ray.degree) / 180) * Math.PI));
-            let adjustedDistance = distance * adjustment + Math.min((Math.sin(((service.chief.world.frame / 10) + (index / 20)) / 1) / distance), 10);
+            let adjustedDistance = distance * adjustment //+ Math.min((Math.sin(((service.chief.world.frame / 10) + (index / 20)) / 1) / distance), 10);
 
             let leftTop  = { x : ((canvasWidth * index) / bruteTotal), y : (canvasHeight / 2) - (canvasHeight) / adjustedDistance};
             let size     = { x : canvasWidth / netTotal, y : (canvasHeight * 2) / adjustedDistance};

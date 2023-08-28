@@ -57,7 +57,11 @@ const testScene = [ // This is just a template to instance the required walls
     { type:'Wall', info:[[19, 12],[22, 12],  0.1, '0,255,100'   ]},
     { type:'Wall', info:[[19, 15],[22, 15],  0.1, '0,255,100'   ]},
     { type:'Wall', info:[[22, 12],[22, 15],  1, '255,157,0'     ]},
-    { type:'Wall', info:[[19, 12],[19, 15],  1, '255,157,0'     ]}
+    { type:'Wall', info:[[19, 12],[19, 15],  1, '255,157,0'     ]},
+
+    { type : 'Circle', info:[{ x : 20, y : 20}, 0.5] },
+    { type : 'Circle', info:[{ x : 20, y : 10}, 5] }
+
 ];
 
 // TODO: replace by a module specialized on building scenes

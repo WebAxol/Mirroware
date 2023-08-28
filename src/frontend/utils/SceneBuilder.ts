@@ -1,3 +1,6 @@
+import { Circle } from '../types/Circle.js';
+import { HorizontalWall } from '../types/HorizontalWall.js';
+import { VerticalWall } from '../types/VerticalWall.js';
 import World from '/pluglightjs/World.js';
 
 class SceneBuilder {
@@ -10,8 +13,13 @@ class SceneBuilder {
 
     public build(scene){
         
-        var horizontal :object[] = [];
-        var vertical   :object[] = [];
+        //  Primitives
+
+        var horizontal :HorizontalWall[] = [];
+        var vertical   :VerticalWall[]   = [];
+        var circles    :Circle[]         = []
+
+        //
 
         scene.forEach((element :any) => {
 
@@ -21,7 +29,7 @@ class SceneBuilder {
 
                 let vertexA = segment[0];
                 let vertexB = segment[1];
-            
+                
                 if(vertexA[0] == vertexB[0] && vertexA[1] != vertexB[1]){
                     vertical.push(this.buildVerticalWall(vertexA,vertexB,segment[2],segment[3]));
                 } 
@@ -34,6 +42,13 @@ class SceneBuilder {
                     console.warn(`Invalid vertex pair given: the vertices must be different and colinear`);
                 }    
             }
+
+            else if(element.type == 'Circle'){
+
+                let info = element.info;
+
+                circles.push(this.buildCircle(info[0],info[1]));
+            }
         });
 
 
@@ -42,8 +57,9 @@ class SceneBuilder {
 
     // Add walls to their respective collections
 
-    horizontal.forEach(wall => { this.app.addToCollection('HorizontalWalls', wall) });
-    vertical.forEach(  wall => { this.app.addToCollection('VerticalWalls', wall) });
+    horizontal.forEach(wall => { this.app.addToCollection('HorizontalWalls',wall) });
+    vertical.forEach(  wall => { this.app.addToCollection('VerticalWalls',  wall) });
+    circles.forEach( circle => { this.app.addToCollection('Circles', circle )});
 
 
     }
@@ -82,6 +98,16 @@ class SceneBuilder {
         return wall;
     };
 
+    private buildCircle(center,radius){
 
+        let circle = this.app.createAgent('Circle',{
+            info : {
+                radius : radius,
+                center : center
+            }
+        });
+
+        return circle;
+    }
 }
 export default SceneBuilder;

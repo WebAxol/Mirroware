@@ -30,6 +30,8 @@ class RayCastProcessor extends Service {
         let newHorizontalIndex = this.testAgainstHorizontalWalls(ray,indices.horizontal);
         let newVerticalIndex   = this.testAgainstVerticalWalls(ray,indices.vertical);
 
+        this.testAgainstCircles(ray);
+
         // new indices imply that the ray has collided, and viceversa
 
         camera.sceneModel.update(ray);
@@ -81,6 +83,8 @@ class RayCastProcessor extends Service {
         if(!sense) return false; // Cannot collide; it is totally vertical
 
         const walls = this.#chief.world.getCollection('VerticalWalls');
+
+        if(walls.length <= 0) return false;
 
         for(index  += (sense == 1 ? 1 : 0); (index < walls.length && sense == 1) || (index >= 0 && sense == -1) ; index += sense){
 
@@ -138,6 +142,32 @@ class RayCastProcessor extends Service {
         }
 
         return false;
+    }
+
+    public testAgainstCircles(ray){
+
+        const circles = this.#chief.world.getCollection('Circles');
+
+        for(let i = 0; i < circles.length; i++){
+
+            let hasCollided = CollisionDetector.RayVsCircle(ray,circles[i]);
+
+            //console.log(hasCollided);
+
+            if(!hasCollided) continue;
+
+          //  console.log(hasCollided);
+
+            let isCloser = this.compareWithClosest(ray,hasCollided);
+
+            if(!isCloser) continue;
+        
+            ray.collidesAt.x = hasCollided[0];
+            ray.collidesAt.y = hasCollided[1];
+            ray.collidesWith = circles[i];
+
+        }
+
     }
 
     public compareWithClosest(ray,collisionPoint) :boolean {
