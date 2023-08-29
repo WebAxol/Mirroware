@@ -47,7 +47,7 @@ class SceneBuilder {
 
                 let info = element.info;
 
-                circles.push(this.buildCircle(info[0],info[1]));
+                circles.push(this.buildCircle(info[0],info[1],info[2]));
             }
         });
 
@@ -98,12 +98,15 @@ class SceneBuilder {
         return wall;
     };
 
-    private buildCircle(center,radius){
+    private buildCircle(center,radius,color){
+
+        console.log(color);
 
         let circle = this.app.createAgent('Circle',{
             info : {
                 radius : radius,
-                center : center
+                center : center,
+                color  : color
             }
         });
 

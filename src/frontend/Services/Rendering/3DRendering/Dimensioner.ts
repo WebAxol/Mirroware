@@ -52,7 +52,7 @@ class Dimensioner extends Service{
             // Create sceneChunck to render
             // TODO : implement interpolation algorithm to split sceneChunck into more pixel columns
             
-            let flashLightBrightness = Math.pow(((index - (camera.rays.length / 2))/10),2) / 3;
+            let flashLightBrightness = Math.pow(((index - (camera.rays.length / 2))/10),2) / 10;
 
             //flashLightBrightness = 1;
 

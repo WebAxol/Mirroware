@@ -29,7 +29,7 @@ class TextureDisplayer extends Service{
         context.scale(1,scale);
             
         context.drawImage(
-           texture,
+            texture,
             (percentage * 390) % 390,
             0,                 
             10,                  

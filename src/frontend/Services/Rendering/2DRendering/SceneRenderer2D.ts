@@ -23,6 +23,11 @@ class SceneRenderer2D extends Service{
         
         this.renderRay(camera.rays[Math.floor(camera.rays.length / 2)],camera.pos);
 
+        /*  
+        camera.rays.forEach(ray => {
+            this.renderRay(ray,camera.pos);
+        });
+        */
         horizontalWalls.forEach(wall => {
             this.renderWall(wall);
         });
@@ -69,7 +74,7 @@ class SceneRenderer2D extends Service{
 
     public renderCircle(circle){
     
-        this.#context.strokeStyle = 'white';
+        this.#context.strokeStyle = `rgb(${circle.color})`;
         this.#context.lineWidth = 10;
 
         this.#context.beginPath();
