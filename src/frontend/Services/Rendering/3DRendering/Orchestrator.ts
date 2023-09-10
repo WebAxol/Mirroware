@@ -33,8 +33,11 @@ class  SceneRenderer3D extends Service{
     public execute(){
 
         // Clear canvas
-
         this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
+
+        this.context.fillStyle = "black";
+
+        this.context.fillRect(0,this.canvas.height / 2,this.canvas.width,this.canvas.height)
 
 
         try{    

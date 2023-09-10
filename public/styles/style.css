@@ -45,12 +45,12 @@ header{
   }
 
 .upperLayer{
-    z-index: 1;
+    z-index: 100;
     position: absolute;
     top: 0;
     width: 100%;
     min-height: 1000px;
-    background-color: rgba(180, 0, 0, 0.5);
+    background-color: rgba(0, 255, 238, 0.1);
     /*background: linear-gradient(0deg, rgba(0,0,0,0.2) 0%, rgba(9,50,9,0.2) 34%, rgba(33, 214, 251, 0.8) 100%);
     */padding: 50px;
 }
