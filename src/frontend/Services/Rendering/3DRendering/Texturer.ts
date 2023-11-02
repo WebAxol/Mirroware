@@ -16,7 +16,7 @@ class TextureDisplayer extends Service{
         
         let scale  = info.size.y / 1000;
         let height = 1000;
-        let roll = ['dirt','netherrack','bricks'];
+        let roll = ['netherrack','bricks','netherrack'];
         
         let pixelNum :number = this.mapTexture(info);
         let percentage :number = pixelNum / textureSpan % 1;

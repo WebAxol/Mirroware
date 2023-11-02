@@ -44,7 +44,7 @@ class Dimensioner extends Service{
             // Fish-eye effect is fixed with this adjustment to the distance
 
             adjustment = adjustment || Math.cos(Math.abs((Math.abs(cameraDegree - ray.degree) / 180) * Math.PI));
-            let adjustedDistance = distance * adjustment //+ Math.min((Math.sin(((service.chief.world.frame / 10) + (index / 20)) / 1) / distance), 10);
+            let adjustedDistance = distance * adjustment // + Math.min((Math.sin(((service.chief.world.frame / 50) + (index / 20)) / 1) * (distance / 10)), 10);
 
             let leftTop  = { x : ((canvasWidth * index) / bruteTotal), y : (canvasHeight / 2) - (canvasHeight) / adjustedDistance};
             let size     = { x : canvasWidth / netTotal, y : (canvasHeight * 2) / adjustedDistance};
@@ -52,7 +52,7 @@ class Dimensioner extends Service{
             // Create sceneChunck to render
             // TODO : implement interpolation algorithm to split sceneChunck into more pixel columns
             
-            let flashLightBrightness = Math.pow(((index - (camera.rays.length / 2))/10),2) / 50;
+            let flashLightBrightness = Math.pow(((index - (camera.rays.length / 2))/10),2) / 3;
 
             //flashLightBrightness = 1;
 

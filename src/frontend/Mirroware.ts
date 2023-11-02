@@ -46,7 +46,8 @@ const testScene = [ // This is just a template to instance the required walls
     { type:'Wall', info:[[7, 5],[7, 7],  1, '0,255,200'         ]},
     { type:'Wall', info:[[7, 15],[7, 20],  1, '0,155,200'       ]},
     { type:'Wall', info:[[7, 20],[15, 20],  1, '255,0,0'        ]},
-    { type:'Wall', info:[[25,5],[25,26], 1, '150,150,150'       ]},
+    { type:'Wall', info:[[7, 15],[15, 15],  1, '0,100,100'        ]},
+    { type:'Wall', info:[[25,5],[25,25], 1, '150,150,150'       ]},
     { type:'Wall', info:[[5,25],[25,25], 0.5, '255,157,0'       ]},
     { type:'Wall', info:[[15,7],[17,7], 1, '255,0,255'          ]},
     { type:'Wall', info:[[15,7],[15,10], 1, '255,155,255'       ]},
@@ -60,11 +61,7 @@ const testScene = [ // This is just a template to instance the required walls
     { type:'Wall', info:[[19, 12],[19, 15],  1, '255,157,0'     ]},
 
     { type : 'Circle', info:[{ x : 20, y : 20}, 0.5,'255,0,0'] },
-    { type : 'Circle', info:[{ x : 20, y : 10}, 4,'0,255,0'] },
-    { type : 'Circle', info:[{ x : 10, y : 10}, 1,'0,100,100'] },
-    { type : 'Circle', info:[{ x : 10, y : 15}, 0.5,'255,0,0'] },
-    { type : 'Circle', info:[{ x : 13, y : 17}, 0.5,'255,255,0'] }
-
+    { type : 'Circle', info:[{ x : 20, y : 10}, 3,'0,255,0'] },
 ];
 
 // TODO: replace by a module specialized on building scenes

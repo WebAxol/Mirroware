@@ -26,14 +26,14 @@ class LightningEffects extends Service {
             for(let i = 0; i < 4; i++){
             
                 if(Math.random() > 0.5) this.renderLightning(new Vector2D(Math.random() * 3000, 0),new Vector2D(Math.random() *  3000,1700 / 2));
-           }
+            }
 
            this.randomNextFrame = Math.round(20 + Math.random() * 10);
         }
 
         if(this.context == null) return;
             
-        this.context.fillStyle = 'rgba(255,255,255,0.1)';
+        this.context.fillStyle = 'rgba(155,155,155,0.05)';
 
         this.context?.fillRect(0,0,3000,1700); 
 

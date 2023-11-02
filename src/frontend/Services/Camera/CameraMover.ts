@@ -7,7 +7,7 @@ class CameraMover extends Service{
     private control;
     private command_KeyMap;
     private keyPressCount :number = 0;
-    private speed :number = 0.41;
+    private speed :number = 0.31;
 
     constructor(){
         super();
@@ -44,7 +44,7 @@ class CameraMover extends Service{
     }
 
     private rotateCamera(angle :number = 0){
- 
+
         camera.rays.forEach(ray => {
             ray.degree = (ray.degree + angle) % 360;
             if(ray.degree < 0) ray.degree += 360;
