@@ -20,7 +20,9 @@ class World {
         this.#serviceManager    = new ServiceManager(this);
 
         //Iteration
-
+        this.lastTime = 10;
+        this.deltaTime = NaN;
+        this.fps = NaN;
         this.frame = 0;
         this.routine = () => {};
         this.pause = false;
@@ -88,14 +90,20 @@ class World {
         this.#eventManager.notifyToServices(eventName,details);
     }
 
-    execute(){
+    execute(timeSpan = 20){
         
 
         if(this.pause){
             return;
         }
 
-        requestAnimationFrame(() => { this.execute() });
+        this.deltaTime = timeSpan - this.lastTime;
+
+        this.fps = 1000 / this.deltaTime;
+
+        this.lastTime = timeSpan;
+
+        requestAnimationFrame((timeSpan) => { this.execute(timeSpan) });
 
         this.#agentPool.removeAgents();
         this.#collectionManager.removeAgentsFromCollections();
@@ -103,7 +111,7 @@ class World {
 
         Object.keys(services).forEach((service) => {
                 services[service].execute();
-         });
+        });
 
         if(!this.pause){
             this.frame++;
