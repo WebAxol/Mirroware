@@ -10,9 +10,16 @@ class RGBA extends Service{
         this.chief = chief;
     }
 
-    public executeAsSubordinate(sceneChunk){
+    public executeAsSubordinate(){
 
-        this.renderRectangle(sceneChunk);
+        const renderStack = this.chief.getStack();
+
+        for(let i = renderStack.length -1; i > 0; i--){
+
+            let sceneChunk = renderStack[i];
+
+            this.renderRectangle(sceneChunk);
+        }
         //this.renderHorizontalBorders(sceneChunk);
 
     }
@@ -25,7 +32,7 @@ class RGBA extends Service{
         let canvasWidth = this.chief.canvas.width;
 
         // Black opaque background to avoid transparent walls
-
+        
         context.fillStyle = `rgba(10,0,0,${sceneChunk.item.opacity})`;
         
         context.fillRect(
