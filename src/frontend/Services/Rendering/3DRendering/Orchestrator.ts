@@ -1,4 +1,5 @@
 import Service from "../../Service.js";
+import { SceneChunk } from "../../../types/SceneChunk.js";
 
 // subordinate modules
 
@@ -11,10 +12,10 @@ class  SceneRenderer3D extends Service{
     protected canvas;
     protected context;
     
-    #dimensioner;
-    #rgba;
-    #texturer;
-    #modelPurger;
+    #dimensioner :Dimensioner; 
+    #rgba        :RGBA;
+    #texturer    :Texturer;
+    #renderStack :SceneChunk[];
 
     constructor(canvas){
 
@@ -28,32 +29,54 @@ class  SceneRenderer3D extends Service{
         this.#dimensioner = new Dimensioner(this);
         this.#rgba = new RGBA(this);
         this.#texturer = new Texturer(this);
+        this.#renderStack = [];
+    }
+
+    public addChunk(chunk : SceneChunk){
+
+        this.#renderStack.push(chunk);
+    }
+
+    public popStack() {
+
+        const chunk = this.#renderStack.pop();
+
+        if(chunk) this.world.removeAgent(chunk); // Translate to pool
+    }
+
+    public getStack(){
+
+        return this.#renderStack;
+    }
+
+    private purgeStack(){
+
+        while(this.#renderStack.length){
+
+            this.popStack();
+        }
     }
 
     public execute(){
 
         // Clear canvas
-
-        this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
-
-
         try{    
+
+            this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
+
             this.#dimensioner.executeAsSubordinate();
+            this.#rgba.executeAsSubordinate();
+            this.#texturer.executeAsSubordinate();
+
+            this.purgeStack();
+
+            //this.world.pauseExecution();
         }
         catch(err){
             console.error(err);
             this.world.pauseExecution();
         }
     }
-
-    public _onvariablesCalculated(info){
-
-        this.#rgba.executeAsSubordinate(info);
-        this.#texturer.executeAsSubordinate(info);
-        this.context.globalAlpha = 1;
-    
-    }
-
 }
 
 export default SceneRenderer3D;

@@ -1,5 +1,6 @@
 import Service from "../../Service.js";
 import { Camera, camera } from "../../../utils/Camera.js";
+import { SceneChunk } from "../../../types/SceneChunk.js"
 
 class Dimensioner extends Service{
 
@@ -14,15 +15,16 @@ class Dimensioner extends Service{
 
 
     public executeAsSubordinate(){
- 
+
         // Too many variables and constants; a clousure is used to avoid declaring them over and over each call: Memory saved
 
-        const cameraDegree = camera.rays[Math.floor((camera.rays.length) / 2)].degree;
-        const context = this.chief.context;
-        const bruteTotal    = camera.rays.length;
-        const netTotal = bruteTotal * (this.interpolations + 1); 
-        const canvasWidth  = this.chief.canvas.width;
-        const canvasHeight = this.chief.canvas.height;
+        const context :CanvasRenderingContext2D = this.chief.context;
+
+        const cameraDegree :number = camera.rays[Math.floor((camera.rays.length) / 2)].degree;
+        const bruteTotal   :number = camera.rays.length;
+        const netTotal     :number = bruteTotal * (this.interpolations + 1); 
+        const canvasWidth  :number = this.chief.canvas.width;
+        const canvasHeight :number = this.chief.canvas.height;
 
         // We call 'fraction' to every individual rectangle computed, and we call 'sceneChuck' to every group of fractions that include two rectangles in between which interpolation has occurred
         // We'll store the information of pre-calculated fractions so that when the data from the adjacent ray is calculated, interpolation can be performed to compute sceneChunks
@@ -55,26 +57,25 @@ class Dimensioner extends Service{
             let flashLightBrightness = Math.pow(((index - (camera.rays.length / 2))/10),2) / 3;
 
             //flashLightBrightness = 1;
+    
+            let sceneChunck = service.chief.world.createAgent('SceneChunk',{
+                info : {
+                    leftTop  : leftTop,
+                    size     : size,
+                    distance : distance * Math.max(flashLightBrightness, 1),
 
-            let sceneChunck = {
+                    // Information of item with which ray collided
 
-                // Spatial and dimensional information
+                    point    : ray.collidesAt,
+                    item     : ray.collidesWith
+                }
+            });
 
-                leftTop  : leftTop,
-                size     : size,
-                distance : distance * Math.max(flashLightBrightness, 1),
+            service.chief.addChunk(sceneChunck);
 
-                // Information of item with which ray collided
-
-                point    : ray.collidesAt,
-                item     : ray.collidesWith
-            }
-            
             if(sceneChunck.item.opacity < 1 && ray.reflected.getType){
                 _calculateDimensions(service,ray.reflected,distance, adjustment);
             }
-
-            service.chief._onvariablesCalculated(sceneChunck); // Internal event notified to chief module
         }
     }
 }
