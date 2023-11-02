@@ -13,7 +13,7 @@ class InputHandler extends Service {
 
         window.addEventListener('keydown',  (e) => { this.keydown(e) });
         window.addEventListener('keyup',    (e) => { this.keyup(e)   });
-     
+    
         // Internal framework events
 
         this.world.registerEvent('keydown');

@@ -4,6 +4,8 @@ import Vector2D from '../../utils/Vector2D.js';
 
 class CameraMover extends Service{
 
+    private dt :number;
+
     private control;
     private command_KeyMap;
     private keyPressCount :number = 0;
@@ -12,13 +14,15 @@ class CameraMover extends Service{
     constructor(){
         super();
 
+        this.dt = 0;
+
         this.command_KeyMap = {
             w : () => { this.translateCamera(0, 1) },
             s : () => { this.translateCamera(0,-1) },
             a : () => { this.translateCamera( 1,0) },
             d : () => { this.translateCamera(-1,0) },
-            k : () => { this.rotateCamera(-3) },
-            ñ : () => { this.rotateCamera( 3) },
+            k : () => { this.rotateCamera(-3 * this.dt) },
+            ñ : () => { this.rotateCamera( 3 * this.dt) },
         }
 
         this.control = {
@@ -32,6 +36,10 @@ class CameraMover extends Service{
     }
 
     public execute() {
+
+        this.dt = 50 / this.world.fps;
+
+        this.speed = 0.41 * this.dt;
         
         let keys = Object.keys(this.control);
 

@@ -10,37 +10,47 @@ class TextureDisplayer extends Service{
         this.chief = chief; 
     };
 
-    public executeAsSubordinate(info){
+    public executeAsSubordinate(){
 
         const textureSpan = 2;
         
-        let scale  = info.size.y / 1000;
         let height = 1000;
-        let roll = ['netherrack','bricks','netherrack'];
-        
-        let pixelNum :number = this.mapTexture(info);
-        let percentage :number = pixelNum / textureSpan % 1;
-        let texture = textures.getTexture(roll[Math.floor(pixelNum / textureSpan) % 3]);
+        let roll = ['netherrack','netherrack','netherrack'];
 
-        let context = this.chief.context;
-        let canvasHeight = this.chief.canvas.height;
+        const renderStack = this.chief.getStack();
+
+        for(let i = renderStack.length - 1; i >= 0; i--){
+
+            let sceneChunk = renderStack[i];
         
-        context.globalAlpha = Math.min(info.item.opacity / (info.distance / 10) / 5, 0.5);
-        context.scale(1,scale);
+            let scale  = sceneChunk.size.y / 1000;
+            let pixelNum :number = this.mapTexture(sceneChunk);
+            let percentage :number = pixelNum / textureSpan % 1;
+            let texture = textures.getTexture(roll[Math.floor(pixelNum / textureSpan) % 3]);
+
+            let context = this.chief.context;
+            let canvasHeight = this.chief.canvas.height;
             
-        context.drawImage(
-            texture,
-            (percentage * 390) % 390,
-            0,                 
-            10,                  
-            400,                
-            info.leftTop.x,
-            ((canvasHeight / 2) / scale) - (height / 2),
-            3000 / 300,                 
-            height
-        );
+            context.globalAlpha = Math.min(sceneChunk.item.opacity / (sceneChunk.distance / 10) / 5, 0.5);
+            context.scale(1,scale);
+                
+            context.drawImage(
+                texture,
+                (percentage * 390) % 390,
+                0,                 
+                10,                  
+                400,                
+                sceneChunk.leftTop.x,
+                ((canvasHeight / 2) / scale) - (height / 2),
+                3000 / 300,                 
+                height
+            );
 
-        context.scale(1, 1 / scale);
+            context.scale(1, 1 / scale);
+
+            this.chief.context.globalAlpha = 1;
+
+        }
     }
 
     public mapTexture(info) :number{
