@@ -37,7 +37,7 @@ class CameraMover extends Service{
 
     public execute() {
 
-        this.dt = 50 / this.world.fps;
+        this.dt = 60 / this.world.fps;
 
         this.speed = 0.41 * this.dt;
         

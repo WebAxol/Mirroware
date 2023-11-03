@@ -62,8 +62,12 @@ class  SceneRenderer3D extends Service{
         // Clear canvas
         try{    
 
-            this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
-    
+            this.context.fillStyle = 'rgb(5,0,0)';
+
+            this.context.clearRect(0,0,this.canvas.width,this.canvas.height / 2);
+            this.context.fillRect(0,this.canvas.height / 2,this.canvas.width,this.canvas.height);
+
+
             this.#dimensioner.executeAsSubordinate();
             this.#rgba.executeAsSubordinate();
             this.#texturer.executeAsSubordinate();

@@ -107,6 +107,11 @@ class Vector2D {
 
         return new Vector2D(-1 * v.y, -1 * v.x);
     }
+
+    public static angleBetween(v1 : Vector2D, v2: Vector2D){
+    
+        return Math.acos(Vector2D.dot(v1,v2) / (v1.mag() * v2.mag())) * (180 /  Math.PI);
+    }
 }
 
 export default Vector2D;

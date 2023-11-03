@@ -1,5 +1,6 @@
 import Service from '../../Service.js';
 import textures from '../../../utils/Textures.js'
+import Vector2D from '../../../utils/Vector2D.js';
 
 class TextureDisplayer extends Service{
 
@@ -15,7 +16,7 @@ class TextureDisplayer extends Service{
         const textureSpan = 2;
         
         let height = 1000;
-        let roll = ['netherrack','netherrack','netherrack'];
+        let roll = ['bricks','bricks'];
 
         const renderStack = this.chief.getStack();
 
@@ -24,9 +25,14 @@ class TextureDisplayer extends Service{
             let sceneChunk = renderStack[i];
         
             let scale  = sceneChunk.size.y / 1000;
-            let pixelNum :number = this.mapTexture(sceneChunk);
+            let pixelNum : number;
+
+            if(sceneChunk.item.radius) pixelNum = this.mapCylinder(sceneChunk);
+            
+            else pixelNum = this.mapTexture(sceneChunk);
+
             let percentage :number = pixelNum / textureSpan % 1;
-            let texture = textures.getTexture(roll[Math.floor(pixelNum / textureSpan) % 3]);
+            let texture = textures.getTexture(roll[Math.floor(pixelNum / textureSpan) % 2]);
 
             let context = this.chief.context;
             let canvasHeight = this.chief.canvas.height;
@@ -51,6 +57,15 @@ class TextureDisplayer extends Service{
             this.chief.context.globalAlpha = 1;
 
         }
+    }
+
+    public mapCylinder(info) :number {
+
+        const direction = new Vector2D(Math.cos(this.chief.world.frame / 100),Math.sin(this.chief.world.frame / 100));
+        const centerToPoint = Vector2D.sub(info.point,  info.item.center);
+        const angle = Vector2D.angleBetween(centerToPoint,direction);
+
+        return angle / 18 * (info.item.radius / 3);
     }
 
     public mapTexture(info) :number{

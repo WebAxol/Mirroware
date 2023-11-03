@@ -1,6 +1,7 @@
 import Service from "../../Service.js";
 import { Camera, camera } from "../../../utils/Camera.js";
 import { SceneChunk } from "../../../types/SceneChunk.js"
+import Vector2D from '../../../utils/Vector2D.js';
 
 class Dimensioner extends Service{
 
@@ -54,7 +55,7 @@ class Dimensioner extends Service{
             // Create sceneChunck to render
             // TODO : implement interpolation algorithm to split sceneChunck into more pixel columns
             
-            let flashLightBrightness = Math.pow(((index - (camera.rays.length / 2))/10),2) / 3;
+            let flashLightBrightness = Math.pow(((index - (camera.rays.length / 2))/10),2) / 10;
 
             //flashLightBrightness = 1;
     
