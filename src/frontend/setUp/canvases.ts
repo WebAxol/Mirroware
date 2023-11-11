@@ -21,7 +21,7 @@ const canvases = {
             zIndex : 1,
             width  : '100%',
             //background: "white"
-            background: 'linear-gradient(180deg, rgba(25,213,205,1) -50%, rgba(255,0,91,0.9836309523809523) 100%)'
+            background: 'linear-gradient(180deg, rgba(125,213,205,1) 0%, rgba(155,100,50,0.9836309523809523) 50%)'
 
             //background : 'url(https://t3.ftcdn.net/jpg/03/01/35/54/360_F_301355492_a8MJpnsU9oS1M05g7dXDuY1v9RsIvcWL.jpg)'
         }
@@ -34,7 +34,7 @@ const canvases = {
         style : {
             zIndex : 2,
             width  : '100%',
-            //background: 'radial-gradient(rgba(0,0,0,0.5) 0%, rgba(255,0,0,0.5) 100%)'
+            background: 'radial-gradient(rgba(0,0,0,0.5) 0%, rgba(135,62,35,0.6) 100%)'
         }
     }),
     
@@ -52,7 +52,7 @@ const canvases = {
             width: '20%',
             height: 'auto',
             opacity: '0.9',
-            ///display : 'none'
+            display : 'none'
         }
     })
 }

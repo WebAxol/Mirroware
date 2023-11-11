@@ -37,9 +37,9 @@ class CameraMover extends Service{
 
     public execute() {
 
-        this.dt = 60 / this.world.fps;
+        this.dt = 50 / this.world.fps;
 
-        this.speed = 0.41 * this.dt;
+        this.speed = 0.31 * this.dt;
         
         let keys = Object.keys(this.control);
 

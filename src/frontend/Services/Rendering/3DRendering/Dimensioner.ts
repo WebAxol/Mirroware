@@ -2,6 +2,7 @@ import Service from "../../Service.js";
 import { Camera, camera } from "../../../utils/Camera.js";
 import { SceneChunk } from "../../../types/SceneChunk.js"
 import Vector2D from '../../../utils/Vector2D.js';
+import CONFIG from "../../../config.js";
 
 class Dimensioner extends Service{
 
@@ -47,17 +48,17 @@ class Dimensioner extends Service{
             // Fish-eye effect is fixed with this adjustment to the distance
 
             adjustment = adjustment || Math.cos(Math.abs((Math.abs(cameraDegree - ray.degree) / 180) * Math.PI));
-            let adjustedDistance = distance * adjustment // + Math.min((Math.sin(((service.chief.world.frame / 50) + (index / 20)) / 1) * (distance / 10)), 10);
+            let adjustedDistance = distance * adjustment //+ Math.min((Math.sin(((service.chief.world.frame / 50) + (index / 20)) / 1) * (distance / 10)), 10);
 
+        
             let leftTop  = { x : ((canvasWidth * index) / bruteTotal), y : (canvasHeight / 2) - (canvasHeight) / adjustedDistance};
             let size     = { x : canvasWidth / netTotal, y : (canvasHeight * 2) / adjustedDistance};
 
             // Create sceneChunck to render
-            // TODO : implement interpolation algorithm to split sceneChunck into more pixel columns
-            
-            let flashLightBrightness = Math.pow(((index - (camera.rays.length / 2))/10),2) / 10;
 
-            //flashLightBrightness = 1;
+            // Adjust light and darkness levels
+
+            let flashLightBrightness = !CONFIG.darkness ? 1 : Math.pow(((index - (camera.rays.length / 2))/ 10 ),2) / CONFIG.lightLevel;
     
             let sceneChunck = service.chief.world.createAgent('SceneChunk',{
                 info : {

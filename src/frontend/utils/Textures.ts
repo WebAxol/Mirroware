@@ -1,4 +1,3 @@
-import { text } from "body-parser";
 
 class Textures {
     
@@ -55,8 +54,8 @@ const textures = new Textures();
 
 // add Textures to 'textures' : textures.add(textureName,src);
 
-textures.addTexture('netherrack','netherrack.png');
-textures.addTexture('dirt','dirt.png');
+textures.addTexture('netherrack','hororr.png');
+textures.addTexture('dirt','prop.png');
 textures.addTexture('bricks','bricks.png');
 
 

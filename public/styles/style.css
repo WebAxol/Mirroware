@@ -20,6 +20,7 @@ body{
     background: black;
     height: fit-content;
     overflow-y: hidden;
+    overflow: hidden;
 }
 header{
     background: black;
@@ -32,6 +33,15 @@ header{
     width: 100%;
     top: 0;
     position: relative;
+    animation: shake;
+    animation-iteration-count: infinite;
+    animation-timing-function:ease-in-out;
+    animation-duration: 1s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: rotate(-1deg)}
+    50%      { transform: rotate(1deg); }
 }
 
 .upper-effect {

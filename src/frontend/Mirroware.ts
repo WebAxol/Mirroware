@@ -1,4 +1,5 @@
 import app                from './Initializer.js';
+import CONFIG             from './config.js';
 import { Camera, camera } from './utils/Camera.js';
 import SceneBuilder       from './utils/SceneBuilder.js';
 
@@ -10,7 +11,7 @@ import SceneBuilder       from './utils/SceneBuilder.js';
 // First, create an array containing rays - TODO: Make an easier and safer way of defining rays with their raysources
 
 
-const n = 300;
+const n = CONFIG.resolution;
 
 for(let i : number = 0; i < n; i++){
     let ray = app.createAgent('Ray',{
@@ -33,7 +34,7 @@ const testScene = [ // This is just a template to instance the required walls
     { type:'Wall', info:[[12,5],[12,-20],   0.2, '255,0,0'      ]},
     { type:'Wall', info:[[5, -24],[5, -25], 1, '255,0,100'      ]},
     { type:'Wall', info:[[5, -21],[5, -20], 1, '0,255,100'      ]},    
-    { type:'Wall', info:[[5, -21],[-20, -21], 0.2, '0,255,100'  ]},    
+    { type:'Wall', info:[[5, -21],[-20, -21], 0.2, '0,255,0'  ]},    
     { type:'Wall', info:[[5, -24],[-20, -24], 0.2, '255,0,100'  ]},    
     { type:'Wall', info:[[5, -20],[10, -20], 1, '0,255,100'     ]},
     { type:'Wall', info:[[12, -20],[25, -20], 1, '0,255,100'    ]},
@@ -61,7 +62,7 @@ const testScene = [ // This is just a template to instance the required walls
     { type:'Wall', info:[[19, 12],[19, 15],  1, '255,157,0'     ]},
 
     { type : 'Circle', info:[{ x : 10, y : 17.5}, 1,'255,0,0'] },
-    { type : 'Circle', info:[{ x : 20, y : 10}, 3,'0,255,0'] },
+    { type : 'Circle', info:[{ x : 20, y : 10}, 3,'255,0,0'] },
 ];
 
 // TODO: replace by a module specialized on building scenes
