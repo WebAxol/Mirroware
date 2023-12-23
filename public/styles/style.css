@@ -33,10 +33,10 @@ header{
     width: 100%;
     top: 0;
     position: relative;
-    animation: shake;
+    /*animation: shake;
     animation-iteration-count: infinite;
     animation-timing-function:ease-in-out;
-    animation-duration: 1s;
+    animation-duration: 1s;*/
 }
 
 @keyframes shake {
@@ -52,7 +52,7 @@ header{
     min-height: 100vh;
     background: radial-gradient(transparent, rgba(0, 0, 0,1));
     /*backdrop-filter: blur(0px);*/
-  }
+}
 
 .upperLayer{
     z-index: 100;

@@ -1,5 +1,6 @@
 import Service from "../../Service.js";
 import { Camera, camera } from "../../../utils/Camera.js";
+import CONFIG from '../../../config.js';
 
 class RGBA extends Service{
 
@@ -52,7 +53,7 @@ class RGBA extends Service{
         context.fillRect(
             sceneChunk.leftTop.x,
             sceneChunk.leftTop.y, 
-            sceneChunk.size.x,
+            sceneChunk.size.x * Math.max(CONFIG.blurEffect * 4,1),
             sceneChunk.size.y
         );
     }

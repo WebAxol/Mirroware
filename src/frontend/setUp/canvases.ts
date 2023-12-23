@@ -34,7 +34,7 @@ const canvases = {
         style : {
             zIndex : 2,
             width  : '100%',
-            background: 'radial-gradient(rgba(0,0,0,0.5) 0%, rgba(135,62,35,0.6) 100%)'
+            //background: 'radial-gradient(rgba(0,0,0,0.4) 0%, rgba(135,62,35,0.5) 100%)'
         }
     }),
     
@@ -52,7 +52,7 @@ const canvases = {
             width: '20%',
             height: 'auto',
             opacity: '0.9',
-            display : 'none'
+            //display : 'none'
         }
     })
 }

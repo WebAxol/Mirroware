@@ -33,7 +33,7 @@ class TextureDisplayer extends Service{
             else pixelNum = this.mapTexture(sceneChunk);
 
             let percentage :number = pixelNum / textureSpan % 1;
-            let texture = textures.getTexture(roll[Math.floor(pixelNum / textureSpan) % 3]);
+            let texture = textures.getTexture(roll[Math.floor(pixelNum / textureSpan) % 1]);
 
             let context = this.chief.context;
             let canvasHeight = this.chief.canvas.height;
@@ -49,7 +49,7 @@ class TextureDisplayer extends Service{
                 400,                
                 sceneChunk.leftTop.x,
                 ((canvasHeight / 2) / scale) - (height / 2),
-                3000 / CONFIG.resolution,                 
+                3000 / (CONFIG.resolution / Math.max(CONFIG.blurEffect * 3,1)),                 
                 height
             );
 
