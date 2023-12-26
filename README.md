@@ -26,6 +26,7 @@ Advanced TypeScript Raycasting Engine that renders mirrors
 - 🎨 Texture & RGBA layers
 - 🎮 Input handling
 - 🎥 Camera free displacement
+- 🎟️ Multi-layer Canvas Manager
 
 <h3>Snapshots</h3>
 
