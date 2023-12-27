@@ -58,7 +58,7 @@ class Dimensioner extends Service{
 
             // Adjust light and darkness levels
 
-            let flashLightBrightness = !CONFIG.darkness ? 1 : Math.pow(((index - (camera.rays.length / 2))/ 10 ),2) / CONFIG.lightLevel;
+            let flashLightBrightness = !CONFIG.fog ? 1 : Math.pow(((index - (camera.rays.length / 2))/ 10 ),2) / CONFIG.lightLevel;
     
             let sceneChunck = service.chief.world.createAgent('SceneChunk',{
                 info : {

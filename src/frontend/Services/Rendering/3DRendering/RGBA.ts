@@ -34,7 +34,7 @@ class RGBA extends Service{
 
         // Black opaque background to avoid transparent walls
 
-        context.fillStyle = `rgba(0,0,0,${sceneChunk.item.opacity})`;
+        context.fillStyle = `rgba(${ CONFIG.fogColor || "0,0,0"},${sceneChunk.item.opacity})`;
         
         context.fillRect(
             sceneChunk.leftTop.x,
