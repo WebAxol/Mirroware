@@ -7,8 +7,7 @@
   "scripts": {
     "build": "tsc && webpack --mode=development",
     "compile": "tsc -w",
-    "start": "tsc && nodemon app.js",
-    "test": "jest"
+    "start": "tsc && nodemon app.js"
   },
   "author": "Gabriel Fuente",
   "license": "ISC",
