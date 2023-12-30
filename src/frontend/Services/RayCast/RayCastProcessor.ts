@@ -37,7 +37,7 @@ class RayCastProcessor extends Service {
         camera.sceneModel.update(ray);
 
         if(newHorizontalIndex == false && newVerticalIndex == false) return false; // No collision
-        if(!((ray.collidesWith.opacity < 1) && ray.level < 3))      return false;
+        if(!((ray.collidesWith.opacity < 1) && ray.level < 5))      return false;
         
         let newIndices =  { 
             vertical  : (newVerticalIndex   === false ) ? indices.vertical   : newVerticalIndex, 

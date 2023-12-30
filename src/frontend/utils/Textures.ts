@@ -6,11 +6,11 @@ class Textures {
     public addTexture(textureName : string ,src : string) : boolean {
 
         if(typeof textureName !== 'string' || !textureName){
-            throw Error(`Invalid texture name given, it must be a non-empty string`);
+            console.error(`Invalid texture name given, it must be a non-empty string`);
         }
 
         if(this.#textures[textureName]){ 
-            throw Error(`Cannot add texture with name '${textureName}'; the name has already been registered`);
+            console.error(`Cannot add texture with name '${textureName}'; the name has already been registered`);
         }
 
         let image;
@@ -20,7 +20,7 @@ class Textures {
             image.src = './img/textures/' + src; // at '/public'
         }
         catch(err){
-            throw Error(`The image with source '/img/textures/${src}' could not be found`);
+            console.error(`The image with source '/img/textures/${src}' could not be found`);
         }
 
         this.#textures[textureName] = image;
