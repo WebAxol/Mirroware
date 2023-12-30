@@ -19,34 +19,36 @@ class VariableCalculator extends Service{
             this.calculateRayProperties(camera.pos,ray);
         });
 
-        this.getIndicesOfClosestBefore(camera);
+        this.getIndicesOfClosest(camera);
 
         return true;
     };
 
-     // Get the index of the closest wall thea appears before the source in relation to an axis
      // WARNING - we are assuming that wall collections are properly sorted
 
-    public getIndicesOfClosestBefore(source :Camera){
+    public getIndicesOfClosest(source :Camera, testArgs :any = undefined ) :object | false {
 
-        const verticalWalls   = this.chief.world.getCollection('VerticalWalls');
-        const horizontalWalls = this.chief.world.getCollection('HorizontalWalls');
+        const verticalWalls   = (testArgs && testArgs.vertical  ) ? testArgs.vertical   : this.chief.world.getCollection('VerticalWalls');
+        const horizontalWalls = (testArgs && testArgs.horizontal) ? testArgs.horizontal : this.chief.world.getCollection('HorizontalWalls');
 
-        // get closest vertical wall's index before source - binary search
+        // get closest vertical wall's index before source
 
         let xPositions = verticalWalls.map((wall) =>  wall.posX );
 
-        source.wallIndices.vertical  = this.BinarySearchForClosestSmaller(xPositions,source.pos.x);
+        source.wallIndices.vertical  = this.BinarySearchForClosest(xPositions,source.pos.x);
 
-        // get closest horizontal wall's index before source - binary search
+        // get closest horizontal wall's index before source
 
         let yPositions = horizontalWalls.map((wall) =>  wall.posY );
         
-        source.wallIndices.horizontal = this.BinarySearchForClosestSmaller(yPositions,source.pos.y);
+        source.wallIndices.horizontal = this.BinarySearchForClosest(yPositions,source.pos.y);
 
+        return source.wallIndices;
     }
 
-    public BinarySearchForClosestSmaller(arr : number[], value : number){
+    public BinarySearchForClosest(arr : number[], value : number) :number {
+
+        if(arr.length <= 0) return -1;
 
         // the closest smaller value will be the largest index that belongs to a value smaller to the given value
 
@@ -82,8 +84,8 @@ class VariableCalculator extends Service{
             inBetweenIndex  = Math.ceil((leftIndex + rightIndex) / 2);
         }
 
-         while(arr[index] >= value) index--;
-         
+        while(arr[index] >= value) index--;
+        
         // Mechanism to avoid infinite loop issue (just in extreme edge case)
 
         if(exec >= 100) throw Error('Binary Search went out of control');

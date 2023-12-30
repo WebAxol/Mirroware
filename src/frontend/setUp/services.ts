@@ -1,10 +1,10 @@
 import RayCaster        from "../Services/RayCast/Orchestrator.js";
-import SceneRenderer3D  from "../Services/Rendering/3DRendering/Orchestrator.js";
-import SceneRenderer2D  from "../Services/Rendering/2DRendering/SceneRenderer2D.js";
+import SceneRenderer3D  from "../Services/3DRendering/Orchestrator.js";
+import SceneRenderer2D  from "../Services/2DRendering/SceneRenderer2D.js";
 import CameraMover      from "../Services/Camera/CameraMover.js";
 import InputHandler     from "../Services/Camera/InputHandler.js";
-import LightningEffects from '../Services/Rendering/2DRendering/LightningEffects.js';
-import RainEffect       from "../Services/Rendering/2DRendering/RainEffect.js";
+import LightningEffects from '../Services/2DRendering/LightningEffects.js';
+import RainEffect       from "../Services/2DRendering/RainEffect.js";
 import canvases         from "./canvases.js";
 
 

@@ -1,5 +1,5 @@
-import Service from "../../Service.js";
-import { SceneChunk } from "../../../types/SceneChunk.js";
+import Service from "../Service.js";
+import { SceneChunk } from "../../types/SceneChunk.js";
 
 // subordinate modules
 

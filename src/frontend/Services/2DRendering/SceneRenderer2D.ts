@@ -1,5 +1,5 @@
-import Service from "../../Service.js";
-import { Camera, camera } from "../../../utils/Camera.js";
+import Service from "../Service.js";
+import { Camera, camera } from "../../utils/Camera.js";
 
 class SceneRenderer2D extends Service{
 

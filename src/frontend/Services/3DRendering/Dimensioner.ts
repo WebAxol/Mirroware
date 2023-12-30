@@ -1,8 +1,8 @@
-import Service from "../../Service.js";
-import { Camera, camera } from "../../../utils/Camera.js";
-import { SceneChunk } from "../../../types/SceneChunk.js"
-import Vector2D from '../../../utils/Vector2D.js';
-import CONFIG from "../../../config.js";
+import Service from "../Service.js";
+import { Camera, camera } from "../../utils/Camera.js";
+import { SceneChunk } from "../../types/SceneChunk.js"
+import Vector2D from '../../utils/Vector2D.js';
+import CONFIG from "../../config.js";
 
 class Dimensioner extends Service{
 
