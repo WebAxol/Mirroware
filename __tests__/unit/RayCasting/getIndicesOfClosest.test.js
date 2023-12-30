@@ -138,7 +138,7 @@ test("property get nearest walls at known manually built cases",() => {
 
         for(let state in playerStates){
 
-            console.log("Case ",env,state);
+            //console.log("Case ",env,state);
     
             let expectedRes = expected[env][state]; 
             let testEnv = environments[env];
@@ -180,16 +180,16 @@ for(let i = 0; i < n; i++){
 
         if(Math.random() < 0.5){ 
             env.horizontal.push( { 
-                startX : randInt(-1000,1000),
-                endX   : randInt(-1000,1000),
-                posY   : randInt(-1000,1000)
+                startX : randInt(-1000000,1000000),
+                endX   : randInt(-1000000,1000000),
+                posY   : randInt(-1000000,1000000)
             });
         }
         if(Math.random() < 0.5){
             env.vertical.push( { 
-                startY : randInt(-1000,1000),
-                endY   : randInt(-1000,1000),
-                posX   : randInt(-1000,1000)
+                startY : randInt(-1000000,1000000),
+                endY   : randInt(-1000000,1000000),
+                posX   : randInt(-1000000,1000000)
             });
         }
     }
@@ -207,7 +207,7 @@ test("property get nearest walls at randomly built cases",() => {
 
         for(let state in generatedPlayerStates){
 
-            console.log("Random Case ",env,state);
+            //console.log("Random Case ",env,state);
     
             let testEnv = generatedEnvironments[env];
             let testState = generatedPlayerStates[state];
@@ -215,7 +215,7 @@ test("property get nearest walls at randomly built cases",() => {
             let reference = _getIndicesOfClosest(testState,testEnv); 
             let tested    = service.getIndicesOfClosest(testState,testEnv);
 
-            console.log(tested);
+            //console.log(tested);
 
             expect(tested).toEqual(reference);
         }

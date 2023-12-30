@@ -96,6 +96,8 @@ class VariableCalculator extends Service{
     public calculateRaySlope(ray :Ray) {
         let degrees = ((ray.degree / 180) * Math.PI);
         ray.slope   = Math.sin(degrees) / Math.cos(degrees);
+
+        return ray.slope;
     }
 
     public calculateRayYIntercept(pos :{ x : number, y :number},ray :Ray){
