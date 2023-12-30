@@ -5,10 +5,10 @@
   "main": "./scripts/app.js",
   "type": "module",
   "scripts": {
-    "build": "tsc && webpack --mode=development",
+    "build": "tsc && webpack --mode=development --watch",
     "compile": "tsc -w",
     "start": "tsc && nodemon app.js",
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "author": "Gabriel Fuente",
   "license": "ISC",
