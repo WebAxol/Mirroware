@@ -1,8 +1,13 @@
-import Vector2D from './Vector2D.js';
+import { HorizontalWall } from '../types/HorizontalWall.js';
+import { VerticalWall }   from '../types/VerticalWall.js';
+import { Circle }         from '../types/Circle.js';
+import { Ray }            from '../types/Ray.js';
+import Vector2D           from './Vector2D.js';
+
 class CollisionDetector {
 
 
-    public static RayVsVerticalLine(ray : any ,line : any) : any {
+    public static RayVsVerticalLine(ray : Ray ,line : VerticalWall) : [number,number] | false {
         
         // Input check
 
@@ -16,23 +21,21 @@ class CollisionDetector {
             return false;
         }
 
-        if(typeof line.startY != 'number' || typeof line.endY != 'number' || typeof line.posX != 'number'){
+        if(typeof line.startY != 'number' || typeof line.endY != 'number' || typeof line.posX != 'number' || line.startY >= line.endY){
             console.error("Invalid argument passed as 'line'");
             return false;
         }
 
         // In case ray is fully horizontal and has a slope of zero
 
-        if(ray.degree == 0 || ray.degree == 360){ 
+        if(Math.abs(ray.slope) == 0){ 
 
-            let theyCollide = (line.startY <= ray.YIntercept && ray.YIntercept <= line.endY);
+            let theyCollide = (line.startY < ray.YIntercept && ray.YIntercept < line.endY);
             
             return theyCollide ? [line.posX,ray.YIntercept] : false;
         }
 
         var colinearYValue : number = (ray.slope * line.posX) + ray.YIntercept;
-
-        //console.log(colinearYValue,line.startY,line.endY);
 
         if(line.startY <= colinearYValue && colinearYValue <= line.endY){
 
@@ -44,13 +47,12 @@ class CollisionDetector {
     }  
 
 
-    public static RayVsHorizontalLine(ray : any ,line : any) : any {
+    public static RayVsHorizontalLine(ray : Ray ,line : HorizontalWall) : [number,number] | false  {
         
         // Input check
 
         if(typeof ray != 'object' || typeof line != 'object'){
             console.error("Both 'ray' and 'line' parameters must be objects");
-            console.warn(line);
             return false;
         }
 
@@ -66,6 +68,8 @@ class CollisionDetector {
 
         var colinearXValue : number = (line.posY - ray.YIntercept) / ray.slope;
 
+        if(Math.abs(ray.slope) == 0) return false; // Parallel can't collide
+
         if(line.startX <= colinearXValue && colinearXValue <= line.endX){
 
             return [colinearXValue,line.posY];
@@ -75,7 +79,7 @@ class CollisionDetector {
         return false;
     } 
 
-    public static RayVsCircle(ray : any, circle :any){
+    public static RayVsCircle(ray : any, circle :Circle){
 
         if(circle.radius <= 0){
             console.error("Circle was defined with a negative or zero radius");

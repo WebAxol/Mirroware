@@ -1,4 +1,4 @@
-import VariableCalculator from "mirroware/frontend/Services/RayCast/VariableCalculator.js";
+import VariableCalculator from "mirroware/frontend/Services/RayCast/RayCalculator.js";
 import Service            from "mirroware/frontend/Services/Service.js";
 
 const service = new VariableCalculator(new Service());

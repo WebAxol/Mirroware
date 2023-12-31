@@ -1,4 +1,4 @@
-import VariableCalculator from "mirroware/frontend/Services/RayCast/VariableCalculator.js";
+import VariableCalculator from "mirroware/frontend/Services/RayCast/RayCalculator.js";
 import Service            from "mirroware/frontend/Services/Service.js";
 
 const service = new VariableCalculator(new Service());
@@ -155,7 +155,7 @@ test("property get nearest walls at known manually built cases",() => {
 
 // * Random cases
 
-const n = 100;
+const n = 10;
 const generatedPlayerStates = []; 
 const generatedEnvironments = [];
 

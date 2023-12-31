@@ -2,7 +2,7 @@ import Service from "../Service.js";
 import { Camera, camera } from '../../utils/Camera.js';
 import { Ray } from '../../types/Ray.js';
 
-class VariableCalculator extends Service{
+class RayCalculator extends Service{
 
     protected chief : Service;
 
@@ -94,14 +94,16 @@ class VariableCalculator extends Service{
     }
 
     public calculateRaySlope(ray :Ray) {
+        
         let degrees = ((ray.degree / 180) * Math.PI);
         ray.slope   = Math.sin(degrees) / Math.cos(degrees);
 
         return ray.slope;
     }
 
-    public calculateRayYIntercept(pos :{ x : number, y :number},ray :Ray){
-        ray.YIntercept = pos.y - (ray.slope * pos.x);
+    public calculateRayYIntercept(origin :{ x : number, y :number},ray :Ray){
+
+        ray.YIntercept = origin.y - (ray.slope * origin.x);
     }
 
     public calculateRayEnding(pos :{ x : number, y :number},ray :Ray){    
@@ -129,4 +131,4 @@ class VariableCalculator extends Service{
     }
 }
 
-export default VariableCalculator;
+export default RayCalculator;

@@ -1,6 +1,4 @@
-
 import CollisionDetector    from "../../utils/CollisionDetector.js";
-import VariableCalculator   from './VariableCalculator.js';
 import { Camera, camera }   from '../../utils/Camera.js';
 import { Ray }              from "../../types/Ray.js";
 import Service              from "../Service.js";
@@ -68,25 +66,20 @@ class RayCastProcessor extends Service {
     }
 
     // WARNING: The following functions assume that wall collections are properly sorted in ascending order
-    // These functions compute the closest horizontal and vertical walls that collide with the given ray
 
-    public testAgainstVerticalWalls(ray,index :number){
 
-        let sense;
+    public testAgainstVerticalWalls(ray :Ray, index :number){
+
         
-        // Get sense : Sense is relevant because rays are unidirectional
+        if(ray.degree == 90 || ray.degree == 270) return false; // Cannot collide; it is totally vertical
 
-        if(     (ray.degree % 360) > 270 && (ray.degree % 360) < 360)   sense = 1;
-        else if((ray.degree % 360) >= 0   && (ray.degree % 360) < 90)    sense = 1;
-        else if((ray.degree % 360) > 90  && (ray.degree % 360) < 270)   sense = -1;
-
-        if(!sense) return false; // Cannot collide; it is totally vertical
+        let sense = Math.cos(ray.degree * (Math.PI / 180)) > 0 ? 1 : -1;
 
         const walls = this.#chief.world.getCollection('VerticalWalls');
 
         if(walls.length <= 0) return false;
 
-        for(index  += (sense == 1 ? 1 : 0); (index < walls.length && sense == 1) || (index >= 0 && sense == -1) ; index += sense){
+        for(index += (sense == 1 ? 1 : 0); (index < walls.length && sense == 1) || (index >= 0 && sense == -1) ; index += sense){
 
             if(walls[index].posX <= ray.collidesAt.x && sense == -1) return index;
             if(walls[index].posX >= ray.collidesAt.x && sense == 1 ) return index - 1;
@@ -109,16 +102,11 @@ class RayCastProcessor extends Service {
         return false;
     }
 
-    public testAgainstHorizontalWalls(ray,index :number){
-
-        let sense = 0;
+    public testAgainstHorizontalWalls(ray :Ray, index :number){
         
-        // Get sense : Sense is relevant because rays are unidirectional
+        if(ray.degree == 180 || ray.degree == 0) return false; // Cannot collide; it is totally horizontal
 
-        if(ray.degree > 0 && ray.degree < 180)          sense = 1;
-        else if(ray.degree > 180 && ray.degree < 360)   sense = -1;
-
-        if(!sense) return false; // Cannot collide; it is totally horizontal
+        let sense = Math.sin(ray.degree * (Math.PI / 180)) > 0 ? 1 : -1;
 
         const walls = this.#chief.world.getCollection('HorizontalWalls');
 
@@ -152,11 +140,7 @@ class RayCastProcessor extends Service {
 
             let hasCollided = CollisionDetector.RayVsCircle(ray,circles[i]);
 
-            //console.log(hasCollided);
-
             if(!hasCollided) continue;
-
-          //  console.log(hasCollided);
 
             let isCloser = this.compareWithClosest(ray,hasCollided);
 
@@ -165,9 +149,7 @@ class RayCastProcessor extends Service {
             ray.collidesAt.x = hasCollided[0];
             ray.collidesAt.y = hasCollided[1];
             ray.collidesWith = circles[i];
-
         }
-
     }
 
     public compareWithClosest(ray,collisionPoint) :boolean {

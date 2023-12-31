@@ -1,17 +1,18 @@
-import Service from "../Service.js";
-import VariableCalculator from "./VariableCalculator.js";
+import Service          from "../Service.js";
+import RayCalculator    from "./RayCalculator.js";
 import RayCastProcessor from './RayCastProcessor.js';
 
 class RayCaster extends Service{
 
     // subordinate services
 
-    #variableCalculator : VariableCalculator // Calculates required variables for the raycasting algorithm
+    #variableCalculator : RayCalculator      // Calculates required variables for the raycasting algorithm
     #rayCastProcessor   : RayCastProcessor   // Uses previously calculated variables to perform the raycast algorithm
 
     constructor(){
         super();
-        this.#variableCalculator = new VariableCalculator(this);
+
+        this.#variableCalculator = new RayCalculator(this);
         this.#rayCastProcessor = new RayCastProcessor(this);
     }
 
@@ -28,7 +29,6 @@ class RayCaster extends Service{
             console.error(err);
             return false;
         }
-
     }
 
     public calculateRayProperties(source,ray){

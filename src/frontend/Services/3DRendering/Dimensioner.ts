@@ -41,6 +41,7 @@ class Dimensioner extends Service{
 
             if(!ray.collidesWith) return;
 
+            let frame = service.chief.world.frame;
             let distanceX = Math.abs(ray.collidesAt.x - (ray.source.pos ? ray.source.pos.x : ray.source.collidesAt.x));
             let distanceY = Math.abs(ray.collidesAt.y - (ray.source.pos ? ray.source.pos.y : ray.source.collidesAt.y));
             let distance  = Math.hypot(distanceX,distanceY) + prevDistance;
@@ -48,7 +49,12 @@ class Dimensioner extends Service{
             // Fish-eye effect is fixed with this adjustment to the distance
 
             adjustment = adjustment || Math.cos(Math.abs((Math.abs(cameraDegree - ray.degree) / 180) * Math.PI));
-            let adjustedDistance = distance * adjustment// + Math.min((Math.sin(((Math.ceil(service.chief.world.frame / 5) / 5) + (index / 20)) / 1) * (distance / 10)), 10);
+            let adjustedDistance = distance * adjustment
+
+
+            if(CONFIG.transformDimensions != null){
+                adjustedDistance = CONFIG.transformDimensions(frame,index,adjustedDistance);
+            }
 
         
             let leftTop  = { x : ((canvasWidth * index) / bruteTotal), y : (canvasHeight / 2) - (canvasHeight) / adjustedDistance};
