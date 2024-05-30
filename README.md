@@ -15,6 +15,8 @@ Advanced TypeScript Raycasting Engine that renders mirrors
 </pre>
 </div>
 
+![Mirroware - a mirror simulator](https://github.com/WebAxol/Mirroware/blob/main/img/image11.png)
+
 
 <h3>Main features (experimental)</h3>
 
@@ -22,17 +24,11 @@ Advanced TypeScript Raycasting Engine that renders mirrors
 - 🪞 Mirrors
 - 🎁 Textures
 - 🌒 Light-and-Fog Effect
-- 🎞️ Blur (Analog-style) effect
+- 🎞️ Minimap
 - 🎨 Texture & RGBA layers
 - 🎮 Input handling
 - 🎥 Camera free displacement
 - 🎟️ Multi-layer Canvas Manager
-
-<h3>Snapshots</h3>
-
-![Mirroware - a mirror simulator](https://github.com/WebAxol/Mirroware/blob/main/img/image10.png)
-
-![Mirroware - a mirror simulator](https://github.com/WebAxol/Mirroware/blob/main/img/image8.png)
 
 <h3>Technical considerations</h3>
 
