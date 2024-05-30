@@ -23,6 +23,7 @@ class TextureDisplayer extends Service{
 
         for(let i = renderStack.length - 1; i >= 0; i--){
 
+            let imageSize  = 32;  
             let sceneChunk = renderStack[i];
         
             let scale  = sceneChunk.size.y / 1000;
@@ -37,19 +38,20 @@ class TextureDisplayer extends Service{
 
             let context = this.chief.context;
             let canvasHeight = this.chief.canvas.height;
-            
+            context.imageSmoothingEnabled = false;
+
             context.globalAlpha = Math.min(sceneChunk.item.opacity / (sceneChunk.distance / 10) / 5, 0.5);
             context.scale(1,scale);
                 
             context.drawImage(
                 texture,
-                (percentage * 390) % 390,
-                0,                 
-                10,                  
-                400,                
-                sceneChunk.leftTop.x,
-                ((canvasHeight / 2) / scale) - (height / 2),
-                3000 / (CONFIG.resolution / Math.max(CONFIG.blurEffect * 3,1)),                 
+                (Math.floor(percentage * imageSize)) % imageSize,  // x offset
+                0,                                   // y offset
+                1,                                   // s_width
+                imageSize,                                  // s_height
+                Math.round(sceneChunk.leftTop.x),
+                Math.round(((canvasHeight / 2) / scale) - (height / 2)),
+                3000 / (CONFIG.resolution / Math.max(CONFIG.blurEffect * 3,1)),
                 height
             );
 
@@ -68,7 +70,7 @@ class TextureDisplayer extends Service{
         const centerToPoint = Vector2D.sub(info.point,  info.item.center);
         const angle = Vector2D.angleBetween(centerToPoint,direction);
 
-        return angle / 18 * (info.item.radius / 3);
+        return angle / 18 * (info.item.radius / 4);
     }
 
     public mapTexture(info) :number{

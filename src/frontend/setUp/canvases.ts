@@ -44,9 +44,8 @@ const canvases = {
         height : 3000,
         style : {
             zIndex : 3,
-            position: 'absolute',
-            border: 'double red 5px',
-            borderRadius: '15%',
+            position: 'absolute',            
+            borderRadius: '50%',
             top: '5px',
             right: '5px',
             width: '20%',

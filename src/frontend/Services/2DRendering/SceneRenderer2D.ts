@@ -1,4 +1,5 @@
-import Service from "../Service.js";
+import Service  from "../Service.js";
+import Vector2D from "../../utils/Vector2D.js";
 import { Camera, camera } from "../../utils/Camera.js";
 
 class SceneRenderer2D extends Service{
@@ -9,7 +10,7 @@ class SceneRenderer2D extends Service{
     constructor(canvas){
         super();
         this.#context = canvas.getContext('2d');
-        this.scale = 100;
+        this.scale = 150;
     }
 
     public execute() {
@@ -21,13 +22,13 @@ class SceneRenderer2D extends Service{
         this.#context.fillStyle = 'rgba(0,0,0,1)';
         this.#context.fillRect(0,0,3000,3000);
         
-        this.renderRay(camera.rays[Math.floor(camera.rays.length / 2)],camera.pos);
+        //this.renderRay(camera.rays[Math.floor(camera.rays.length / 2)],camera.pos);
 
-        /*  
+        
         camera.rays.forEach(ray => {
             this.renderRay(ray,camera.pos);
         });
-        */
+        
         horizontalWalls.forEach(wall => {
             this.renderWall(wall);
         });
@@ -44,29 +45,49 @@ class SceneRenderer2D extends Service{
 
     public renderWall(wall){
 
+        const deg = camera.rays[Math.floor(camera.rays.length / 2)].degree;
+
         this.#context.strokeStyle = `rgba(${wall.color},1)`;
-        this.#context.lineWidth = 15;
+        //this.#context.strokeStyle = `lawngreen`;
+        this.#context.lineWidth = 20;
+
+        let from = { x : wall.startX || wall.posX, y : wall.posY || wall.startY};
+        let to   = { x : wall.endX   || wall.posX, y : wall.posY || wall.endY  };
+
+        from = Vector2D.rotate(from, camera.pos, deg);
+        to   = Vector2D.rotate(to,   camera.pos, deg);
+
+        from = Vector2D.sub(Vector2D.sub(from,camera.pos), { x : -10, y : -10 }).scale(this.scale);
+        to   = Vector2D.sub(Vector2D.sub(to,  camera.pos), { x : -10, y : -10 }).scale(this.scale);
 
         this.#context.beginPath();
-        this.#context.moveTo((wall.startX || wall.posX) * this.scale, (wall.posY || wall.startY) * this.scale);
-        this.#context.lineTo((wall.endX   || wall.posX) * this.scale, (wall.posY || wall.endY  ) * this.scale);
+        this.#context.moveTo(from.x,from.y);
+        this.#context.lineTo(to.x,to.y);
         this.#context.closePath();
         this.#context.stroke();
     }
 
     public renderRay(ray, source){
 
+        const deg = camera.rays[Math.floor(camera.rays.length / 2)].degree;
 
         if(ray.reflected.getType && ray.reflected.active){
             this.renderRay(ray.reflected, ray.collidesAt);
         }
 
-        this.#context.strokeStyle = ray.level <= 1 ? 'white' : 'red';
-        this.#context.lineWidth = 10;
+        this.#context.strokeStyle = 'rgba(255,255,255,0.05)'//'white' : 'red';
+        this.#context.lineWidth = 80;
+
+        let from = Vector2D.rotate(source, camera.pos, deg);
+        let to   = Vector2D.rotate(ray.collidesAt, camera.pos, deg);
+
+        from = Vector2D.sub(Vector2D.sub(from,camera.pos), { x : -10, y : -10 }).scale(this.scale);
+        to   = Vector2D.sub(Vector2D.sub(to,  camera.pos), { x : -10, y : -10 }).scale(this.scale);
+
 
         this.#context.beginPath();
-        this.#context.moveTo(source.x * this.scale, source.y * this.scale);
-        this.#context.lineTo(ray.collidesAt.x * this.scale,  ray.collidesAt.y * this.scale);
+        this.#context.moveTo(from.x,from.y);
+        this.#context.lineTo(to.x,to.y);
         this.#context.closePath();
         this.#context.stroke();
 
@@ -74,11 +95,17 @@ class SceneRenderer2D extends Service{
 
     public renderCircle(circle){
     
+        const deg = camera.rays[Math.floor(camera.rays.length / 2)].degree;
+
+
         this.#context.strokeStyle = `rgb(${circle.color})`;
-        this.#context.lineWidth = 10;
+        this.#context.lineWidth = 20;
+
+        let center = Vector2D.rotate(circle.center,camera.pos,deg);
+        center = Vector2D.sub(Vector2D.sub(center,camera.pos), { x : -10, y : -10 }).scale(this.scale);
 
         this.#context.beginPath();
-        this.#context.arc(circle.center.x * this.scale, circle.center.y * this.scale, circle.radius * this.scale, 0, 2 * Math.PI);
+        this.#context.arc(center.x, center.y, circle.radius * this.scale, 0, 2 * Math.PI);
         this.#context.stroke();
 
     }

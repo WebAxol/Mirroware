@@ -54,9 +54,7 @@ const textures = new Textures();
 
 // add Textures to 'textures' : textures.add(textureName,src);
 
-textures.addTexture('netherrack','hororr.png');
-textures.addTexture('dirt','prop.png');
-textures.addTexture('bricks','bricks.png');
+textures.addTexture('bricks','optbrick.png');
 
 
 

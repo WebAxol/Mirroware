@@ -57,7 +57,10 @@ class Dimensioner extends Service{
             }
 
         
-            let leftTop  = { x : ((canvasWidth * index) / bruteTotal), y : (canvasHeight / 2) - (canvasHeight) / adjustedDistance};
+            let leftTop  = { 
+                x : ((canvasWidth * index) / bruteTotal), 
+                y : ((canvasHeight) / 2) - (canvasHeight * 1) / adjustedDistance
+            };
             let size     = { x : canvasWidth / netTotal, y : (canvasHeight * 2) / adjustedDistance};
 
             // Create sceneChunck to render

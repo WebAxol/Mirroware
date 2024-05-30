@@ -20,9 +20,9 @@ class RGBA extends Service{
             let sceneChunk = renderStack[i];
 
             this.renderRectangle(sceneChunk);
-        }
-        //this.renderHorizontalBorders(sceneChunk);
+            //this.renderBorders(sceneChunk);
 
+        }
     }
 
     public renderRectangle(sceneChunk){
@@ -58,7 +58,7 @@ class RGBA extends Service{
         );
     }
 
-    public renderHorizontalBorders(sceneChunk){
+    public renderBorders(sceneChunk){
 
         let context = this.chief.context;
 
@@ -70,14 +70,8 @@ class RGBA extends Service{
         context.beginPath();
         context.moveTo( sceneChunk.leftTop.x,sceneChunk.leftTop.y);
         context.lineTo( sceneChunk.leftTop.x + sceneChunk.size.x, sceneChunk.leftTop.y);
-        context.closePath();
-        context.stroke();
-
-        // Bottom border
-
-        context.beginPath();
-        context.moveTo( sceneChunk.leftTop.x, (sceneChunk.leftTop.y + sceneChunk.size.y));
         context.lineTo( sceneChunk.leftTop.x + sceneChunk.size.x, (sceneChunk.leftTop.y + sceneChunk.size.y));
+        context.lineTo( sceneChunk.leftTop.x, (sceneChunk.leftTop.y + sceneChunk.size.y));
         context.closePath();
         context.stroke();
 

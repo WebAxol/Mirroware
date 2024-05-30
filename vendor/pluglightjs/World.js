@@ -92,30 +92,38 @@ class World {
 
     execute(timeSpan = 20){
         
+        try{
 
-        if(this.pause){
-            return;
+            if(this.pause){
+                return;
+            }
+
+            this.deltaTime = timeSpan - this.lastTime;
+
+            this.fps = 1000 / this.deltaTime;
+
+            this.lastTime = timeSpan;
+
+            requestAnimationFrame((timeSpan) => { this.execute(timeSpan) });
+
+            this.#agentPool.removeAgents();
+            this.#collectionManager.removeAgentsFromCollections();
+            var services = this.getServices();
+
+            Object.keys(services).forEach((service) => {
+                    services[service].execute();
+            });
+
+            if(!this.pause){
+                this.frame++;
+                this.routine(this);
+            }
+
         }
-
-        this.deltaTime = timeSpan - this.lastTime;
-
-        this.fps = 1000 / this.deltaTime;
-
-        this.lastTime = timeSpan;
-
-        requestAnimationFrame((timeSpan) => { this.execute(timeSpan) });
-
-        this.#agentPool.removeAgents();
-        this.#collectionManager.removeAgentsFromCollections();
-        var services = this.getServices();
-
-        Object.keys(services).forEach((service) => {
-                services[service].execute();
-        });
-
-        if(!this.pause){
-            this.frame++;
-            this.routine(this);
+        catch(err){
+            this.pauseExecution();
+            console.warn('Execution paused due to run-time error:');
+            throw err;
         }
     }
 

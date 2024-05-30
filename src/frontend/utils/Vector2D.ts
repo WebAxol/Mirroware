@@ -93,10 +93,24 @@ class Vector2D {
         return this;
     }
 
-    public static normalize(v :Vector2D){
-        let mag = this.mag(v);
+    public static rotate(v, center, deg :number){
 
-        return { x : v.x / mag, y : v.y / mag }
+        deg *= Math.PI / 180;
+
+        v = Vector2D.sub(v,center);
+
+        return Vector2D.add({
+            x : v.dot({ x : Math.cos(deg), y : -Math.sin(deg) }), 
+            y : v.dot({ x : Math.sin(deg), y :  Math.cos(deg) })
+        }, center);
+        
+    }
+
+    public static normalize(v){
+
+        let mag = Vector2D.mag(v);
+
+        return new Vector2D(v.x / mag, v.y / mag )
     }
 
     public static between(v1,v2,percentil){
