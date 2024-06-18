@@ -1,11 +1,11 @@
 @font-face {
     font-family: PoiretOne;
-    src: url('../fonts/Poiret_One/PoiretOne-Regular.ttf');
+    src: url('../assets/fonts/Poiret_One/PoiretOne-Regular.ttf');
 }
 
 @font-face {
     font-family: Pixeloid;
-    src: url('../fonts/press-start-2p-font/PressStart2P-vaV7.ttf');
+    src: url('../assets/fonts/pixeloid-font/PixeloidMono-d94EV.ttf');
 }
 
 
@@ -38,6 +38,15 @@ header{
     animation-iteration-count: infinite;
     animation-timing-function:ease-in-out;
     animation-duration: 1s;*/
+}
+
+#fps-counter{
+    padding: 20px;
+    position: absolute;
+    font-size: 1.5em;
+    z-index: 100; 
+    color: white;
+    font-family: Pixeloid;
 }
 
 @keyframes shake {

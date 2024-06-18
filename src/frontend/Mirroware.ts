@@ -45,11 +45,18 @@ const testScene = [ // This is just a template to instance the required walls
     { type:'Wall', info:[[12, 5],[25, 5], 1, '0,255,100'        ]},
     { type:'Wall', info:[[5, 7],[7, 7],  1, '0,255,100'         ]},
     { type:'Wall', info:[[7, 5],[7, 7],  1, '37, 190, 42'       ]},
-    { type:'Wall', info:[[7, 15],[7, 20],  1, '0,155,200'       ]},
-    { type:'Wall', info:[[7, 20],[15, 20],  0.05, '255,0,0'     ]},
+    { type:'Wall', info:[[7, 14],[7, 20],  1, '0,155,200'       ]},
+
+    { type:'Wall', info:[[7, 20],[15, 20],  1, '255,46,87'     ]},
     { type:'Wall', info:[[7, 15],[15, 15],  0.05, '0,100,100'   ]},
+    { type:'Wall', info:[[7, 19],[15, 19],  0.05, '255,46,87'     ]},
+    { type:'Wall', info:[[7, 14],[15, 14],  1, '0,100,100'   ]},
+
+    { type:'Wall', info:[[15, 15],[15, 14],  1, '0,100,100'   ]},
+    { type:'Wall', info:[[15, 19],[15, 20],  1, '255,46,87'   ]},
+
     { type:'Wall', info:[[25,5],[25,25], 1, '150,150,150'       ]},
-    { type:'Wall', info:[[5,25],[25,25], 0.1, '255,255,255'       ]},
+    { type:'Wall', info:[[5,25],[25,25], 0.1, '255,255,255'     ]},
     { type:'Wall', info:[[15,7],[17,7], 1, '255,0,255'          ]},
     { type:'Wall', info:[[15,7],[15,10], 1, '255,155,255'       ]},
     { type:'Wall', info:[[15,10],[15.5,10], 1, '255,155,200'    ]},
@@ -61,10 +68,10 @@ const testScene = [ // This is just a template to instance the required walls
     { type:'Wall', info:[[22, 12],[22, 15],  1, '255,157,0'     ]},
     { type:'Wall', info:[[19, 12],[19, 15],  1, '255,157,0'     ]},
 
-    { type : 'Circle', info:[{ x : 10, y : 17.5}, 1,'255,46,87'] },
+    { type : 'Circle', info:[{ x : 10, y : 17}, 1,'255,46,87'] },
     { type : 'Circle', info:[{ x : 20, y : 10}, 3,'255,46,87'] },
-    { type : 'Circle', info:[{ x : 20, y : 19}, 1,'0,86,46'] },
-
+    //{ type : 'Circle', info:[{ x : 20, y : 19}, 0.5,'0,86,46'] },
+    { type : 'Circle', info:[camera.pos, 0.5,'0,100,0'] },
 ];
 
 // TODO: replace by a module specialized on building scenes

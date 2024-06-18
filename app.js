@@ -24,6 +24,7 @@ app.use(express.static(join(__dirname,'lib/frontend')));
 app.use(express.static(join(__dirname, 'vendor')));
 app.use(express.static(join(__dirname, 'dist')));
 
+
 /* --- Server & DataBase connection --- */
 app.listen(__port, '0.0.0.0', () => {
     console.log('The server is listening on port', __port);

@@ -51,7 +51,7 @@ class TextureDisplayer extends Service{
                 imageSize,                                  // s_height
                 Math.round(sceneChunk.leftTop.x),
                 Math.round(((canvasHeight / 2) / scale) - (height / 2)),
-                3000 / (CONFIG.resolution / Math.max(CONFIG.blurEffect * 3,1)),
+                600 / (CONFIG.resolution / Math.max(CONFIG.blurEffect * 3,1)),
                 height
             );
 
