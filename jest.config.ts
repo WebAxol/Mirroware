@@ -9,11 +9,12 @@ export default {
     "js"
   ],
   moduleNameMapper:{
+    '^/pluglightjs/(.*)\\.js$': '<rootDir>/vendor/pluglightjs/$1',
     '^(.*)\\.js$': '$1',
-    '/pluglightjs/(.*)$' : '<rootDir>vendor/pluglightjs/$1'
   },
   transform: {
-    "\\.(ts|tsx)$": "ts-jest"
+    "\\.(ts|tsx)$": "ts-jest",
+    '^.+\\.jsx?$': 'babel-jest',
   },
   testRegex: "/__tests__/.*\\.(ts|tsx|js)$"
 };
