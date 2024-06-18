@@ -10,7 +10,7 @@ class SceneRenderer2D extends Service{
     constructor(canvas){
         super();
         this.#context = canvas.getContext('2d');
-        this.scale = 150;
+        this.scale = 1.5 * 3;
     }
 
     public execute() {
@@ -22,7 +22,7 @@ class SceneRenderer2D extends Service{
         this.#context.fillStyle = 'rgba(0,0,0,1)';
         this.#context.fillRect(0,0,3000,3000);
         
-        //this.renderRay(camera.rays[Math.floor(camera.rays.length / 2)],camera.pos);
+        this.renderRay(camera.rays[Math.floor(camera.rays.length / 2)],camera.pos);
 
         
         camera.rays.forEach(ray => {
@@ -49,7 +49,7 @@ class SceneRenderer2D extends Service{
 
         this.#context.strokeStyle = `rgba(${wall.color},1)`;
         //this.#context.strokeStyle = `lawngreen`;
-        this.#context.lineWidth = 20;
+        this.#context.lineWidth = 1;
 
         let from = { x : wall.startX || wall.posX, y : wall.posY || wall.startY};
         let to   = { x : wall.endX   || wall.posX, y : wall.posY || wall.endY  };
@@ -76,7 +76,7 @@ class SceneRenderer2D extends Service{
         }
 
         this.#context.strokeStyle = 'rgba(255,255,255,0.05)'//'white' : 'red';
-        this.#context.lineWidth = 80;
+        this.#context.lineWidth = 1;
 
         let from = Vector2D.rotate(source, camera.pos, deg);
         let to   = Vector2D.rotate(ray.collidesAt, camera.pos, deg);
@@ -99,7 +99,7 @@ class SceneRenderer2D extends Service{
 
 
         this.#context.strokeStyle = `rgb(${circle.color})`;
-        this.#context.lineWidth = 20;
+        this.#context.lineWidth = 1;
 
         let center = Vector2D.rotate(circle.center,camera.pos,deg);
         center = Vector2D.sub(Vector2D.sub(center,camera.pos), { x : -10, y : -10 }).scale(this.scale);
