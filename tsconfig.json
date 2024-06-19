@@ -35,6 +35,7 @@
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
     // "typeRoots": [],                                  /* Specify multiple folders that act like './node_modules/@types'. */
     "types": [
+      "@types/web",
       "node",
       "jest"
     ],                                      /* Specify type package names to be included without being referenced in a source file. */
@@ -106,5 +107,5 @@
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
 
-  "exclude": [ "__tests__","*.test*"]
+  "exclude": [ "*jest*", "__tests__", "*.test*"]
 }

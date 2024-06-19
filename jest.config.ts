@@ -1,8 +1,9 @@
 export default {
   
+  setupFilesAfterEnv: ["./jest.setup.ts"],  
   clearMocks: true,
   preset: "ts-jest",
-  testEnvironment: "node",
+  testEnvironment: "jsdom",
   moduleFileExtensions : [
     "ts",
     "tsx",
@@ -16,5 +17,5 @@ export default {
     "\\.(ts|tsx)$": "ts-jest",
     '^.+\\.jsx?$': 'babel-jest',
   },
-  testRegex: "/__tests__/.*\\.(ts|tsx|js)$"
+  testRegex: "/__tests__/.*\\.test.(ts|tsx|js)$"
 };

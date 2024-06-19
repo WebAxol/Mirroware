@@ -8,7 +8,7 @@
     "compile": "tsc -w -p tsconfig.build.json",
     "build": "webpack --mode=development --watch",
     "start": "nodemon app.js",
-    "test": "jest --verbose"
+    "test": "jest --watch"
   },
   "author": "Gabriel Fuente",
   "license": "ISC",
@@ -20,6 +20,7 @@
     "@jest/types": "^29.6.3",
     "@types/express": "^4.17.15",
     "@types/jest": "^29.5.11",
+    "@types/web": "^0.0.149",
     "babel-jest": "^29.3.1",
     "jest": "^29.5.0",
     "jest-environment-jsdom": "^29.7.0",
