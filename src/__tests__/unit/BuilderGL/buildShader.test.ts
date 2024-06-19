@@ -59,5 +59,7 @@ describe("buildShader method", () => {
 
             expect(res).toBeInstanceOf(WebGLShader);
         });
+
     });
+
 });

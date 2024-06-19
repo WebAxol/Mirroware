@@ -6,12 +6,13 @@ const getContext = () => {
         {
             bufferData:    jest.fn(),
             createBuffer:  jest.fn().mockReturnValue(new WebGLBuffer()),
-            createShader:  jest.fn().mockImplementation((type) => {
+            createProgram: jest.fn().mockReturnValue(new WebGLProgram()),
+            createShader:  jest.fn().mockImplementation((type : number) => {
 
                 if(type === 1) return new WebGLShader();
 
             }),
-            shaderSource:  jest.fn().mockImplementation((shader,source) => {
+            shaderSource:  jest.fn().mockImplementation((shader : WebGLShader ,source : string) => {
 
                 if(!(shader instanceof WebGLShader)) return false;
                 if(!source)                          return false;
@@ -20,6 +21,21 @@ const getContext = () => {
             }),
             compileShader:       jest.fn(),
             getShaderParameter : jest.fn().mockReturnValue(true),
+            attachShader:        jest.fn().mockImplementation((program : WebGLProgram, shader : WebGLShader) => {
+                
+                if(!(program instanceof WebGLProgram)) return false;
+                if(!(shader instanceof WebGLShader))   return false;
+                
+                return true;
+            }),
+            linkProgram:        jest.fn().mockImplementation((program : WebGLProgram) => {
+                
+                if(!(program instanceof WebGLProgram)) return false;
+                
+                return true;
+            }),
+            getProgramParameter: jest.fn().mockReturnValue(true),
+            deleteProgram      : jest.fn(),
             bindBuffer:          jest.fn(),
             bufferSubData:       jest.fn(),
 
