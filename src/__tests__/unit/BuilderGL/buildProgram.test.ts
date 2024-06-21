@@ -6,7 +6,7 @@ beforeEach(() => {
 });
 
 describe("buildProgram", () => {
-
+    
     var gl, vertexShader, fragmentShader;
 
     const func = () => { return BuilderGL.buildProgram(gl,vertexShader, fragmentShader); };
@@ -20,7 +20,6 @@ describe("buildProgram", () => {
 
         gl = getContext();
         expect(func).not.toThrow(err);
-
     });
 
     it("must validate vertex shader", () => {
@@ -32,7 +31,6 @@ describe("buildProgram", () => {
 
         vertexShader = new WebGLShader();
         expect(func).not.toThrow(err);
-
     });
 
     it("must validate fragment shader", () => {
@@ -44,7 +42,6 @@ describe("buildProgram", () => {
 
         fragmentShader = new WebGLShader();
         expect(func).not.toThrow(err);
-
     });
 
     it("must return an instance of WebGLProgram", () => {
@@ -53,6 +50,5 @@ describe("buildProgram", () => {
         expect(gl.attachShader).toHaveBeenCalledTimes(2);
         expect(gl.attachShader).toHaveReturnedWith(true);
         expect(gl.linkProgram).toHaveReturnedWith(true);
-
     });
 });
