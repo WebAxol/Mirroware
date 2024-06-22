@@ -1,6 +1,6 @@
-import { Circle } from '../types/Circle.js';
-import { HorizontalWall } from '../types/HorizontalWall.js';
-import { VerticalWall } from '../types/VerticalWall.js';
+import { Circle } from '../../types/Circle.js';
+import { HorizontalWall } from '../../types/HorizontalWall.js';
+import { VerticalWall } from '../../types/VerticalWall.js';
 import World from '/pluglightjs/World.js';
 
 class SceneBuilder {

@@ -1,6 +1,6 @@
-import { Ray }      from '../types/Ray.js';
-import SceneModel   from './SceneModel.js';
-import Vector2D     from './Vector2D.js';
+import { Ray }      from '../../types/Ray.js';
+import SceneModel   from './../SceneModel.js';
+import Vector2D     from './../physics/Vector2D.js';
 
 class Camera{
 
