@@ -1,4 +1,4 @@
-import Vector2D from '../utils/Vector2D.js';
+import Vector2D from '../utils/physics/Vector2D.js';
 
 interface Circle {
     center : Vector2D,

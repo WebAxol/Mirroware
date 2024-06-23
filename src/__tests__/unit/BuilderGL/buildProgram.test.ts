@@ -1,4 +1,4 @@
-import BuilderGL from "./../../../frontend/utils/BuilderGL.js";
+import BuilderGL from "../../../frontend/utils/rendering/BuilderGL.js";
 import getContext from '../../__mocks__/getContext';
 
 beforeEach(() => {

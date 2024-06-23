@@ -1,6 +1,6 @@
 import Service from '../Service.js';
-import { Camera, camera } from '../../utils/Camera.js';
-import Vector2D from '../../utils/Vector2D.js';
+import { Camera, camera } from '../../utils/scene/Camera.js';
+import Vector2D from '../../utils/physics/Vector2D.js';
 
 class CameraMover extends Service{
 
@@ -15,7 +15,7 @@ class CameraMover extends Service{
         super();
 
         this.dt = 0;
-
+        /*
         this.command_KeyMap = {
             w : () => { this.translateCamera(0, 1) },
             s : () => { this.translateCamera(0,-1) },
@@ -23,7 +23,7 @@ class CameraMover extends Service{
             d : () => { this.translateCamera(-1,0) },
             k : () => { this.rotateCamera(-3 * this.dt) },
             ñ : () => { this.rotateCamera( 3 * this.dt) },
-        }
+        }*/
 
         this.control = {
             w : false,
@@ -50,7 +50,7 @@ class CameraMover extends Service{
             }
         });
     }
-
+    /*
     private rotateCamera(angle :number = 0){
 
         camera.rays.forEach(ray => {
@@ -89,6 +89,7 @@ class CameraMover extends Service{
             this.control[info.key] = false;
         }
     }
+    */
 }
 
 export default CameraMover;

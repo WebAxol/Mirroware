@@ -1,5 +1,5 @@
 import Service from "../Service.js";
-import { Camera, camera } from "../../utils/Camera.js";
+import { Camera, camera } from "../../utils/scene/Camera.js";
 
 class InputHandler extends Service {
 

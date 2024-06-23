@@ -1,7 +1,7 @@
 import app                from './Initializer.js';
 import CONFIG             from './config.js';
-import { Camera, camera } from './utils/Camera.js';
-import SceneBuilder       from './utils/SceneBuilder.js';
+import { Camera, camera } from './utils/scene/Camera.js';
+import SceneBuilder       from './utils/scene/SceneBuilder.js';
 
 // Playground
 

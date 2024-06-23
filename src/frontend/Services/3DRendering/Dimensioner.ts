@@ -1,7 +1,7 @@
 import Service from "../Service.js";
-import { Camera, camera } from "../../utils/Camera.js";
+import { Camera, camera } from "../../utils/scene/Camera.js";
 import { SceneChunk } from "../../types/SceneChunk.js"
-import Vector2D from '../../utils/Vector2D.js';
+import Vector2D from '../../utils/physics/Vector2D.js';
 import CONFIG from "../../config.js";
 
 class Dimensioner extends Service{
@@ -22,7 +22,9 @@ class Dimensioner extends Service{
 
         const context :CanvasRenderingContext2D = this.chief.context;
 
-        const cameraDegree :number = camera.rays[Math.floor((camera.rays.length) / 2)].degree;
+        // const cameraDegree :number = camera.rays[Math.floor((camera.rays.length) / 2)].degree;
+        const cameraDegree = NaN; 
+        
         const bruteTotal   :number = camera.rays.length;
         const netTotal     :number = bruteTotal * (this.interpolations + 1); 
         const canvasWidth  :number = this.chief.canvas.width;

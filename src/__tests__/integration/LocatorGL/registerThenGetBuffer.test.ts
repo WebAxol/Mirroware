@@ -1,4 +1,4 @@
-import LocatorGL from "./../../../frontend/utils/LocatorGL.js";
+import LocatorGL from "../../../frontend/utils/rendering/LocatorGL.js";
 
 const locator = new LocatorGL();
 

@@ -1,6 +1,6 @@
 import Service  from "../Service.js";
-import Vector2D from "../../utils/Vector2D.js";
-import { Camera, camera } from "../../utils/Camera.js";
+import Vector2D from "../../utils/physics/Vector2D.js";
+import { Camera, camera } from "../../utils/scene/Camera.js";
 
 class SceneRenderer2D extends Service{
 
@@ -45,7 +45,8 @@ class SceneRenderer2D extends Service{
 
     public renderWall(wall){
 
-        const deg = camera.rays[Math.floor(camera.rays.length / 2)].degree;
+        //const deg = camera.rays[Math.floor(camera.rays.length / 2)].degree;
+        const deg = NaN;
 
         this.#context.strokeStyle = `rgba(${wall.color},1)`;
         //this.#context.strokeStyle = `lawngreen`;
@@ -69,7 +70,8 @@ class SceneRenderer2D extends Service{
 
     public renderRay(ray, source){
 
-        const deg = camera.rays[Math.floor(camera.rays.length / 2)].degree;
+        //const deg = camera.rays[Math.floor(camera.rays.length / 2)].degree;
+        const deg = NaN;
 
         if(ray.reflected.getType && ray.reflected.active){
             this.renderRay(ray.reflected, ray.collidesAt);
@@ -95,8 +97,8 @@ class SceneRenderer2D extends Service{
 
     public renderCircle(circle){
     
-        const deg = camera.rays[Math.floor(camera.rays.length / 2)].degree;
-
+        //const deg = camera.rays[Math.floor(camera.rays.length / 2)].degree;
+        const deg = NaN;
 
         this.#context.strokeStyle = `rgb(${circle.color})`;
         this.#context.lineWidth = 1;

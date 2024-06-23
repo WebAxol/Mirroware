@@ -1,5 +1,5 @@
 import Service from "../Service.js";
-import { Camera, camera } from "../../utils/Camera.js";
+import { Camera, camera } from "../../utils/scene/Camera.js";
 import CONFIG from '../../config.js';
 
 class RGBA extends Service{

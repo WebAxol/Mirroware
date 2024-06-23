@@ -1,4 +1,4 @@
-import CanvasManager from '../utils/CanvasManager.js';
+import CanvasManager from '../utils/rendering/CanvasManager.js';
 
 const canvases = {
     
