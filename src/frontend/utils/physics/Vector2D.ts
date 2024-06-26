@@ -9,6 +9,10 @@ class Vector2D {
         return this;
     }
 
+    static copy(v : Vector2D){
+        return new Vector2D(v.x,v.y);
+    }
+
     public add(v :Vector2D){
         this.x += v.x;
         this.y += v.y;
@@ -47,6 +51,16 @@ class Vector2D {
 
     public static mult(v1,v2){
         return new Vector2D(v1.x * v2.x ,v1.y * v2.y );
+    }
+
+    public abs(){
+        this.x = Math.abs(this.x);
+        this.y = Math.abs(this.y);
+        return this;
+    }
+
+    public static abs(v){
+        return new Vector2D(Math.abs(v.x),Math.abs(v.y));
     }
 
     public dot(v :Vector2D){

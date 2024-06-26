@@ -10,7 +10,7 @@ interface Ray {
     direction  : Vector2D,
     collidesAt : Vector2D,
     collidesWith : VerticalWall | HorizontalWall | undefined,
-    reflected  : {} | Ray,
+    reflected  : undefined | Ray,
 }
 
 const rayPrototype :Ray = {
@@ -18,7 +18,7 @@ const rayPrototype :Ray = {
     active      : true,
     source      : new Vector2D(NaN,NaN),
     direction   : new Vector2D(NaN,NaN),
-    reflected   : {},
+    reflected   : undefined,
     level       : 1,
 
     // for collision detection and response
