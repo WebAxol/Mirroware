@@ -22,7 +22,7 @@ const testRay = (x,y,hx,hy) => {
     return {
         level: 1,
         source      : new Vector2D(x,y),
-        direction   : new Vector2D(hx,hy)
+        direction   : Vector2D.normalize(new Vector2D(hx,hy))
     };
 };
 
@@ -76,15 +76,12 @@ const testCases = [
         expectedPerRay: [
             { 
                 source: { x : -1.5, y : -1 },
-                direction  : { x : 2, y : -1 },
                 collidesAt : { x : -0.5, y : -1.5 }, 
                 reflected  : {
                     source     : { x : -0.5, y : -1.5 },
-                    direction  : { x : 2, y : 1},
                     collidesAt : { x : 1.5, y : -0.5 },
                     reflected: {
                         source     : { x : 1.5, y : -0.5 },
-                        direction  : { x : -2, y : 1},
                         collidesAt : { x : 1, y : -0.25 }
                     }
                 }
@@ -93,26 +90,21 @@ const testCases = [
                 collidesAt: { x : -0.75, y : -1 },
                 reflected: {
                     source: { x : -0.75, y : -1 },
-                    direction: { x : -1, y : 2 },
                     collidesAt: { x : -1, y : -0.5 },
                     reflected : {
                         source: { x : -1, y : -0.5 },
-                        direction: { x: 1, y: 2 },
                         collidesAt: { x : -0.25, y : 1 },
                         reflected: {
                             source: { x : -0.25, y : 1 },
-                            direction: { x: 1, y: -2 },
                         }
                     }
                 }
             },
             {
                 collidesAt: { x : 1.33333333, y : -1.5 },
-                direction : { x: 5, y : -3 },
                 source : { x : -2, y : 0.5 },
                 reflected : {
                     source: { x : 1.33333333, y : -1.5 },
-                    direction: { x : 5, y : 3 },
                     collidesAt: { x : 2, y : -1.1 }
                 }
             }
@@ -137,15 +129,12 @@ const testCases = [
         expectedPerRay: [
             {
                 source: { x : -0.8, y : 0.4 },
-                direction : { x : 3, y : -2 },
                 collidesAt: { x : 0.1, y : -0.2 },
                 reflected: {
                     source: { x : 0.1, y : -0.2 },
-                    direction : { x : 3, y : 2 },
                     collidesAt: { x : 0.6, y : 0.13333333 },
                     reflected: {
                         source: { x : 0.6, y : 0.13333333 },
-                        direction : { x : -3, y : 2 },
                         collidesAt: { x : 0.4, y : 0.266666666 },
                     }
                 }

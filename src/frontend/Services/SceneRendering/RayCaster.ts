@@ -43,16 +43,16 @@ class RayCaster extends Service {
             VerticalWall   : (reflected) => { reflected.direction.x *= -1 }
         };
 
-        const algorithm = strategy[surfaceType];
+        const reflectStrategy = strategy[surfaceType];
 
-        if(!algorithm)  return false;
+        if(!reflectStrategy)  return false;
 
-        algorithm(ray.reflected);
+        reflectStrategy(ray.reflected);
 
         return true;
     }
 
-    // WARNING: The following functions assume that wall collections are properly sorted in ascending order
+    // WARNING: The following function assumes that wall collections are properly sorted in ascending order based on their posX and posY values
 
     public iterativeWallCollisionTest(ray : Ray, indices : { horizontal :number, vertical : number }) :boolean {
 
@@ -80,6 +80,7 @@ class RayCaster extends Service {
 
             if(collision){ 
                 ray.collidesAt   = collision;
+                ray.lambda       =  Math.min(lambdaH,lambdaV);
                 ray.collidesWith = (lambdaH <= lambdaV) ? wallH : wallV;
                 break;
             }

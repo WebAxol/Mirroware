@@ -6,6 +6,7 @@ interface Ray {
 
     active     : boolean,
     level      : number,
+    lambda     : number, 
     source     : Vector2D,
     direction  : Vector2D,
     collidesAt : Vector2D,
@@ -16,6 +17,7 @@ interface Ray {
 const rayPrototype :Ray = {
 
     active      : true,
+    lambda      : NaN,
     source      : new Vector2D(NaN,NaN),
     direction   : new Vector2D(NaN,NaN),
     reflected   : undefined,
