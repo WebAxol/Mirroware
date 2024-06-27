@@ -1,6 +1,3 @@
-const canvas2d = document.querySelector('#canvas2d');
-const canvas3d = document.querySelector('#canvas3d');
-
 
 interface CanvasSchema {
 
@@ -83,7 +80,5 @@ class CanvasManager {
 }
 
 const instance = new CanvasManager();
-
-export { canvas2d, canvas3d };
 
 export default instance;
