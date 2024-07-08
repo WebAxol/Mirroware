@@ -94,10 +94,8 @@ class World {
         
         try{
 
-            if(this.pause){
-                return;
-            }
-
+            if(this.pause) return;
+            
             this.deltaTime = timeSpan - this.lastTime;
 
             this.fps = 1000 / this.deltaTime;
@@ -116,10 +114,8 @@ class World {
                     services[service].execute();
             });
 
-            if(!this.pause){
-                this.frame++;
-                this.routine(this);
-            }
+            this.routine(this);
+            this.frame++;
 
         }
         catch(err){
