@@ -1,22 +1,60 @@
-import { Ray }      from '../../types/Ray.js';
-import SceneModel   from './../SceneModel.js';
-import Vector2D     from './../physics/Vector2D.js';
+import { Ray }           from '../../types/Ray.js';
+import Vector2D          from './../physics/Vector2D.js';
+import World             from '/pluglightjs/World.js';
 
-class Camera{
+class Camera {
 
-    public pos         : Vector2D;
+    private initialized : boolean = false;
+
     public wallIndices : { vertical : number, horizontal : number};
-    public sceneModel  : SceneModel;
-    public rays        : Ray[];
+    public pos         : Vector2D;
+    public FOV         : number;
+    public castCenter  : Ray | undefined;
+    public castEdge    : Ray | undefined;
 
-    constructor(pos){
-        this.wallIndices = { horizontal : 0, vertical : 0 };
-        this.pos         = new Vector2D( pos.x || 0, pos.y || 0 );
-        this.sceneModel  = new SceneModel();
-        this.rays        = [];
+    constructor(){
+
+        // Everything set as 'NaN' by default
+
+        this.wallIndices = { horizontal : NaN, vertical : NaN };
+        this.FOV  = NaN;
+        this.pos  = new Vector2D(NaN,NaN);
+    };
+
+    public init(app : World, info : any) :boolean {
+
+        var { x, y, fov, dx, dy } = info;
+
+        this.FOV  = fov;
+        this.pos  =  new Vector2D(x,y);
+
+        if(this.initialized){
+            console.warn("Attempted to initialize an already initialized instance of 'Camera'");
+
+            return false;
+        }
+
+        camera.castCenter = app.createAgent('Ray', { 
+            info : { 
+                source    : camera.pos,
+                direction : Vector2D.normalize(new Vector2D(dx,dy))
+            }
+        });
+        
+        camera.castEdge = app.createAgent('Ray', { 
+            info : { 
+                source    : camera.pos,
+                direction : Vector2D.complexRotate(
+                    Vector2D.normalize(new Vector2D(dx,dy)), 
+                    [ Math.cos(camera.FOV * Math.PI / 360), Math.sin(camera.FOV * Math.PI / 360 ) ]
+                ) 
+            }
+        });
+
+        return this.initialized = true;
     }
-}
+};
 
-const camera = new Camera({ x : 13, y : 13 });
+const camera = new Camera();
 
 export { Camera, camera };

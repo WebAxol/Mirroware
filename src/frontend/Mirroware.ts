@@ -1,34 +1,33 @@
 import app                from './Initializer.js';
 import CONFIG             from './config.js';
-import { Camera, camera } from './utils/scene/Camera.js';
+import { camera } from './utils/scene/Camera.js';
+import Vector2D           from './utils/physics/Vector2D.js';
 import SceneBuilder       from './utils/scene/SceneBuilder.js';
 
-// Playground
+// Initialize camera
 
-// TODO: create abstraction layer to lessen the work of building scenes; for now, we'll imperatively define everything
-// Justification: feasability is a priority; In the future, the project can be enhanced
+camera.init(app,{
+    x : 17,
+    y:  17,
+    dx: 0,
+    dy: 1,
+    fov : 100.1
+});
 
-// First, create an array containing rays - TODO: Make an easier and safer way of defining rays with their raysources
+// Define and create scene
 
+const scene = [
+   
+    { type:'Wall', info:[[2,2],[4,2],   1, '255,0,0'         ]},
+    { type:'Wall', info:[[2,2],[2,4],   1, '0,255,0'         ]},
 
-const n = CONFIG.resolution;
+    { type : 'Circle', info:[camera.pos, 1,'0,100,0'          ]},
+    //{ type:'Wall', info:[[-1,2],[1,2],   1, '255,255,0'         ]},
+    //{ type:'Wall', info:[[-3.57,3],[3.57,3],   1, '0,255,0'         ]},
 
-for(let i : number = 0; i < n; i++){
-    let ray = app.createAgent('Ray',{
-        'info' : {
-            degree : (i * (100 / n))
-        }
-    });
-
-    ray.source = camera;
-    camera.rays.push(ray);
-}
-
-// Create a simple scene (composed by horizontal and vertical walls);
-// [from, to, opacity, color]
-
-const testScene = [ // This is just a template to instance the required walls
-
+    
+    { type : 'Circle', info:[camera.pos, 0.5,'0,100,0'          ]},
+ 
     { type:'Wall', info:[[5,5],[5,25],   1, '255,255,0'         ]},
     { type:'Wall', info:[[10,5],[10,-20],   1, '0,255,0'        ]},
     { type:'Wall', info:[[12,5],[12,-20],   1, '255,0,0'        ]},
@@ -46,15 +45,12 @@ const testScene = [ // This is just a template to instance the required walls
     { type:'Wall', info:[[5, 7],[7, 7],  1, '0,255,100'         ]},
     { type:'Wall', info:[[7, 5],[7, 7],  1, '37, 190, 42'       ]},
     { type:'Wall', info:[[7, 14],[7, 20],  1, '0,155,200'       ]},
-
-    { type:'Wall', info:[[7, 20],[15, 20],  1, '255,46,87'     ]},
+    { type:'Wall', info:[[7, 20],[15, 20],  1, '255,46,87'      ]},
     { type:'Wall', info:[[7, 15],[15, 15],  0.05, '0,100,100'   ]},
-    { type:'Wall', info:[[7, 19],[15, 19],  0.05, '255,46,87'     ]},
-    { type:'Wall', info:[[7, 14],[15, 14],  1, '0,100,100'   ]},
-
-    { type:'Wall', info:[[15, 15],[15, 14],  1, '0,100,100'   ]},
-    { type:'Wall', info:[[15, 19],[15, 20],  1, '255,46,87'   ]},
-
+    { type:'Wall', info:[[7, 19],[15, 19],  0.05, '255,46,87'   ]},
+    { type:'Wall', info:[[7, 14],[15, 14],  1, '0,100,100'      ]},
+    { type:'Wall', info:[[15, 15],[15, 14],  1, '0,100,100'     ]},
+    { type:'Wall', info:[[15, 19],[15, 20],  1, '255,46,87'     ]},
     { type:'Wall', info:[[25,5],[25,25], 1, '150,150,150'       ]},
     { type:'Wall', info:[[5,25],[25,25], 0.1, '255,255,255'     ]},
     { type:'Wall', info:[[15,7],[17,7], 1, '255,0,255'          ]},
@@ -68,17 +64,15 @@ const testScene = [ // This is just a template to instance the required walls
     { type:'Wall', info:[[22, 12],[22, 15],  1, '255,157,0'     ]},
     { type:'Wall', info:[[19, 12],[19, 15],  1, '255,157,0'     ]},
 
-    { type : 'Circle', info:[{ x : 10, y : 17}, 1,'255,46,87'] },
-    { type : 'Circle', info:[{ x : 20, y : 10}, 3,'255,46,87'] },
-    //{ type : 'Circle', info:[{ x : 20, y : 19}, 0.5,'0,86,46'] },
-    { type : 'Circle', info:[camera.pos, 0.5,'0,100,0'] },
-];
-
-// TODO: replace by a module specialized on building scenes
+    //{ type : 'Circle', info:[{ x : 10, y : 17}, 1,'255,46,87'   ]},
+    //{ type : 'Circle', info:[{ x : 20, y : 10}, 3,'255,46,87'   ]},
+    //{ type : 'Circle', info:[{ x : 20, y : 19}, 0.5,'0,86,46'   ]},
+    
+    ];
 
 const sceneBuilder = new SceneBuilder(app);
 
-sceneBuilder.build(testScene);
+sceneBuilder.build(scene);
 
 /* ------ Debugging commands (Not for production) ------- */
 
@@ -94,16 +88,12 @@ const commands = {
         app.execute();
         console.log('execution resumed');
     }   
-
 }
-
-
 
 window.addEventListener('keydown', (e) => {
 
     if(commands[e.key]) commands[e.key]();
-
-})
+});
 
 // execute
 

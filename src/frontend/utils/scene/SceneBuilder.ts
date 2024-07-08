@@ -100,8 +100,6 @@ class SceneBuilder {
 
     private buildCircle(center,radius,color){
 
-        console.log(color);
-
         let circle = this.app.createAgent('Circle',{
             info : {
                 radius : radius,
