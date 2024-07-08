@@ -34,10 +34,14 @@ const getContext = () => {
                 
                 return true;
             }),
-            getProgramParameter: jest.fn().mockReturnValue(true),
-            deleteProgram      : jest.fn(),
-            bindBuffer:          jest.fn(),
-            bufferSubData:       jest.fn(),
+            getProgramParameter     : jest.fn().mockReturnValue(true),
+            deleteProgram           : jest.fn(),
+            bindBuffer              : jest.fn(),
+            bufferSubData           : jest.fn(),
+            useProgram              : jest.fn(),
+            getAttribLocation       : jest.fn(),
+            vertexAttribPointer     : jest.fn(),
+            enableVertexAttribArray : jest.fn(),
 
             FRAGMENT_SHADER : 1,
             VERTEX_SHADER   : 1,
