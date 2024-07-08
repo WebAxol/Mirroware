@@ -22,13 +22,14 @@ class SceneRenderer2D extends Service{
         this.#context.fillStyle = 'rgba(0,0,0,1)';
         this.#context.fillRect(0,0,3000,3000);
         
-        this.renderRay(camera.rays[Math.floor(camera.rays.length / 2)],camera.pos);
+        //this.renderRay(camera.rays[Math.floor(camera.rays.length / 2)],camera.pos);
 
-        
+        /*
         camera.rays.forEach(ray => {
             this.renderRay(ray,camera.pos);
         });
-        
+        */
+
         horizontalWalls.forEach(wall => {
             this.renderWall(wall);
         });
@@ -45,8 +46,9 @@ class SceneRenderer2D extends Service{
 
     public renderWall(wall){
 
-        //const deg = camera.rays[Math.floor(camera.rays.length / 2)].degree;
-        const deg = NaN;
+        if(!camera.castCenter) return;
+
+        const deg = camera.castCenter?.direction.angle() * (180 / Math.PI);
 
         this.#context.strokeStyle = `rgba(${wall.color},1)`;
         //this.#context.strokeStyle = `lawngreen`;
@@ -70,8 +72,9 @@ class SceneRenderer2D extends Service{
 
     public renderRay(ray, source){
 
-        //const deg = camera.rays[Math.floor(camera.rays.length / 2)].degree;
-        const deg = NaN;
+        if(!camera.castCenter) return;
+
+        const deg = camera.castCenter?.direction.angle() * (180 / Math.PI);
 
         if(ray.reflected.getType && ray.reflected.active){
             this.renderRay(ray.reflected, ray.collidesAt);
@@ -96,9 +99,10 @@ class SceneRenderer2D extends Service{
     }
 
     public renderCircle(circle){
-    
-        //const deg = camera.rays[Math.floor(camera.rays.length / 2)].degree;
-        const deg = NaN;
+
+        if(!camera.castCenter) return;
+
+        const deg = camera.castCenter?.direction.angle() * (180 / Math.PI);
 
         this.#context.strokeStyle = `rgb(${circle.color})`;
         this.#context.lineWidth = 1;
