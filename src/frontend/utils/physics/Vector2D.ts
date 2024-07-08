@@ -107,6 +107,15 @@ class Vector2D {
         return this;
     }
 
+    public angle(){
+        let angle =  Math.atan2( this.y , this.x );
+
+        if (angle < 0) {
+            angle += 2 * Math.PI;
+        }
+        return angle;
+    }
+
     public static rotate(v, center, deg :number){
 
         deg *= Math.PI / 180;
@@ -116,9 +125,23 @@ class Vector2D {
         return Vector2D.add({
             x : v.dot({ x : Math.cos(deg), y : -Math.sin(deg) }), 
             y : v.dot({ x : Math.sin(deg), y :  Math.cos(deg) })
-        }, center);
-        
+        }, center);   
     }
+
+    public complexRotate(w : number[]){
+
+        const temp = this.x;
+
+        this.x = this.x * w[0] - this.y * w[1];
+        this.y = temp   * w[1] + this.y * w[0];
+
+        return this;
+    }
+
+    public static complexRotate(v, w : number[]){
+
+       return new Vector2D(v.x * w[0] - v.y * w[1], v.x * w[1] + v.y * w[0]); 
+    };
 
     public static normalize(v){
 
@@ -138,7 +161,9 @@ class Vector2D {
 
     public static angleBetween(v1 : Vector2D, v2: Vector2D){
     
-        return Math.acos(Vector2D.dot(v1,v2) / (v1.mag() * v2.mag())) * (180 /  Math.PI);
+        let normalizedDotProduct = Vector2D.dot(v1,v2) / (v1.mag() * v2.mag());
+
+        return Math.acos(Math.min(normalizedDotProduct, 1));
     }
 }
 
