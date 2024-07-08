@@ -18,6 +18,9 @@ class RayCaster extends Service {
         
         if(ray.reflected) ray.reflected.active = false;
 
+        ray.collidesWith = null;
+        ray.lambda = Infinity;
+
         const collision = this.iterativeWallCollisionTest(ray, indices);
 
         if(!collision) return;

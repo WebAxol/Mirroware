@@ -12,24 +12,33 @@ class SpaceSearcher extends Service {
 
     public execute() {}
     
-    public getIndicesOfClosest(source :Camera, testArgs :any = undefined ) :object | false {
+    public getIndicesOfClosest(camera :Camera) :{ horizontal: number, vertical : number } {
 
-        const verticalWalls   = (testArgs && testArgs.vertical  ) ? testArgs.vertical   : this.world.getCollection('VerticalWalls');
-        const horizontalWalls = (testArgs && testArgs.horizontal) ? testArgs.horizontal : this.world.getCollection('HorizontalWalls');
+        const verticalWalls   = this.#chief.world.getCollection('VerticalWalls');
+        const horizontalWalls = this.#chief.world.getCollection('HorizontalWalls');
+        const wallIndices     = { horizontal : -1, vertical : -1 };
 
         // get closest vertical wall's index before source
 
-        let xPositions = verticalWalls.map((wall) =>  wall.posX );
+        if(verticalWalls.length > 0){
 
-        source.wallIndices.vertical  = this.BinarySearchForClosest(xPositions,source.pos.x);
+            let xPositions = verticalWalls.map((wall) =>  wall.posX );
+
+            wallIndices.vertical  = this.BinarySearchForClosest(xPositions,camera.pos.x);
+
+        }
 
         // get closest horizontal wall's index before source
 
-        let yPositions = horizontalWalls.map((wall) =>  wall.posY );
-        
-        source.wallIndices.horizontal = this.BinarySearchForClosest(yPositions,source.pos.y);
+        if(horizontalWalls.length > 0){
 
-        return source.wallIndices;
+            let yPositions = horizontalWalls.map((wall) =>  wall.posY );
+            
+            wallIndices.horizontal = this.BinarySearchForClosest(yPositions,camera.pos.y);
+        
+        }
+
+        return wallIndices;
     }
 
     public BinarySearchForClosest(arr : number[], value : number) :number {

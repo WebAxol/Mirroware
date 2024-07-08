@@ -1,35 +1,114 @@
 import LocatorGL from "../utils/rendering/LocatorGL.js";
-import canvas3d  from "./canvases.js";
+import BuilderGL from "../utils/rendering/BuilderGL.js";
+import canvases  from "./canvases.js";
+import CONFIG from "../config.js";
 
-const gl :WebGL2RenderingContext = canvas3d.getContext("WebGL2");
-const locator :LocatorGL = new LocatorGL();
+const canvas = canvases.canvas3d;
 
-const frontBuffer        :WebGLBuffer | null = gl.createBuffer();
+const gl :WebGL2RenderingContext = canvas.getContext("webgl2");
 
-gl.bindBuffer(gl.ARRAY_BUFFER, frontBuffer);
-gl.bufferData(gl.ARRAY_BUFFER, 1024, gl.DYNAMIC_DRAW);
+const locatorPromise :Promise<unknown> = new Promise( async (resolve,reject) => {
 
-const frontElementBuffer :WebGLBuffer | null = gl.createBuffer();
+    const _locator = new LocatorGL();
 
-gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, frontElementBuffer);
-gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, 1024, gl.DYNAMIC_DRAW);
+    console.log("%cPreparing WebGL...","color: skyblue");
 
-const lyingBuffer        :WebGLBuffer | null = gl.createBuffer();
+    // Creation of shaders & program build-up
 
-gl.bindBuffer(gl.ARRAY_BUFFER, lyingBuffer);
-gl.bufferData(gl.ARRAY_BUFFER, 1024, gl.DYNAMIC_DRAW);
+    console.log('\x1b[36m',"building shaders...");
 
-const lyingElementBuffer :WebGLBuffer | null = gl.createBuffer();
+    const rectangleVertexShader :WebGLShader | void = await BuilderGL.buildShader(gl, "VERTEX_SHADER",   "./shaders/rect.vert");
+    const frontFragmentShader   :WebGLShader | void = await BuilderGL.buildShader(gl, "FRAGMENT_SHADER", "./shaders/front.frag");
+    const lyingFragmentShader   :WebGLShader | void = await BuilderGL.buildShader(gl, "FRAGMENT_SHADER", "./shaders/lying.frag");
 
-gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, lyingElementBuffer);
-gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, 1024, gl.DYNAMIC_DRAW);
+    console.log("\n\n");
+    console.log("%c[WebGL DEBUG]: shaders' status","color : skyblue")
+    console.table({
+        rectangleVertexShader,
+        frontFragmentShader,
+        lyingFragmentShader
+    })
 
-// Registration of buffers at locator for later usage
+    if( !rectangleVertexShader ||
+        !frontFragmentShader   ||
+        !lyingFragmentShader )          return reject("There was an error at building shaders");
+        
 
-if(frontBuffer)         locator.registerBuffer(frontBuffer,"ARRAY_BUFFER","frontBuffer");
-if(frontElementBuffer)  locator.registerBuffer(frontElementBuffer,"ELEMENT_ARRAY_BUFFER", "frontBuffer");
+    console.log('\x1b[36m',"building programs...");
 
-if(lyingBuffer)         locator.registerBuffer(lyingBuffer,"ARRAY_BUFFER","lyingBuffer");
-if(lyingElementBuffer)  locator.registerBuffer(lyingElementBuffer,"ELEMENT_ARRAY_BUFFER", "lyingBuffer");
+    const frontProgram :WebGLProgram | void = BuilderGL.buildProgram(gl,rectangleVertexShader,frontFragmentShader);
+    const lyingProgram :WebGLProgram | void = BuilderGL.buildProgram(gl,rectangleVertexShader,lyingFragmentShader);
+    
+    console.log("\n\n");
+    console.log("%c[WebGL DEBUG]: programs' status","color : skyblue")
+    console.table({
+        frontProgram,
+        lyingProgram
+    })
 
-export { gl, locator };
+    if(!frontProgram || !lyingProgram)   return reject("There was an error at building programs");
+
+    // Registration of programs at locator for later usage
+
+    console.log('\x1b[36m',"allocating programs...");
+
+    _locator.registerProgram("front",frontProgram);
+    _locator.registerProgram("lying",lyingProgram);
+
+    // Creation of buffers and attribute set-up
+
+    console.log('\x1b[36m',"creating buffers...");
+    
+    gl.useProgram(frontProgram);
+
+    const frontBuffer        :WebGLBuffer | null = gl.createBuffer();
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, frontBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(600 * 5 * 4), gl.DYNAMIC_DRAW);
+
+    const frontElementBuffer :WebGLBuffer | null = gl.createBuffer();
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, frontElementBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(600 * 3 * 2), gl.DYNAMIC_DRAW);
+
+    gl.useProgram(lyingProgram);
+    
+    const lyingBuffer        :WebGLBuffer | null = gl.createBuffer();
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, lyingBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(600 * 3 * 8), gl.DYNAMIC_DRAW);
+    
+
+    const lyingElementBuffer :WebGLBuffer | null = gl.createBuffer();
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, lyingElementBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(600 * 3 * 4), gl.DYNAMIC_DRAW);
+    
+    if( !frontBuffer        ||
+        !frontElementBuffer ||
+        !lyingBuffer        ||
+        !lyingElementBuffer)        return reject("There was an error at creating buffers");
+    
+    //if( !frontBuffer        ||
+    //    !frontElementBuffer   )  return reject("There was an error at creating buffers");
+
+    // Registration of buffers at locator for later usage
+
+    console.log('\x1b[36m',"allocating buffers...");
+
+    _locator.registerBuffer(frontBuffer,"ARRAY_BUFFER","frontBuffer");
+    _locator.registerBuffer(frontElementBuffer,"ELEMENT_ARRAY_BUFFER", "frontBuffer");
+    _locator.registerBuffer(lyingBuffer,"ARRAY_BUFFER","lyingBuffer");
+    _locator.registerBuffer(lyingElementBuffer,"ELEMENT_ARRAY_BUFFER", "lyingBuffer");
+
+    console.log("\n\n");
+    console.log("%cWebGL was prepared successfully!","color: lawngreen; background:black");
+    
+    gl.enable(gl.BLEND);
+
+    return resolve(_locator);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+})
+
+export { gl, locatorPromise };

@@ -62,6 +62,15 @@ class LocatorGL {
 
         return buffer ? buffer : false;
     };
+
+    public getProgram(name : string) :false | WebGLProgram {
+
+        const program = this.programs.get(name);
+
+        if(!program) return false;
+
+        return program;
+    };
 }
 
 export default LocatorGL;
