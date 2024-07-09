@@ -13,6 +13,7 @@ const canvases :CanvasDictionary = {
         style : {
             width: '100%',
             zIndex : 2,
+            background: 'linear-gradient(180deg, rgba(125,213,205,1) 0%, rgba(155,100,50,0.9836309523809523) 50%)',
             'image-rendering': 'pixelated'
         }
     }),

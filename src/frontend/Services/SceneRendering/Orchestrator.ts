@@ -57,6 +57,10 @@ class RenderingPipeline extends Service {
         ctx.closePath();
         ctx.stroke();
 
+        if(!ray.reflected || !ray.reflected.active) return;
+        
+        this.__debugRay__(ray.reflected);
+
     }
 
     execute(){
@@ -67,8 +71,8 @@ class RenderingPipeline extends Service {
         const complex = [ Math.cos(-2 / Math.PI / 180), Math.sin(-2 / Math.PI / 180) ];
         camera.castCenter.direction.complexRotate(complex);
         camera.castEdge.direction.complexRotate(complex);
-        //camera.pos.x -= 0.005;
-        //camera.pos.y -= 0.005;
+        camera.pos.x -= 0.005;
+        camera.pos.y -= 0.005;
 
 
         const wallIndices = this.spaceSearcher.getIndicesOfClosest(camera);
@@ -77,6 +81,8 @@ class RenderingPipeline extends Service {
         const rotationAngle  :number   = (camera.FOV / CONFIG.resolution) * (Math.PI / 180) * -1;
         const complexRotator :number[] = [ Math.cos(rotationAngle), Math.sin(rotationAngle) ];
         const direction = Vector2D.copy(ray.direction);
+
+        this.dataModeller.memoryIndex = 0;
 
         for(let i = 0; i < CONFIG.resolution; i++){
 
@@ -91,7 +97,9 @@ class RenderingPipeline extends Service {
             this.dataModeller.model(ray, angle, i);
         }
 
-        this.renderer.execute();
+        let amount = this.dataModeller.memoryIndex;
+
+        this.renderer.render(amount);
 
         ray.direction = direction;
 

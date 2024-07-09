@@ -31,17 +31,13 @@ void main() {
     
     vec3  textureCoord = u_cameraPosition + (rayDirection * lambda);
 
-    //if(textureCoord.z > 0.0) color = vec3(0.0,0.0,0.0);
-
     if(mod(textureCoord.z * 1.0,2.0) > 1.0 && mod(textureCoord.x * 1.0,2.0) > 1.0) color = vec3(0.0,0.0,0.0);
     if(mod(textureCoord.z * 1.0,2.0) < 1.0 && mod(textureCoord.x * 1.0,2.0) < 1.0) color = vec3(0.0,0.0,0.0);
     
     color /= lambda / 2.0;
 
-    if(v_height > 0.0) gl_FragColor = vec4(0,0,0, 0.1);
+    if(v_height > 0.0) gl_FragColor = vec4(0,0.2,0.5, 0);
     
-    else gl_FragColor = vec4(color, 1.0);
-
-    //gl_FragColor = vec4(color, 1.0);
+    else gl_FragColor = vec4(color, 0.9);
     
 }

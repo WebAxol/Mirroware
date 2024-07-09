@@ -25,7 +25,7 @@ class RayCaster extends Service {
 
         if(!collision) return;
             
-        if(ray.level <= 5 && this.reflect(ray)) this.castRay(ray.reflected,indices);
+        if(ray.level <= 1 &&  ray.collidesWith.opacity < 1 &&this.reflect(ray)) this.castRay(ray.reflected,indices);
     }
 
     public reflect(ray :any) :boolean {
@@ -33,12 +33,13 @@ class RayCaster extends Service {
         if(!ray.collidesWith) return false;
 
         if(!ray.reflected){
-
-            ray.reflected           = this.#chief.world.createAgent('Ray');
-            ray.reflected.level     = ray.level + 1;
-            ray.reflected.source    = Vector2D.copy(ray.collidesAt);
-            ray.reflected.direction = Vector2D.copy(ray.direction);
+            ray.reflected       = this.#chief.world.createAgent('Ray');
+            ray.reflected.level = ray.level + 1;
         }
+
+        ray.reflected.source    = Vector2D.copy(ray.collidesAt);
+        ray.reflected.direction = Vector2D.copy(ray.direction);        
+        ray.reflected.active    = true;
 
         const surfaceType = ray.collidesWith.getType();
         const strategy = {
