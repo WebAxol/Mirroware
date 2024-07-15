@@ -4,6 +4,17 @@ import Service            from "../Service.js";
 import { gl }             from "../../setUp/webGL.js";
 import { camera }         from "../../utils/scene/Camera.js";
 
+interface Cache {
+    itemID: number;
+    xi    : number;
+    yi    : number;
+    xf    : number;
+    yf    : number;
+    colori: string;
+    colorf: string;
+    child : Cache | undefined;
+}
+
 class DataModeller extends Service{
 
     private chief;
@@ -18,16 +29,35 @@ class DataModeller extends Service{
     private lyingBuffer         :WebGLBuffer  = gl.createBuffer() as WebGLBuffer;
     private lyingElementBuffer  :WebGLBuffer  = gl.createBuffer() as WebGLBuffer;
 
+    private cache :Cache;
+
     constructor(chief){
         super();
         this.chief = chief;
+
+        const head :any = {};
+        var  node :any = head;
+
+        for(let i = 0; i <= 4; i++){
+            node.itemID = -1; 
+            node.colori = ''; 
+            node.colorf = ""; 
+            node.xi     = NaN;
+            node.yi     = NaN; 
+            node.xf     = 0; 
+            node.yf     = 0; 
+            node.child  = undefined
+
+            if(i == 1) continue;
+
+            node.child  = {};
+            node = node.child;
+        }
+
+        this.cache = head;
     }
 
     // Real buffers being established after WebGL is initialized
-
-    public reset(){
-        this.memoryIndex = 0;
-    }
 
     public init(){
 
@@ -42,122 +72,166 @@ class DataModeller extends Service{
 
     }
 
+    public reset(){
+
+        this.memoryIndex = 0;
+
+        var cache :Cache | undefined = this.cache;
+
+        while(cache){
+            cache.itemID = -1;
+            cache = cache.child;
+        }
+    }
+
     public model( ray : any, angle: number, index : number, ){
 
         if(!this.initialized) this.init();  // Initialize buffers if not already
-
-        const resolution = CONFIG.resolution;        
+   
         const znear      = 1 / Math.tan(camera.FOV * Math.PI / 360);
         const deltaAngle = (camera.FOV / CONFIG.resolution) * (Math.PI / 180) * -1;
 
-        var depth = 0, height;
-        var xi, xf, yi, yf, my;
+        var depth = 0;
+        var itemID = -1, nx, ny;
+        var mi = Infinity;
+        var mf = Infinity;
         var color, darkness;
         
-        var lyingSurf    :number[] = [];
-        var frontSurf    :number[] = [];
-        var lyingElement :number[] = [];
-        var frontElement :number[] = [];
+        var lyingSurf    :any[] = [];
+        var frontSurf    :any[] = [];
+        var lyingElement :any[] = [];
+        var frontElement :any[] = [];
+        
+        var cache :Cache | undefined = this.cache;
+        var cut = false;
+        var level = -1;
 
-         while(true){
+         while(cache){
 
-            depth +=  ray.lambda * Math.cos(Math.abs(angle));
-            darkness = 1 + (depth / 10) + (Math.abs(CONFIG.resolution / 2 - index) / 100); 
+            itemID = -1;
 
-            height = 0.01 + znear / depth;
+            if(ray && ray.collidesWith){
 
-            my = yi !== undefined ? yi : 1;
+                itemID = ray.collidesWith.getID();
 
-            xi = Math.tan(angle)              * znear * ((index <= CONFIG.resolution / 2) ? -1 : 1);
-            xf = Math.tan(angle + deltaAngle) * znear * ((index <= CONFIG.resolution / 2) ? -1 : 1);
-            yi =   height + (0 / depth);
-            yf = - height + (0 / depth);
+                depth +=  ray.lambda * Math.cos(Math.abs(angle));
+                darkness = 1 + (depth / 10) + (Math.abs(CONFIG.resolution / 2 - index) / 10); 
 
-            color = ray.collidesWith ?  ray.collidesWith.color + `,${ray.collidesWith.opacity}` : "0,0,0,1";
-            color = color.split(',').map((component, i) => { 
+                ny = 0.01 + znear / depth;
 
-                if(i !== 3) return parseFloat(component) / (255 * darkness) 
+                nx = Math.tan(angle - deltaAngle) * znear * ((index <= CONFIG.resolution / 2) ? -1 : 1);
 
-                return parseFloat(component);
-            });
+                color = (ray.collidesWith ?  ray.collidesWith.color + `,${ray.collidesWith.opacity}` : "0,0,0,1")
+                    .split(',')
+                    .map((component, i) => {  return i < 3 ? parseFloat(component) / (255 * darkness) : parseFloat(component); });
+            }
 
-            frontSurf = [
-                xi,yi, 0.1 * ray.level, ...color,
-                xf,yi, 0.1 * ray.level, ...color,
-                xf,yf, 0.1 * ray.level, ...color,
-                xi,yf, 0.1 * ray.level, ...color,
-            ]
-            .concat(frontSurf);
+            cut = cache.itemID >= 0 && (cut || (cache.itemID !== itemID || index === CONFIG.resolution - 1 ));
 
-            frontElement = [
-                0, 1, 2, 
-                0, 3, 2
-            ]
-            .map((i) => {  return i + this.memoryIndex * 4 })
-            .concat(frontElement.map((i) => { return i + 4} ));
+            if(cut){
+                
+                this.memoryIndex++;
 
-            lyingSurf = [
-                //  Ceiling
-                xi,my, 0.1 * ray.level, 1,
-                xf,my, 0.1 * ray.level, 1,
-                xf,yi, 0.1 * ray.level, 1,
-                xi,yi, 0.1 * ray.level, 1, 
-                //  Floor
-                xi,yf, 0.1 * ray.level, -1,
-                xf,yf, 0.1 * ray.level, -1,
-                xf,-my,0.1 * ray.level, -1,
-                xi,-my,0.1 * ray.level, -1,
-            ]
-            .concat(lyingSurf);
+                level++;
 
+                let { xi, yi, xf, yf } = cache;
 
-            lyingElement = [
-                0, 1, 2, 
-                0, 3, 2,
+                mi = Math.min(mi, Math.max(yi,1));
+                mf = Math.min(mf, Math.max(yf,1));` `
 
-                4, 5, 6,
-                4, 7, 6
-            ]
-            .map((i) => {  return i + this.memoryIndex * 8 })
-            .concat(lyingElement.map((i) => { return i + 8}) );
+                frontSurf = [
+                    xi, yi, 0.001 * level, ...cache.colori,
+                    xf, yf, 0.001 * level, ...cache.colorf,
+                    xf,-yf, 0.001 * level, ...cache.colorf,
+                    xi,-yi, 0.001 * level, ...cache.colori,
+                ]
+                .concat(frontSurf);
 
-            // Allocate inside buffers
+                frontElement = ([
+                    0, 1, 2, 
+                    0, 3, 2
+                ]
+                .map((i) => {  return i + (this.memoryIndex - level) * 4 })
+                ).concat(frontElement.map((i) => { return i + 4 }));
 
-            if(!ray.reflected || !ray.reflected.active) break;
+                lyingSurf = [
+                    //  Ceiling
+                    xi,mi,  0.001 * level, 1,
+                    xf,mf,  0.001 * level, 1,
+                    xf,yf,  0.001 * level, 1,
+                    xi,yi,  0.001 * level, 1, 
+                    //  Floor
+                    xi,-yi, 0.001 * level, -1,
+                    xf,-yf, 0.001 * level, -1,
+                    xf,-mf, 0.001 * level, -1,
+                    xi,-mi, 0.001 * level, -1,
+                ]
+                .concat(lyingSurf);
 
-            ray = ray.reflected;
+                lyingElement = [
+                    0, 1, 2, 
+                    0, 3, 2,
 
+                    4, 5, 6,
+                    4, 7, 6
+                ]
+                .map((i) => {  return i + (this.memoryIndex - level) * 8 })
+                .concat(lyingElement.map((i) => { return i + 8 }));
+
+                cache.itemID = itemID; 
+                cache.colori = color; 
+                cache.xi = xf; 
+                cache.yi = ny; 
+            }
+            
+            if(cache.itemID < 0 && ray){
+                cache.itemID = itemID;
+                cache.colori = color;
+                cache.colorf = color;
+                cache.xi     = nx;
+                cache.yi     = ny;
+            } 
+                
+            cache.xf     = nx;
+            cache.yf     = ny;
+            cache.colorf = color;
+
+            ray = (ray && ray.reflected && ray.reflected.active) ? ray.reflected : null;
+
+            cache = cache.child;
         }
+
+        // Allocate inside buffers
+
+        if(!frontSurf.length) return;
 
         gl.bindBuffer(gl.ARRAY_BUFFER,this.frontBuffer);
         gl.bufferSubData(
             gl.ARRAY_BUFFER, 
-            this.memoryIndex * 7 * 4 * Float32Array.BYTES_PER_ELEMENT, 
+            (this.memoryIndex - level) * 7 * 4 * Float32Array.BYTES_PER_ELEMENT, 
             new Float32Array(frontSurf)
         );
 
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,this.frontElementBuffer);
         gl.bufferSubData(
             gl.ELEMENT_ARRAY_BUFFER, 
-            this.memoryIndex * 6 * Uint16Array.BYTES_PER_ELEMENT, 
+            (this.memoryIndex - level) * 6 * Uint16Array.BYTES_PER_ELEMENT, 
             new Uint16Array(frontElement)
         );
 
         gl.bindBuffer(gl.ARRAY_BUFFER,this.lyingBuffer);
         gl.bufferSubData(
             gl.ARRAY_BUFFER, 
-            this.memoryIndex * 8 * 4 * Float32Array.BYTES_PER_ELEMENT, 
+            (this.memoryIndex - level) * 8 * 4 * Float32Array.BYTES_PER_ELEMENT, 
             new Float32Array(lyingSurf)
         );
 
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,this.lyingElementBuffer);
         gl.bufferSubData(
             gl.ELEMENT_ARRAY_BUFFER, 
-            this.memoryIndex * 12 * Uint16Array.BYTES_PER_ELEMENT, 
+            (this.memoryIndex - level) * 12 * Uint16Array.BYTES_PER_ELEMENT, 
             new Uint16Array(lyingElement)
         );
-
-        this.memoryIndex += ray.level; 
     }
 
     mapWallTexture(){}

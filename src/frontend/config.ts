@@ -6,13 +6,6 @@ const CONFIG = {
     //fogColor   : `${25*2},${6*2},${16*2}`, // RGB
     fogColor   : `${20*2},${0*2},${0*2}`, // RGB
     blurEffect : 0,
-
-    transformDimensions : (frame, index, distance) => {
-        //return distance + Math.min(0.5 * (Math.sin(((frame / 50) + (index / 20)) / 1) * (distance / 10)), 10);
-    
-        return distance;
-    },
-
     lightLevel : 40
 };
 

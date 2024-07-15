@@ -94,7 +94,7 @@ class Vector2D {
     }
 
     public static scale(v,s){
-        return { x : v.x * s , y : v.y * s }
+        return new Vector2D( v.x * s , v.y * s )
     }
 
     public normalize(){

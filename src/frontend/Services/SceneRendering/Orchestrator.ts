@@ -41,7 +41,7 @@ class RenderingPipeline extends Service {
         const deg = camera.castCenter?.direction.angle() * (180 / Math.PI);
         //const deg = 0;
 
-        ctx.strokeStyle = 'rgba(255,255,255,0.05)'//'white' : 'red';
+        ctx.strokeStyle = 'rgba(255,255,255,0.005)'//'white' : 'red';
         ctx.lineWidth = 1;
 
         let from = Vector2D.rotate(ray.source, camera.pos, deg);
@@ -68,13 +68,6 @@ class RenderingPipeline extends Service {
         if(!this.locator)                                     return false;
         if(!camera || !camera.castEdge || !camera.castCenter) return false;
 
-        const complex = [ Math.cos(-2 / Math.PI / 180), Math.sin(-2 / Math.PI / 180) ];
-        camera.castCenter.direction.complexRotate(complex);
-        camera.castEdge.direction.complexRotate(complex);
-        camera.pos.x -= 0.005;
-        camera.pos.y -= 0.005;
-
-
         const wallIndices = this.spaceSearcher.getIndicesOfClosest(camera);
 
         const ray : Ray                = camera.castEdge;
@@ -82,11 +75,13 @@ class RenderingPipeline extends Service {
         const complexRotator :number[] = [ Math.cos(rotationAngle), Math.sin(rotationAngle) ];
         const direction = Vector2D.copy(ray.direction);
 
-        this.dataModeller.memoryIndex = 0;
+        this.dataModeller.reset();
 
         for(let i = 0; i < CONFIG.resolution; i++){
 
             ray.direction.complexRotate(complexRotator);
+
+            if(ray.reflected) ray.reflected.active = false;
 
             this.rayCaster.castRay(ray, Object.assign({},wallIndices));
 

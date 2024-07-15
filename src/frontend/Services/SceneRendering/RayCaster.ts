@@ -12,8 +12,6 @@ class RayCaster extends Service {
         this.#chief = chief;
     }
 
-    public execute() {}
-
     public castRay(ray : any, indices : { horizontal :number, vertical : number }){
         
         if(ray.reflected) ray.reflected.active = false;
@@ -25,7 +23,7 @@ class RayCaster extends Service {
 
         if(!collision) return;
             
-        if(ray.level <= 1 &&  ray.collidesWith.opacity < 1 &&this.reflect(ray)) this.castRay(ray.reflected,indices);
+        if(ray.level < 5 &&  ray.collidesWith.opacity < 1 &&this.reflect(ray)) this.castRay(ray.reflected,indices);
     }
 
     public reflect(ray :any) :boolean {
@@ -96,7 +94,7 @@ class RayCaster extends Service {
         return collision ? true : false;
     }
 
-    /*
+    
     private testAgainstCircles(ray){
 
         const circles = this.#chief.world.getCollection('Circles');
@@ -107,7 +105,7 @@ class RayCaster extends Service {
 
             if(!hasCollided) continue;
 
-            let isCloser = this.compareWithClosest(ray,hasCollided);
+            let isCloser = ray.lambda > hasCollided;
 
             if(!isCloser) continue;
         
@@ -115,7 +113,7 @@ class RayCaster extends Service {
             ray.collidesAt.y = hasCollided[1];
             ray.collidesWith = circles[i];
         }
-    }*/    
+    }
 }
 
 export default RayCaster;

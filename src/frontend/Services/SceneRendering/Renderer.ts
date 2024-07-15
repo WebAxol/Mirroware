@@ -39,6 +39,8 @@ class Renderer extends Service {
     }
     
     render(amount : number){
+        
+        amount++;
 
         if(!camera || !camera.castCenter || !camera.castEdge) return;
         
@@ -54,71 +56,70 @@ class Renderer extends Service {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     
 
-            // Lying surfaces
+        // Lying surfaces
 
-            gl.useProgram(this.lyingProgram);
+        gl.useProgram(this.lyingProgram);
 
-            gl.bindBuffer(gl.ARRAY_BUFFER,this.lyingBuffer);
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,this.lyingElementBuffer);
+        gl.bindBuffer(gl.ARRAY_BUFFER,this.lyingBuffer);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,this.lyingElementBuffer);
+
+        gl.disableVertexAttribArray(a_color);
+
+        gl.enableVertexAttribArray(a_position);
+
+        gl.vertexAttribPointer(
+            a_position, 
+            3, 
+            gl.FLOAT, 
+            false, 
+            4 * Float32Array.BYTES_PER_ELEMENT, 
+            0
+        );
+
+        gl.enableVertexAttribArray(a_height);
+        
+        gl.vertexAttribPointer(
+            a_height, 
+            1, 
+            gl.FLOAT, 
+            false, 
+            4 * Float32Array.BYTES_PER_ELEMENT, 
+            3 * Float32Array.BYTES_PER_ELEMENT
+        );
+
+        // Uniforms
+
+        const cameraPositionUniform = gl.getUniformLocation(this.lyingProgram, 'u_cameraPosition');
+        gl.uniform3f(
+            cameraPositionUniform, 
+            camera.pos.x,
+            0,
+            camera.pos.y
+        );
+
+        const cameraAngleUniform = gl.getUniformLocation(this.lyingProgram, 'u_cameraAngle');
+        gl.uniform1f(
+            cameraAngleUniform,
+            camera.castCenter.direction.angle() 
+        )    
+
+        // Draw
+
+        gl.drawElements(
+            gl.TRIANGLES, 
+            3 * amount * 4, 
+            gl.UNSIGNED_SHORT, 
+            3 * 0 * Uint16Array.BYTES_PER_ELEMENT
+        );
     
-            gl.disableVertexAttribArray(a_color);
-    
-            gl.vertexAttribPointer(
-                a_position, 
-                3, 
-                gl.FLOAT, 
-                false, 
-                4 * Float32Array.BYTES_PER_ELEMENT, 
-                0
-            );
-    
-            gl.enableVertexAttribArray(a_height);
-            
-            gl.vertexAttribPointer(
-                a_height, 
-                1, 
-                gl.FLOAT, 
-                false, 
-                4 * Float32Array.BYTES_PER_ELEMENT, 
-                3 * Float32Array.BYTES_PER_ELEMENT
-            );
-    
-            // Uniforms
-    
-            const cameraPositionUniform = gl.getUniformLocation(this.lyingProgram, 'u_cameraPosition');
-            gl.uniform3f(
-                cameraPositionUniform, 
-                camera.pos.x,
-                0,
-                camera.pos.y
-            );
-    
-            const cameraAngleUniform = gl.getUniformLocation(this.lyingProgram, 'u_cameraAngle');
-            gl.uniform1f(
-                cameraAngleUniform,
-                camera.castCenter.direction.angle() 
-            )    
-    
-            // Draw
-            
-            gl.drawElements(
-                gl.TRIANGLES, 
-                3 * amount * 4, 
-                gl.UNSIGNED_SHORT, 
-                3 * 0 * Uint16Array.BYTES_PER_ELEMENT
-            );
-    
-            gl.disableVertexAttribArray(a_height);
+        gl.disableVertexAttribArray(a_height);
 
         // Front surfaces
 
         gl.useProgram(this.frontProgram);
 
         gl.bindBuffer(gl.ARRAY_BUFFER,this.frontBuffer);
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,this.frontElementBuffer);
-
-        gl.enableVertexAttribArray(a_position);
-    
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,this.frontElementBuffer);    
         
         gl.vertexAttribPointer(
             a_position, 
