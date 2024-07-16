@@ -64,25 +64,25 @@ const locatorPromise :Promise<unknown> = new Promise( async (resolve,reject) => 
     const frontBuffer        :WebGLBuffer | null = gl.createBuffer();
 
     gl.bindBuffer(gl.ARRAY_BUFFER, frontBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(100 * 5 * 8), gl.DYNAMIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(3000 * 5 * 8), gl.DYNAMIC_DRAW);
 
     const frontElementBuffer :WebGLBuffer | null = gl.createBuffer();
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, frontElementBuffer);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(100 * 3 * 4), gl.DYNAMIC_DRAW);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(3000 * 3 * 4), gl.DYNAMIC_DRAW);
 
     gl.useProgram(lyingProgram);
     
     const lyingBuffer        :WebGLBuffer | null = gl.createBuffer();
 
     gl.bindBuffer(gl.ARRAY_BUFFER, lyingBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(100 * 3 * 16), gl.DYNAMIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(3000 * 3 * 16), gl.DYNAMIC_DRAW);
     
 
     const lyingElementBuffer :WebGLBuffer | null = gl.createBuffer();
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, lyingElementBuffer);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(100 * 3 * 8), gl.DYNAMIC_DRAW);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(3000 * 3 * 8), gl.DYNAMIC_DRAW);
     
     if( !frontBuffer        ||
         !frontElementBuffer ||

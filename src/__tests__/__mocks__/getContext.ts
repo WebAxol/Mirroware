@@ -42,12 +42,21 @@ const getContext = () => {
             getAttribLocation       : jest.fn(),
             vertexAttribPointer     : jest.fn(),
             enableVertexAttribArray : jest.fn(),
+            enable                  : jest.fn(),
+            depthFunc               : jest.fn(),
+            blendFunc               : jest.fn(),
+
 
             FRAGMENT_SHADER : 1,
             VERTEX_SHADER   : 1,
             ARRAY_BUFFER    : 1,
             DYNAMIC_DRAW    : 1,
-            STATIC_DRAW     : 1
+            STATIC_DRAW     : 1,
+            ALWAYS          : 1,
+            ONE_MINUS_SRC_ALPHA : 1,
+            BLEND           : 1,
+            DEPTH_TEST      : 1,
+            SRC_ALPHA       : 1
         }
     );
     

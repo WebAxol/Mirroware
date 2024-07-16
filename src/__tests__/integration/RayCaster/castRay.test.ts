@@ -179,7 +179,8 @@ testCases.forEach((case_ : any, index : number) => {
             getCollection : jest.fn().mockImplementation((name) => {
                 return {
                     "VerticalWalls"   : case_.verticalWalls,
-                    "HorizontalWalls" : case_.horizontalWalls
+                    "HorizontalWalls" : case_.horizontalWalls,
+                    "Circles"         : []
                 }[name];
             }),
             createAgent : jest.fn().mockImplementation((type) => {

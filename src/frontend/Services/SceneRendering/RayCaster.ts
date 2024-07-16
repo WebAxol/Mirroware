@@ -19,9 +19,10 @@ class RayCaster extends Service {
         ray.collidesWith = null;
         ray.lambda = Infinity;
 
-        const collision = this.iterativeWallCollisionTest(ray, indices);
+        const wallCollision   = this.iterativeWallCollisionTest(ray, indices);
+        const circleCollision = this.testAgainstCircles(ray);
 
-        if(!collision) return;
+        if(!wallCollision && !circleCollision) return;
             
         if(ray.level < 5 &&  ray.collidesWith.opacity < 1 &&this.reflect(ray)) this.castRay(ray.reflected,indices);
     }
@@ -42,7 +43,12 @@ class RayCaster extends Service {
         const surfaceType = ray.collidesWith.getType();
         const strategy = {
             HorizontalWall : (reflected) => { reflected.direction.y *= -1 },
-            VerticalWall   : (reflected) => { reflected.direction.x *= -1 }
+            VerticalWall   : (reflected) => { reflected.direction.x *= -1 },
+            Circle         : (reflected) => { 
+                
+                reflected.source.add(Vector2D.scale(reflected.direction,0.01)); 
+                reflected.direction.scale(2);
+            }
         };
 
         const reflectStrategy = strategy[surfaceType];
@@ -95,24 +101,32 @@ class RayCaster extends Service {
     }
 
     
-    private testAgainstCircles(ray){
+    private testAgainstCircles(ray) :boolean {
 
         const circles = this.#chief.world.getCollection('Circles');
 
+        var collided = false, collision;
+
         for(let i = 0; i < circles.length; i++){
 
-            let hasCollided = CollisionDetector.RayVsCircle(ray,circles[i]);
+            collision = CollisionDetector.RayVsCircle(ray,circles[i]);
+    
+            if(!collision) continue;
 
-            if(!hasCollided) continue;
+            if(ray.lambda <= collision.lambda) continue;
 
-            let isCloser = ray.lambda > hasCollided;
-
-            if(!isCloser) continue;
+            collided = true;
         
-            ray.collidesAt.x = hasCollided[0];
-            ray.collidesAt.y = hasCollided[1];
+            ray.collidesAt   = collision.point;
+            ray.lambda       = collision.lambda;
+
+            //console.log(collision.lambda);
+
             ray.collidesWith = circles[i];
+            
         }
+
+        return collided;
     }
 }
 

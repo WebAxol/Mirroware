@@ -5,14 +5,15 @@ import { gl }             from "../../setUp/webGL.js";
 import { camera }         from "../../utils/scene/Camera.js";
 
 interface Cache {
-    itemID: number;
-    xi    : number;
-    yi    : number;
-    xf    : number;
-    yf    : number;
-    colori: string;
-    colorf: string;
-    child : Cache | undefined;
+    itemID   : number;
+    xi       : number;
+    yi       : number;
+    xf       : number;
+    yf       : number;
+    colori   : string;
+    colorf   : string;
+    child    : Cache | undefined;
+    stripped : boolean;
 }
 
 class DataModeller extends Service{
@@ -47,6 +48,7 @@ class DataModeller extends Service{
             node.xf     = 0; 
             node.yf     = 0; 
             node.child  = undefined
+            node.stripped = false;
 
             if(i == 1) continue;
 
@@ -79,7 +81,8 @@ class DataModeller extends Service{
         var cache :Cache | undefined = this.cache;
 
         while(cache){
-            cache.itemID = -1;
+            cache.itemID   = -1;
+            cache.stripped = true;
             cache = cache.child;
         }
     }
@@ -103,10 +106,10 @@ class DataModeller extends Service{
         var frontElement :any[] = [];
         
         var cache :Cache | undefined = this.cache;
-        var cut = false;
+        var cut = false, stripped = false;
         var level = -1;
 
-         while(cache){
+        while(cache){
 
             itemID = -1;
 
@@ -114,8 +117,12 @@ class DataModeller extends Service{
 
                 itemID = ray.collidesWith.getID();
 
+                stripped = ray.collidesWith.getType() == "Circle";
+
                 depth +=  ray.lambda * Math.cos(Math.abs(angle));
-                darkness = 1 + (depth / 10) + (Math.abs(CONFIG.resolution / 2 - index) / 10); 
+                darkness = Math.pow(1 + (depth * depth / 5), 1); 
+
+                //darkness *= darkness;
 
                 ny = 0.01 + znear / depth;
 
@@ -126,7 +133,7 @@ class DataModeller extends Service{
                     .map((component, i) => {  return i < 3 ? parseFloat(component) / (255 * darkness) : parseFloat(component); });
             }
 
-            cut = cache.itemID >= 0 && (cut || (cache.itemID !== itemID || index === CONFIG.resolution - 1 ));
+            cut = cache.itemID >= 0 && (cut || (cache.itemID !== itemID || index === CONFIG.resolution - 1 || cache.stripped));
 
             if(cut){
                 
@@ -134,8 +141,9 @@ class DataModeller extends Service{
 
                 level++;
 
-                let { xi, yi, xf, yf } = cache;
+                let { xi, yi, xf, yf } = cache; 
 
+            
                 mi = Math.min(mi, Math.max(yi,1));
                 mf = Math.min(mf, Math.max(yf,1));` `
 
@@ -181,7 +189,8 @@ class DataModeller extends Service{
                 cache.itemID = itemID; 
                 cache.colori = color; 
                 cache.xi = xf; 
-                cache.yi = ny; 
+                cache.yi = ny;
+                cache.stripped = stripped;
             }
             
             if(cache.itemID < 0 && ray){

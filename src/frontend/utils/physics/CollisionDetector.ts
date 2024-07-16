@@ -49,11 +49,11 @@ class CollisionDetector {
     } 
 
 
-    public static RayVsCircle(ray : any, circle :Circle){
+    public static RayVsCircle(ray : any, circle :Circle) : { point : Vector2D, lambda : number } | false {
 
         if(circle.radius <= 0)  throw Error("Invalid circle radius: it must be a positive number");
         
-        let rayOrigin = ray.source.pos ? ray.source.pos  : ray.source.collidesAt;
+        let rayOrigin :Vector2D = ray.source;
 
         let OC = Vector2D.sub(circle.center,rayOrigin);
 
@@ -64,15 +64,17 @@ class CollisionDetector {
 
         let BAmag = Math.sqrt(circle.radius * circle.radius - CAmagSq);
 
-        let distance = OAmag - BAmag;
+        // "lambda" is a scalar representing the distance of the ray origin to the circle
 
-        if(distance <= 0) return false;
+        let lambda : number = OAmag - BAmag;
+
+        if(!lambda || lambda <= 0) return false;  
         
-        let RayToCircle = rayDirection.scale(distance)  
+        let RayToCircle = rayDirection.scale(lambda)  
 
-        let intercept = [ rayOrigin.x + RayToCircle.x, rayOrigin.y + RayToCircle.y ];
+        let point :Vector2D = Vector2D.add(rayOrigin,RayToCircle);
 
-        return intercept;
+        return { point, lambda };
     }
 }
 

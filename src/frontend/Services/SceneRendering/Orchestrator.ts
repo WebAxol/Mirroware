@@ -41,7 +41,7 @@ class RenderingPipeline extends Service {
         const deg = camera.castCenter?.direction.angle() * (180 / Math.PI);
         //const deg = 0;
 
-        ctx.strokeStyle = 'rgba(255,255,255,0.005)'//'white' : 'red';
+        ctx.strokeStyle = 'rgba(255,255,255,0.01)'//'white' : 'red';
         ctx.lineWidth = 1;
 
         let from = Vector2D.rotate(ray.source, camera.pos, deg);
