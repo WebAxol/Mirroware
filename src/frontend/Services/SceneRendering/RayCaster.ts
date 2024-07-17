@@ -24,7 +24,7 @@ class RayCaster extends Service {
 
         if(!wallCollision && !circleCollision) return;
             
-        if(ray.level < 5 &&  ray.collidesWith.opacity < 1 &&this.reflect(ray)) this.castRay(ray.reflected,indices);
+        if(ray.level < 15 &&  ray.collidesWith.opacity < 1 &&this.reflect(ray)) this.castRay(ray.reflected,indices);
     }
 
     public reflect(ray :any) :boolean {

@@ -143,7 +143,7 @@ class Renderer extends Service {
     
         gl.drawElements(
             gl.TRIANGLES, 
-            3 * amount * 2, 
+            3 * amount * 4, 
             gl.UNSIGNED_SHORT, 
             3 * 0 * Uint16Array.BYTES_PER_ELEMENT
         );

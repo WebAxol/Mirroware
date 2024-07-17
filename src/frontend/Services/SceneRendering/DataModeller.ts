@@ -10,8 +10,8 @@ interface Cache {
     yi       : number;
     xf       : number;
     yf       : number;
-    colori   : string;
-    colorf   : string;
+    colori   : number[];
+    colorf   : number[];
     child    : Cache | undefined;
     stripped : boolean;
 }
@@ -39,7 +39,7 @@ class DataModeller extends Service{
         const head :any = {};
         var  node :any = head;
 
-        for(let i = 0; i <= 4; i++){
+        for(let i = 0; i <= 14; i++){
             node.itemID = -1; 
             node.colori = ''; 
             node.colorf = ""; 
@@ -152,15 +152,25 @@ class DataModeller extends Service{
                     xf, yf, 0.001 * level, ...cache.colorf,
                     xf,-yf, 0.001 * level, ...cache.colorf,
                     xi,-yi, 0.001 * level, ...cache.colori,
+
+                    xi,-yi, 0.001     * level, ...cache.colori.map((i) => { return i / 15 }),
+                    xf,-yf, 0.001     * level, ...cache.colorf.map((i) => { return i / 15 }),
+                    xf,-yf * 3, 0.001 * level, ...cache.colorf.map((i) => { return i / 15 }),
+                    xi,-yi * 3, 0.001 * level, ...cache.colori.map((i) => { return i / 15 }),
+
                 ]
+                
                 .concat(frontSurf);
 
                 frontElement = ([
                     0, 1, 2, 
-                    0, 3, 2
+                    0, 3, 2,
+
+                    4, 5, 6,
+                    4, 7, 6,
                 ]
-                .map((i) => {  return i + (this.memoryIndex - level) * 4 })
-                ).concat(frontElement.map((i) => { return i + 4 }));
+                .map((i) => {  return i + (this.memoryIndex - level) * 8 })
+                ).concat(frontElement.map((i) => { return i + 8 }));
 
                 lyingSurf = [
                     //  Ceiling
@@ -217,14 +227,14 @@ class DataModeller extends Service{
         gl.bindBuffer(gl.ARRAY_BUFFER,this.frontBuffer);
         gl.bufferSubData(
             gl.ARRAY_BUFFER, 
-            (this.memoryIndex - level) * 7 * 4 * Float32Array.BYTES_PER_ELEMENT, 
+            (this.memoryIndex - level) * 7 * 8 * Float32Array.BYTES_PER_ELEMENT, 
             new Float32Array(frontSurf)
         );
 
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,this.frontElementBuffer);
         gl.bufferSubData(
             gl.ELEMENT_ARRAY_BUFFER, 
-            (this.memoryIndex - level) * 6 * Uint16Array.BYTES_PER_ELEMENT, 
+            (this.memoryIndex - level) * 12 * Uint16Array.BYTES_PER_ELEMENT, 
             new Uint16Array(frontElement)
         );
 
