@@ -46,8 +46,20 @@ class RayCaster extends Service {
             VerticalWall   : (reflected) => { reflected.direction.x *= -1 },
             Circle         : (reflected) => { 
                 
+                const circle = ray.collidesWith;
+                const pointToCenter = Vector2D.sub(circle.center,ray.collidesAt); 
+                const angleBetween  = Vector2D.angleBetween( Vector2D.scale(ray.direction, -1), pointToCenter );
+                const sense         = (ray.direction.x > 0 ? 1 : -1);
+
+                reflected.direction
+                    .complexRotate( [ 
+                        Math.cos(sense * angleBetween * 2), 
+                        Math.sin(sense * angleBetween * 2)
+                    ]);
+
                 reflected.source.add(Vector2D.scale(reflected.direction,0.01)); 
-                reflected.direction.scale(2);
+                reflected.direction.scale(-1);
+
             }
         };
 
