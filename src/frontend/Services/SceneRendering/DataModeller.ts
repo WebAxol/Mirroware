@@ -1,4 +1,5 @@
 import LocatorGL          from "../../utils/rendering/LocatorGL.js";
+import Vector2D           from "../../utils/physics/Vector2D.js";
 import CONFIG             from "../../config.js";
 import Service            from "../Service.js";
 import { gl }             from "../../setUp/webGL.js";
@@ -10,6 +11,8 @@ interface Cache {
     yi       : number;
     xf       : number;
     yf       : number;
+    zi       : number;
+    zf       : number;
     colori   : number[];
     colorf   : number[];
     child    : Cache | undefined;
@@ -117,12 +120,11 @@ class DataModeller extends Service{
 
                 itemID = ray.collidesWith.getID();
 
+                // If the surface is circular (cylindrical), it will be rendered stripe by stripe
                 stripped = ray.collidesWith.getType() == "Circle";
 
                 depth +=  ray.lambda * Math.cos(Math.abs(angle));
                 darkness = Math.pow(1 + (depth * depth / 5), 1); 
-
-                //darkness *= darkness;
 
                 ny = 0.01 + znear / depth;
 
@@ -141,23 +143,20 @@ class DataModeller extends Service{
 
                 level++;
 
-                let { xi, yi, xf, yf } = cache; 
-
+                let { xi, yi, xf, yf, zi, zf } = cache; 
             
                 mi = Math.min(mi, Math.max(yi,1));
-                mf = Math.min(mf, Math.max(yf,1));` `
-
+                mf = Math.min(mf, Math.max(yf,1));
+            
+                
                 frontSurf = [
-                    xi, yi, 0.001 * level, ...cache.colori,
-                    xf, yf, 0.001 * level, ...cache.colorf,
-                    xf,-yf, 0.001 * level, ...cache.colorf,
-                    xi,-yi, 0.001 * level, ...cache.colori,
 
-                    xi,-yi, 0.001     * level, ...cache.colori.map((i) => { return i / 15 }),
-                    xf,-yf, 0.001     * level, ...cache.colorf.map((i) => { return i / 15 }),
-                    xf,-yf * 3, 0.001 * level, ...cache.colorf.map((i) => { return i / 15 }),
-                    xi,-yi * 3, 0.001 * level, ...cache.colori.map((i) => { return i / 15 }),
-
+                    // Position |       Color      |    Texturing
+                    //  x   y   z   |  r   g   b   a   | U   V
+                    xi * zi, yi * zi, zi, ...cache.colori, 0,0,
+                    xf * zf, yf * zf, zf, ...cache.colorf, 5,0,
+                    xf * zf,-yf * zf, zf, ...cache.colorf, 5,1,
+                    xi * zi,-yi * zi, zi, ...cache.colori, 0,1,
                 ]
                 
                 .concat(frontSurf);
@@ -165,24 +164,22 @@ class DataModeller extends Service{
                 frontElement = ([
                     0, 1, 2, 
                     0, 3, 2,
-
-                    4, 5, 6,
-                    4, 7, 6,
                 ]
-                .map((i) => {  return i + (this.memoryIndex - level) * 8 })
-                ).concat(frontElement.map((i) => { return i + 8 }));
+                .map((i) => {  return i + (this.memoryIndex - level) * 4 })
+                ).concat(frontElement.map((i) => { return i + 4 }));
 
                 lyingSurf = [
                     //  Ceiling
-                    xi,mi,  0.001 * level, 1,
-                    xf,mf,  0.001 * level, 1,
-                    xf,yf,  0.001 * level, 1,
-                    xi,yi,  0.001 * level, 1, 
+
+                    xi * zi, mi * zi,zi, 1,
+                    xf * zf, mf * zf,zf, 1,
+                    xf * zi, yf * zi,zi, 1,
+                    xi * zf, yi * zf,zf, 1, 
                     //  Floor
-                    xi,-yi, 0.001 * level, -1,
-                    xf,-yf, 0.001 * level, -1,
-                    xf,-mf, 0.001 * level, -1,
-                    xi,-mi, 0.001 * level, -1,
+                    xi * zi,-yi * zi,zi, -1,
+                    xf * zf,-yf * zf,zf, -1,
+                    xf * zf,-mf * zf,zf, -1,
+                    xi * zi,-mi * zi,zi, -1,
                 ]
                 .concat(lyingSurf);
 
@@ -200,6 +197,7 @@ class DataModeller extends Service{
                 cache.colori = color; 
                 cache.xi = xf; 
                 cache.yi = ny;
+                cache.zi = depth;
                 cache.stripped = stripped;
             }
             
@@ -214,6 +212,8 @@ class DataModeller extends Service{
             cache.xf     = nx;
             cache.yf     = ny;
             cache.colorf = color;
+            cache.zf     = depth;
+
 
             ray = (ray && ray.reflected && ray.reflected.active) ? ray.reflected : null;
 
@@ -227,14 +227,14 @@ class DataModeller extends Service{
         gl.bindBuffer(gl.ARRAY_BUFFER,this.frontBuffer);
         gl.bufferSubData(
             gl.ARRAY_BUFFER, 
-            (this.memoryIndex - level) * 7 * 8 * Float32Array.BYTES_PER_ELEMENT, 
+            (this.memoryIndex - level) * 9 * 4 * Float32Array.BYTES_PER_ELEMENT, 
             new Float32Array(frontSurf)
         );
 
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,this.frontElementBuffer);
         gl.bufferSubData(
             gl.ELEMENT_ARRAY_BUFFER, 
-            (this.memoryIndex - level) * 12 * Uint16Array.BYTES_PER_ELEMENT, 
+            (this.memoryIndex - level) * 6 * Uint16Array.BYTES_PER_ELEMENT, 
             new Uint16Array(frontElement)
         );
 
@@ -252,10 +252,6 @@ class DataModeller extends Service{
             new Uint16Array(lyingElement)
         );
     }
-
-    mapWallTexture(){}
-    mapCircleTexture(){}
-
 };  
 
 export default DataModeller;

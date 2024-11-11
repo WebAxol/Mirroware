@@ -2,6 +2,7 @@ import LocatorGL from "../utils/rendering/LocatorGL.js";
 import BuilderGL from "../utils/rendering/BuilderGL.js";
 import canvases  from "./canvases.js";
 import CONFIG from "../config.js";
+import loader from "./images.js";
 
 const canvas = canvases.canvas3d;
 
@@ -106,6 +107,22 @@ const locatorPromise :Promise<unknown> = new Promise( async (resolve,reject) => 
        
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    
+    // Textures
+
+    const texture :WebGLTexture | null = gl.createTexture();
+    const bricks   :any = loader.get("bricks");
+
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+    gl.texImage2D(
+        gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,
+        gl.UNSIGNED_BYTE, bricks
+    )
 
     return resolve(_locator);
 })

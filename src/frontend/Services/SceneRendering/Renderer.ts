@@ -35,7 +35,6 @@ class Renderer extends Service {
         this.lyingProgram       = locator.getProgram('lying');
 
         this.initialized = true;
-
     }
     
     render(amount : number){
@@ -46,17 +45,18 @@ class Renderer extends Service {
         
         if(!this.initialized) this.init();
 
+        // Attributes
 
         const a_color    :number = gl.getAttribLocation(this.frontProgram, 'a_color');
         const a_position :number = gl.getAttribLocation(this.frontProgram, 'a_position');
         const a_height   :number = gl.getAttribLocation(this.frontProgram, 'a_height');
+        const a_texCoord :number = gl.getAttribLocation(this.frontProgram, 'a_texCoord');
 
         
         gl.clearColor(0.0, 0.0, 0.0, 0.0);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     
-
-        // Lying surfaces
+        // Lying surfaces (Floor and ceiling)
 
         gl.useProgram(this.lyingProgram);
 
@@ -64,6 +64,8 @@ class Renderer extends Service {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,this.lyingElementBuffer);
 
         gl.disableVertexAttribArray(a_color);
+
+        // Position Attribute
 
         gl.enableVertexAttribArray(a_position);
 
@@ -75,6 +77,8 @@ class Renderer extends Service {
             4 * Float32Array.BYTES_PER_ELEMENT, 
             0
         );
+
+        // Height Attribute
 
         gl.enableVertexAttribArray(a_height);
         
@@ -103,7 +107,7 @@ class Renderer extends Service {
             camera.castCenter.direction.angle() 
         )    
 
-        // Draw
+        // Draw Floor and Ceiling
 
         gl.drawElements(
             gl.TRIANGLES, 
@@ -114,21 +118,27 @@ class Renderer extends Service {
     
         gl.disableVertexAttribArray(a_height);
 
-        // Front surfaces
+        //
+        // Front surfaces (Walls)
+        //
 
         gl.useProgram(this.frontProgram);
 
         gl.bindBuffer(gl.ARRAY_BUFFER,this.frontBuffer);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,this.frontElementBuffer);    
         
+        // Position Attribute
+
         gl.vertexAttribPointer(
             a_position, 
             3, 
             gl.FLOAT, 
             false, 
-            7 * Float32Array.BYTES_PER_ELEMENT, 
+            9 * Float32Array.BYTES_PER_ELEMENT, 
             0
         );
+
+        // Color Attribute
 
         gl.enableVertexAttribArray(a_color);
 
@@ -137,16 +147,35 @@ class Renderer extends Service {
             4, 
             gl.FLOAT, 
             false, 
-            7 * Float32Array.BYTES_PER_ELEMENT, 
+            9 * Float32Array.BYTES_PER_ELEMENT, 
             3 * Float32Array.BYTES_PER_ELEMENT
         );
+
+        // TexCoord Attribute
     
+        gl.enableVertexAttribArray(a_texCoord);
+
+        gl.vertexAttribPointer(
+            a_texCoord, 
+            2, 
+            gl.FLOAT, 
+            false, 
+            9 * Float32Array.BYTES_PER_ELEMENT, 
+            7 * Float32Array.BYTES_PER_ELEMENT
+        );
+
+
+        // Draw Walls
+
         gl.drawElements(
             gl.TRIANGLES, 
-            3 * amount * 4, 
+            3 * amount * 2, 
             gl.UNSIGNED_SHORT, 
             3 * 0 * Uint16Array.BYTES_PER_ELEMENT
         );
+
+        gl.disableVertexAttribArray(a_texCoord);
+
     };
         
 };

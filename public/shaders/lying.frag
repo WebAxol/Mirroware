@@ -1,11 +1,12 @@
- precision mediump float;
+precision mediump float;
+
+uniform sampler2D sampler;
+
 
 uniform vec3  u_cameraPosition;
 uniform float u_cameraAngle;
-
+varying vec3 v_position;
 varying float v_height;
-
-
 
 vec3 rayMarching(){
     return vec3(0,0,0);
@@ -40,14 +41,18 @@ void main() {
     if(mod(textureCoord.z * 2.0,2.0) > 1.0 && mod(textureCoord.x * 2.0,2.0) > 1.0) color = vec3(0.0,0.0,0.0);
     if(mod(textureCoord.z * 2.0,2.0) < 1.0 && mod(textureCoord.x * 2.0,2.0) < 1.0) color = vec3(0.0,0.0,0.0);
     
-    //color = mix(color, vec3(1,0,0),0.3);
-
     color /= lambda * lambda;
 
-    if(v_height > 0.0) gl_FragColor = vec4(0,0.2,0.5, 0);
     
-    else gl_FragColor = vec4(color, 0.95);
+    vec2 texCoord = vec2(textureCoord.x,textureCoord.z);
+    vec4 texColor = texture2D(sampler, texCoord) / (lambda*lambda*lambda/ 10.0);
 
-    //gl_FragColor = vec4(color, 1.0);
+    texColor.w = 0.99;
+
+    if(v_height > 0.0) gl_FragColor = vec4(0,0.2,0.5, 0);
+
+
+    //else 
+    gl_FragColor = texColor;
     
 }
