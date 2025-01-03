@@ -1,5 +1,5 @@
-import CollisionDetector from "../../../frontend/utils/physics/CollisionDetector.js";
-import Vector2D from "../../../frontend/utils/physics/Vector2D.js";
+import CollisionDetector from "../../../utils/physics/CollisionDetector.js";
+import Vector2D from "../../../utils/physics/Vector2D.js";
 
 
 describe("RayVsCircle method", () => {
