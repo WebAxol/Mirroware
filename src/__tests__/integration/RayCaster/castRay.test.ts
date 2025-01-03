@@ -1,7 +1,7 @@
-import RayCaster         from "./../../../frontend/Services/SceneRendering/RayCaster.js";
-import CollisionDetector from "../../../frontend/utils/physics/CollisionDetector.js";
-import Vector2D          from "../../../frontend/utils/physics/Vector2D.js";
-import { Ray }           from "../../../frontend/types/Ray.js";
+import RayCaster         from "../../../Services/SceneRendering/RayCaster.js";
+import CollisionDetector from "../../../utils/physics/CollisionDetector.js";
+import Vector2D          from "../../../utils/physics/Vector2D.js";
+import { Ray }           from "../../../types/Ray.js";
 
 /* 
     TODO : Fix inefficient index update when ray doesn't hit a wall of a type

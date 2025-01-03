@@ -5,7 +5,7 @@ import path from "path";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default {
-    entry   : "./lib/frontend/Mirroware.js",
+    entry   : "./lib/Mirroware.js",
     output  : {
         path : path.resolve(__dirname,'dist'),
         filename : 'Mirroware.min.js'
