@@ -4,30 +4,29 @@ import CONFIG             from "../../config.js";
 import Service            from "../Service.js";
 import { gl }             from "../../setUp/webGL.js";
 import { camera }         from "../../utils/scene/Camera.js";
+import { Circle }         from "../../types/Circle.js";
+
+type RGBA = [ number, number, number, number ]; 
+type Pair<T> = [ T, T ];
 
 interface Cache {
     itemID   : number;
-    xi       : number;
-    yi       : number;
-    xf       : number;
-    yf       : number;
-    zi       : number;
-    zf       : number;
-    colori   : number[];
-    colorf   : number[];
+    x        : Pair<number>;
+    y        : Pair<number>;
+    z        : Pair<number>;
+    t        : Pair<number>;
+    color    : Pair<RGBA>;
     child    : Cache | undefined;
     stripped : boolean;
 }
 
 class DataModeller extends Service{
 
-    private chief;
     public memoryIndex : number = 0;
 
     // Empty dummy WebGLBuffer instances used before initialization
 
     private initialized : boolean = false;
-
     private frontBuffer         :WebGLBuffer  = gl.createBuffer() as WebGLBuffer;
     private frontElementBuffer  :WebGLBuffer  = gl.createBuffer() as WebGLBuffer;
     private lyingBuffer         :WebGLBuffer  = gl.createBuffer() as WebGLBuffer;
@@ -35,31 +34,35 @@ class DataModeller extends Service{
 
     private cache :Cache;
 
-    constructor(chief){
+    constructor( private chief ){
         super();
-        this.chief = chief;
 
         const head :any = {};
+        const n :number = 14;
+
         var  node :any = head;
 
-        for(let i = 0; i <= 14; i++){
-            node.itemID = -1; 
-            node.colori = ''; 
-            node.colorf = ""; 
-            node.xi     = NaN;
-            node.yi     = NaN; 
-            node.xf     = 0; 
-            node.yf     = 0; 
+        for(let i = 0; i <= n; i++){
+            node.itemID = -1;
+            node.color  = [NaN,NaN]; 
+            node.x      = [NaN,NaN];
+            node.y      = [NaN,NaN]; 
+            node.z      = [NaN,NaN];
+            node.t      = [NaN,NaN];
             node.child  = undefined
             node.stripped = false;
 
-            if(i == 1) continue;
+            if(i == n) continue;
 
             node.child  = {};
             node = node.child;
         }
 
         this.cache = head;
+
+        console.log(this.cache);
+
+        this.chief.world.pauseExecution();
     }
 
     // Real buffers being established after WebGL is initialized
@@ -77,7 +80,7 @@ class DataModeller extends Service{
 
     }
 
-    public reset(){
+    public reset() :void {
 
         this.memoryIndex = 0;
 
@@ -90,7 +93,50 @@ class DataModeller extends Service{
         }
     }
 
-    public model( ray : any, angle: number, index : number, ){
+    // Texture mapping functions - return number within [0,1]
+
+    private mapTexture(collidesAt : Vector2D, item : any){
+
+        if(collidesAt == null) return 0;
+
+        if(item.getType() == "Circle") return this.mapCylindricalTexture(collidesAt,item);
+
+        return this.mapLinearTexture(collidesAt,item);
+    }
+
+    private mapLinearTexture(collidesAt : Vector2D, wall : any) : number {
+        
+        let percentage :number = 0;
+
+        if(wall.getType() === 'HorizontalWall'){
+
+            let wallLength = wall.endX - wall.startX;
+            percentage = Math.abs(((collidesAt.x - wall.startX)));
+        }
+
+        else if(wall.getType() === 'VerticalWall'){
+
+            let wallLength = wall.endY - wall.startY;
+            percentage = Math.abs((collidesAt.y - wall.startY));
+        }
+
+        return percentage;
+    }
+
+    private mapCylindricalTexture(collidesAt : Vector2D, cyl : Circle) : number {
+
+        let _angle = Math.ceil(this.chief.world.frame / 1) / 50;
+
+        const direction = new Vector2D(Math.cos(_angle),Math.sin(_angle));
+        const centerToPoint = Vector2D.sub(collidesAt,  cyl.center);
+        const angle = Vector2D.angleBetween(centerToPoint,direction);
+
+        //console.log(angle);
+
+        return angle / (Math.PI / (cyl.radius * 2));
+    }
+
+    public model( ray : any, angle: number, index : number, ) : void {
 
         if(!this.initialized) this.init();  // Initialize buffers if not already
    
@@ -98,7 +144,7 @@ class DataModeller extends Service{
         const deltaAngle = (camera.FOV / CONFIG.resolution) * (Math.PI / 180) * -1;
 
         var depth = 0;
-        var itemID = -1, nx, ny;
+        var itemID = -1, nx, ny, nt;
         var mi = Infinity;
         var mf = Infinity;
         var color, darkness;
@@ -121,6 +167,7 @@ class DataModeller extends Service{
                 itemID = ray.collidesWith.getID();
 
                 // If the surface is circular (cylindrical), it will be rendered stripe by stripe
+                
                 stripped = ray.collidesWith.getType() == "Circle";
 
                 depth +=  ray.lambda * Math.cos(Math.abs(angle));
@@ -129,6 +176,8 @@ class DataModeller extends Service{
                 ny = 0.01 + znear / depth;
 
                 nx = Math.tan(angle - deltaAngle) * znear * ((index <= CONFIG.resolution / 2) ? -1 : 1);
+
+                nt = this.mapTexture(ray.collidesAt, ray.collidesWith);
 
                 color = (ray.collidesWith ?  ray.collidesWith.color + `,${ray.collidesWith.opacity}` : "0,0,0,1")
                     .split(',')
@@ -143,20 +192,20 @@ class DataModeller extends Service{
 
                 level++;
 
-                let { xi, yi, xf, yf, zi, zf } = cache; 
+                let { x, y , z, t } = cache; 
             
-                mi = Math.min(mi, Math.max(yi,1));
-                mf = Math.min(mf, Math.max(yf,1));
+                mi = Math.min(mi, Math.max(y[0],1));
+                mf = Math.min(mf, Math.max(y[1] ,1));
             
                 
                 frontSurf = [
 
-                    // Position |       Color      |    Texturing
-                    //  x   y   z   |  r   g   b   a   | U   V
-                    xi * zi, yi * zi, zi, ...cache.colori, 0,0,
-                    xf * zf, yf * zf, zf, ...cache.colorf, 5,0,
-                    xf * zf,-yf * zf, zf, ...cache.colorf, 5,1,
-                    xi * zi,-yi * zi, zi, ...cache.colori, 0,1,
+                    //          Position              |       Color      |    Texturing
+                    //  x           y           z     |  r   g   b   a   | U   V
+                    x[0] * z[0] , y[0] * z[0] , z[0] , ...cache.color[0], t[0],0,
+                    x[1] * z[1] , y[1] * z[1] , z[1] , ...cache.color[1], t[1],0,
+                    x[1] * z[1] ,-y[1] * z[1] , z[1] , ...cache.color[1], t[1],1,
+                    x[0] * z[0] ,-y[0] * z[0] , z[0] , ...cache.color[0], t[0],1,
                 ]
                 
                 .concat(frontSurf);
@@ -170,16 +219,15 @@ class DataModeller extends Service{
 
                 lyingSurf = [
                     //  Ceiling
-
-                    xi * zi, mi * zi,zi, 1,
-                    xf * zf, mf * zf,zf, 1,
-                    xf * zi, yf * zi,zi, 1,
-                    xi * zf, yi * zf,zf, 1, 
+                    x[0] * z[0] , mi   * z[0] ,z[0],  1,
+                    x[1] * z[1] , mf   * z[1] ,z[1],  1,
+                    x[1] * z[0] , y[1] * z[0] ,z[0],  1,
+                    x[0] * z[1] , y[0] * z[1] ,z[1],  1, 
                     //  Floor
-                    xi * zi,-yi * zi,zi, -1,
-                    xf * zf,-yf * zf,zf, -1,
-                    xf * zf,-mf * zf,zf, -1,
-                    xi * zi,-mi * zi,zi, -1,
+                    x[0] * z[0] ,-y[0] * z[0] ,z[0], -1,
+                    x[1] * z[1] ,-y[1] * z[1] ,z[1], -1,
+                    x[1] * z[1] ,-mf   * z[1] ,z[1], -1,
+                    x[0] * z[0] ,-mi   * z[0] ,z[0], -1,
                 ]
                 .concat(lyingSurf);
 
@@ -193,34 +241,42 @@ class DataModeller extends Service{
                 .map((i) => {  return i + (this.memoryIndex - level) * 8 })
                 .concat(lyingElement.map((i) => { return i + 8 }));
 
+                // Set first edge after cut
+
                 cache.itemID = itemID; 
-                cache.colori = color; 
-                cache.xi = xf; 
-                cache.yi = ny;
-                cache.zi = depth;
+                cache.color[0]  = color; 
+                cache.x[0] = x[1]; 
+                cache.y[0] = ny;
+                cache.z[0] = depth;
+                cache.t[0] = nt;    // First texture edge is undefined as it depends on the next item the ray collides with
                 cache.stripped = stripped;
             }
+
+            // Initialize first edge when cache is untouched
             
             if(cache.itemID < 0 && ray){
                 cache.itemID = itemID;
-                cache.colori = color;
-                cache.colorf = color;
-                cache.xi     = nx;
-                cache.yi     = ny;
+                cache.color[0] = color;
+                cache.color[1] = color;
+                cache.x[0]     = nx;
+                cache.y[0]     = ny;
+                cache.t[0]     = nt;
             } 
-                
-            cache.xf     = nx;
-            cache.yf     = ny;
-            cache.colorf = color;
-            cache.zf     = depth;
 
-
+            // Update second edge
+            
+            cache.x[1] = nx;
+            cache.y[1] = ny;
+            cache.color[1] = color;
+            cache.z[1] = depth;
+            cache.t[1] = nt;
+            
             ray = (ray && ray.reflected && ray.reflected.active) ? ray.reflected : null;
 
             cache = cache.child;
         }
 
-        // Allocate inside buffers
+        // Update buffers
 
         if(!frontSurf.length) return;
 

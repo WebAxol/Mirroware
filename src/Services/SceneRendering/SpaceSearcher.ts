@@ -1,5 +1,5 @@
 import Service      from "../Service.js";
-import { Camera }   from "./../../utils/scene/Camera.js";
+import { Camera }   from "../../utils/scene/Camera.js";
 
 class SpaceSearcher extends Service {
 

@@ -1,5 +1,5 @@
 import { Ray }           from '../../types/Ray.js';
-import Vector2D          from '../physics/Vector2D.js';
+import Vector2D          from './../physics/Vector2D.js';
 import World             from '/pluglightjs/World.js';
 
 class Camera {
