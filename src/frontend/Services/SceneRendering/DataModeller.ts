@@ -124,7 +124,7 @@ class DataModeller extends Service{
                 stripped = ray.collidesWith.getType() == "Circle";
 
                 depth +=  ray.lambda * Math.cos(Math.abs(angle));
-                darkness = Math.pow(1 + (depth * depth / 5), 1); 
+                darkness = Math.pow(1 + (depth * depth / 20), 1); 
 
                 ny = 0.01 + znear / depth;
 

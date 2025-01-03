@@ -18,7 +18,7 @@ void main() {
     vec3 color = vec3(1.0,1.0,1.0);
 
     vec2 fragCoordPixels = gl_FragCoord.xy;
-    vec2 resolution      = vec2(600,340);
+    vec2 resolution      = vec2(600 * 5,340 * 5);
     vec2 normalizedCoord = (2.0 * fragCoordPixels - resolution) / resolution;
     vec3 rayDirection  =   vec3(normalizedCoord.xy, znear);
 
@@ -45,14 +45,13 @@ void main() {
 
     
     vec2 texCoord = vec2(textureCoord.x,textureCoord.z);
-    vec4 texColor = texture2D(sampler, texCoord) / (lambda*lambda*lambda/ 10.0);
+    vec4 texColor = texture2D(sampler, texCoord) / (lambda*lambda/ 5.0);
 
     texColor.w = 0.99;
 
     if(v_height > 0.0) gl_FragColor = vec4(0,0.2,0.5, 0);
 
 
-    //else 
-    gl_FragColor = texColor;
+    else gl_FragColor = texColor;
     
 }

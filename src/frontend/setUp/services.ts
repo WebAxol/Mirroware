@@ -7,8 +7,6 @@ import canvases             from "./canvases.js";
 
 
 const services = {
-    //'RayCastProcessor' : new RayCaster(),
-    //'SceneRenderer3D'  : new SceneRenderer3D(canvases.canvas3d),
     'SceneRenderer2D'  : new SceneRenderer2D(canvases.canvas2d),
     'SceneRendering'   : new RenderingPipeline(),
     'CameraMover'      : new CameraMover(),

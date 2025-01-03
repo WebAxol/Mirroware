@@ -8,8 +8,8 @@ const canvases :CanvasDictionary = {
     
     canvas3d : CanvasManager.createCanvas({
         id : 'canvas3d',
-        width : 300 * 2,
-        height : 170 * 2,
+        width : 300 * 2 * 5,
+        height : 170 * 2 * 5,
         style : {
             width: '100%',
             zIndex : 2,
