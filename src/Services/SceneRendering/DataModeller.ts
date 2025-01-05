@@ -131,8 +131,6 @@ class DataModeller extends Service{
         const centerToPoint = Vector2D.sub(collidesAt,  cyl.center);
         const angle = Vector2D.angleBetween(centerToPoint,direction);
 
-        //console.log(angle);
-
         return angle / (Math.PI / (cyl.radius * 2));
     }
 
@@ -145,8 +143,8 @@ class DataModeller extends Service{
 
         var depth = 0;
         var itemID = -1, nx, ny, nt;
-        var mi = Infinity;
-        var mf = Infinity;
+        var mi = 1;
+        var mf = 1;
         var color, darkness;
         
         var lyingSurf    :any[] = [];
@@ -181,7 +179,8 @@ class DataModeller extends Service{
 
                 color = (ray.collidesWith ?  ray.collidesWith.color + `,${ray.collidesWith.opacity}` : "0,0,0,1")
                     .split(',')
-                    .map((component, i) => {  return i < 3 ? parseFloat(component) / (255 * darkness) : parseFloat(component); });
+                    .map((component, i) => {  return i < 3 ? parseFloat(component) / 255 : parseFloat(component); });
+
             }
 
             cut = cache.itemID >= 0 && (cut || (cache.itemID !== itemID || index === CONFIG.resolution - 1 || cache.stripped));
@@ -193,11 +192,7 @@ class DataModeller extends Service{
                 level++;
 
                 let { x, y , z, t } = cache; 
-            
-                mi = Math.min(mi, Math.max(y[0],1));
-                mf = Math.min(mf, Math.max(y[1] ,1));
-            
-                
+                            
                 frontSurf = [
 
                     //          Position              |       Color      |    Texturing
@@ -217,6 +212,8 @@ class DataModeller extends Service{
                 .map((i) => {  return i + (this.memoryIndex - level) * 4 })
                 ).concat(frontElement.map((i) => { return i + 4 }));
 
+                //if(ray.level > 1 && mi == 1) throw Error("dd");
+
                 lyingSurf = [
                     //  Ceiling
                     x[0] * z[0] , mi   * z[0] ,z[0],  1,
@@ -229,7 +226,7 @@ class DataModeller extends Service{
                     x[1] * z[1] ,-mf   * z[1] ,z[1], -1,
                     x[0] * z[0] ,-mi   * z[0] ,z[0], -1,
                 ]
-                .concat(lyingSurf);
+                .concat(lyingSurf);    
 
                 lyingElement = [
                     0, 1, 2, 
@@ -258,9 +255,10 @@ class DataModeller extends Service{
                 cache.itemID = itemID;
                 cache.color[0] = color;
                 cache.color[1] = color;
-                cache.x[0]     = nx;
+                cache.x[0]     = nx //- (2 / 600);
                 cache.y[0]     = ny;
                 cache.t[0]     = nt;
+                mi = 1;
             } 
 
             // Update second edge
