@@ -112,7 +112,6 @@ class RayCaster extends Service {
         return collision ? true : false;
     }
 
-    
     private testAgainstCircles(ray) :boolean {
 
         const circles = this.#chief.world.getCollection('Circles');
@@ -131,9 +130,6 @@ class RayCaster extends Service {
         
             ray.collidesAt   = collision.point;
             ray.lambda       = collision.lambda;
-
-            //console.log(collision.lambda);
-
             ray.collidesWith = circles[i];
             
         }

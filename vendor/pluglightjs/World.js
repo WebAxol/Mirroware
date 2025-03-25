@@ -100,7 +100,7 @@ class World {
 
             this.fps = 1000 / this.deltaTime;
 
-            if(this.frame % 5 === 0) document.getElementById("fps-counter").innerHTML = `FPS: ${this.fps.toFixed(2)}`;
+            if(this.frame % 5 === 0) document.getElementById("fps-counter").innerHTML = `FPS: ${this.fps.toFixed(2)} | Waiting for Players...`;
 
             this.lastTime = timeSpan;
 

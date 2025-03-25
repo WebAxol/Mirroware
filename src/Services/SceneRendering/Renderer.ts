@@ -97,7 +97,7 @@ class Renderer extends Service {
         const timeUniform = gl.getUniformLocation(this.lyingProgram, 'u_time');
         gl.uniform1f(
             timeUniform,
-            this.chief.world.frame / 10 
+            this.chief.world.frame / 10
         );    
 
         const cameraPositionUniform = gl.getUniformLocation(this.lyingProgram, 'u_cameraPosition');

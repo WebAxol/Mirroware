@@ -18,6 +18,12 @@ camera.init(app,{
 
 const scene = [
    
+    { type:'Wall', info:[[-1e10,-1e10],[-1e10,1e10],   1, '255,0,0' ]},
+    { type:'Wall', info:[[-1e10,-1e10],[1e10,-1e10],   1, '255,0,0' ]},
+    { type:'Wall', info:[[1e10,-1e10],[1e10,1e10],   1, '255,0,0'   ]},
+    { type:'Wall', info:[[1e10,1e10],[-1e10,1e10],   1, '255,0,0'   ]},
+
+
     { type:'Wall', info:[[2,2],[4,2],   1, '255,0,0'            ]},
     { type:'Wall', info:[[2,2],[2,4],   1, '0,255,0'            ]},
     { type:'Wall', info:[[5,5],[5,25],   1, '255,255,0'         ]},
@@ -57,7 +63,7 @@ const scene = [
     { type:'Wall', info:[[19, 12],[19, 15], 0.1, '255,157,0'    ]},  
 
     { type : 'Circle', info:[camera.pos        ,0.3,1,'255,0,0' ]},
-    { type : 'Circle', info:[{ x : 17, y : 17 },1.0,1,'255,0,0' ]}, 
+    { type : 'Circle', info:[{ x : 17, y : 17 },1.0,1,'0, 0, 0' ]}, 
     ];
 
 const sceneBuilder = new SceneBuilder(app);
@@ -88,3 +94,11 @@ window.addEventListener('keydown', (e) => {
 // execute
 
 app.execute();
+
+document.addEventListener("dblclick", () => {
+    document.documentElement.requestFullscreen().then((res) => {
+        console.log("XXXXXXXXXXXXXX");
+    }).catch((e) => {
+        console.log(e);
+    });
+});

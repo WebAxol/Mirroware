@@ -9,14 +9,34 @@ import { Circle }         from "../../types/Circle.js";
 type RGBA = [ number, number, number, number ]; 
 type Pair<T> = [ T, T ];
 
+/* Definitions:
+
+- The scene is modelled as the set of elements and sub-elements within the camera FOV, each of which are represented by 4 vertices, one trapezium made of 2 triangles, (except for cylindrical elements)
+- We call "element" to any geometry that is rendered after being detected by a ray
+- A "sub-element" is an element rendered within another: either a mirror or a window element
+
+*/
+/**
+ * @description                           contains information of the current element and sub-elements in contact with an iterating ray
+ * @property {number}            itemID : integer that identifies the last entity a ray has collided with
+ * @property {Pair<number>}      x      : abscissas in normalized screen-space, representing horizontal left and right bounds of polygon
+ * @property {Pair<number>}      y      : ordinates in normalized screen-space, representing vertical left and right bounds of polygon
+ * @property {Pair<number>}      z      : depth value
+ * @property {Pair<number>}      t      : texture coordinates
+ * @property {Pair<number>}      l      : vertical bounds that limit the sky and floor based on the current context
+ * @property {Pair<RGBA>}        color  : Polygon background color vector
+ * @property {Cache | undefined} child  : It can contain a reference to another Cache object, representing a sub-scene within a mirror
+ * @property {boolean}          stripped: If true, it will make a rectangle for each column derived of every iteration of a ray for a particular element (suitable for non-linear geometry)
+ */
 interface Cache {
-    itemID   : number;
+    itemID   : number;             
     x        : Pair<number>;
-    y        : Pair<number>;
+    y        : Pair<number>;        
     z        : Pair<number>;
     t        : Pair<number>;
-    color    : Pair<RGBA>;
-    child    : Cache | undefined;
+    l        : Pair<number>;      
+    color    : Pair<RGBA>;          
+    child    : Cache | undefined;   
     stripped : boolean;
 }
 
@@ -42,6 +62,8 @@ class DataModeller extends Service{
 
         var  node :any = head;
 
+        // Empty cache is created by default
+
         for(let i = 0; i <= n; i++){
             node.itemID = -1;
             node.color  = [NaN,NaN]; 
@@ -49,6 +71,7 @@ class DataModeller extends Service{
             node.y      = [NaN,NaN]; 
             node.z      = [NaN,NaN];
             node.t      = [NaN,NaN];
+            node.l      = [NaN,NaN];
             node.child  = undefined
             node.stripped = false;
 
@@ -65,8 +88,10 @@ class DataModeller extends Service{
         this.chief.world.pauseExecution();
     }
 
-    // Real buffers being established after WebGL is initialized
 
+    /**
+    * @description Initializes memory buffers after WebGL is ready 
+    */
     public init(){
 
         const locator :LocatorGL = this.chief.locator;
@@ -134,6 +159,12 @@ class DataModeller extends Service{
         return angle / (Math.PI / (cyl.radius * 2));
     }
 
+    /**
+     * @description Main method, which computes the vertices of each element within the FOV of an observer (the camera), and stores them in buffers for rendering
+     * @param ray   Ray entity object
+     * @param angle Ray angle at current iteration
+     * @param index integer that corresponds to the iteration number
+     */
     public model( ray : any, angle: number, index : number, ) : void {
 
         if(!this.initialized) this.init();  // Initialize buffers if not already
@@ -142,7 +173,7 @@ class DataModeller extends Service{
         const deltaAngle = (camera.FOV / CONFIG.resolution) * (Math.PI / 180) * -1;
 
         var depth = 0;
-        var itemID = -1, nx, ny, nt;
+        var itemID = -1, currentX, currentY, nt;
         var mi = 1;
         var mf = 1;
         var color, darkness;
@@ -171,9 +202,8 @@ class DataModeller extends Service{
                 depth +=  ray.lambda * Math.cos(Math.abs(angle));
                 darkness = Math.pow(1 + (depth * depth / 20), 1); 
 
-                ny = 0.01 + znear / depth;
-
-                nx = Math.tan(angle - deltaAngle) * znear * ((index <= CONFIG.resolution / 2) ? -1 : 1);
+                currentY = 0.01 + znear / depth;
+                currentX = Math.tan(angle - deltaAngle) * znear * ((index <= CONFIG.resolution / 2) ? -1 : 1);
 
                 nt = this.mapTexture(ray.collidesAt, ray.collidesWith);
 
@@ -183,11 +213,14 @@ class DataModeller extends Service{
 
             }
 
+            // Variable "cut" indicates if the current element has been iterated completely or stripped is true, 
+            // when cut is true, the current trapezium is delimited and a new adjacent one begins
+
             cut = cache.itemID >= 0 && (cut || (cache.itemID !== itemID || index === CONFIG.resolution - 1 || cache.stripped));
 
             if(cut){
                 
-                this.memoryIndex++;
+                this.memoryIndex++; // tracks current buffer index
 
                 level++;
 
@@ -211,8 +244,6 @@ class DataModeller extends Service{
                 ]
                 .map((i) => {  return i + (this.memoryIndex - level) * 4 })
                 ).concat(frontElement.map((i) => { return i + 4 }));
-
-                //if(ray.level > 1 && mi == 1) throw Error("dd");
 
                 lyingSurf = [
                     //  Ceiling
@@ -243,9 +274,9 @@ class DataModeller extends Service{
                 cache.itemID = itemID; 
                 cache.color[0]  = color; 
                 cache.x[0] = x[1]; 
-                cache.y[0] = ny;
+                cache.y[0] = currentY;
                 cache.z[0] = depth;
-                cache.t[0] = nt;    // First texture edge is undefined as it depends on the next item the ray collides with
+                cache.t[0] = nt;    // First texture edge is undefined as it depends on the next geometry the ray collides with
                 cache.stripped = stripped;
             }
 
@@ -255,21 +286,23 @@ class DataModeller extends Service{
                 cache.itemID = itemID;
                 cache.color[0] = color;
                 cache.color[1] = color;
-                cache.x[0]     = nx //- (2 / 600);
-                cache.y[0]     = ny;
+                cache.x[0]     = currentX;
+                cache.y[0]     = currentY;
                 cache.t[0]     = nt;
                 mi = 1;
             } 
 
             // Update second edge
             
-            cache.x[1] = nx;
-            cache.y[1] = ny;
+            cache.x[1] = currentX;
+            cache.y[1] = currentY;
             cache.color[1] = color;
             cache.z[1] = depth;
             cache.t[1] = nt;
             
             ray = (ray && ray.reflected && ray.reflected.active) ? ray.reflected : null;
+
+            // Go to next sub-element (if exists, implies an element is rendered within the context of the current one)
 
             cache = cache.child;
         }

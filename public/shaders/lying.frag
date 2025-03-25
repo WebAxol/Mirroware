@@ -7,6 +7,32 @@ uniform float u_time;
 
 varying float v_height; 
 
+// Linear Transformations
+
+
+vec3 rotateX(vec3 v, float angle){
+
+    mat3 rotationX = mat3(
+        1,cos(angle), -sin(angle),
+        0,sin(angle), cos(angle),
+        0,0,  1
+    );
+
+    return rotationX * v;
+}
+
+
+vec3 rotateY(vec3 v, float angle){
+
+    mat3 rotationY = mat3(
+        cos(angle),0, -sin(angle),
+        0,1.0,0,
+        sin(angle),0,  cos(angle)
+    );
+
+    return rotationY * v;
+}
+
 // Primitives
 
 struct Box {
@@ -70,18 +96,70 @@ float opSmoothIntersection( float d1, float d2, float k )
 
 // Ray Marching scene setup
 
+float rand(vec2 co){
+    return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
+}
 
+vec3 rayDirection; 
+
+vec3 tileCoords(vec3 p,float cellSize){
+    return  floor(p / cellSize);
+}
+
+vec3 voxelCoord(vec3 p, float voxelSize){
+    return floor(p / voxelSize) * voxelSize;
+}
+
+float voxelDistance(vec3 p, float d, float voxelSize){
+    
+    vec3 surfacePoint = p + rayDirection * d; 
+    
+    vec3 currentVoxel = floor(p / voxelSize);
+    vec3 surfaceVoxel = floor(surfacePoint / voxelSize);
+
+    // If they are the same voxel, return distance of zero, otherwise, return the original distance
+
+    return (currentVoxel == surfaceVoxel) ? 0.0 : d;
+}
 
 float map(vec3 p) {
+
+    p.y -= 5.0;
+
+    Box  b1 = Box(vec3(15.0,10.0,15.0), vec3(2.0,2.0,2.0));
+    Box  b2 = Box(vec3(15.0,10.0,0.0), vec3(2.0,2.0,2.0));
+
+
+    Sphere sp2 = Sphere(vec3(15.0- cos(u_time / 30.0) * 0.0,10.0 - sin(u_time / 30.0) * 5.0,15.0 - sin(u_time / 30.0) * 5.0),20.0);
+
+    float res = 1000.0;
+
+    p.xz += u_time / 10.0;
+    vec3 p2 = p;
+
+    p2.z -= 15.0;
+    p2 = mod(-abs(p2),30.0);
     
-    Sphere sp1 = Sphere(vec3(5.0- sin(0.0) * (10.0 - sin(u_time) * 2.0),7.0,5.0- cos(0.0) * (10.0 - cos(u_time) * 2.0)),2.0);
-    Sphere sp2 = Sphere(vec3(5.0- sin(0.0) * (20.0 - sin(u_time) * 5.0),7.0,5.0- cos(0.0) * (20.0 - cos(u_time) * 5.0)),2.0);
-    Box     b1 = Box(vec3(5.0,7.0,5.0), vec3(2.0,2.0,2.0));
+    res = opSmoothUnion(res,sdBox(p2,b1),5.0);
+    res = opSmoothUnion(res,sdBox(p2,b2),5.0);
 
-    //p = mod(-abs(p) ,20.0);
+    float size = 1.0;
 
-    return sdBox(p, b1);  
-   
+
+    p = mod(-1.0 * abs(p),50.0);
+
+    //p = alignToVoxelGrid(p,3.0);
+
+    p = floor(p / size) * size;
+
+    res = opSmoothUnion(res,sdSphere(p, sp2),15.0);
+
+    //res = voxelDistance(p,res,3.0);
+
+
+    float t = u_time / 5.0;
+
+    return res;
 }
 
 void main() {
@@ -92,9 +170,10 @@ void main() {
     vec3 color = vec3(1.0,1.0,1.0);
 
     vec2 fragCoordPixels = gl_FragCoord.xy;
-    vec2 resolution      = vec2(600 * 5,340 * 5);
+    vec2 resolution      = vec2(600 * 2,340 * 2);
     vec2 normalizedCoord = (2.0 * fragCoordPixels - resolution) / resolution;
-    vec3 rayDirection  =   vec3(normalizedCoord.xy, znear);
+    
+    rayDirection  =   vec3(normalizedCoord.xy, znear);
 
     rayDirection /= length(rayDirection); // Normalized ray direction
 
@@ -106,7 +185,7 @@ void main() {
         sin(u_cameraAngle),0,  cos(u_cameraAngle)
     );
     
-    rayDirection = rotation * rayDirection; // Transformed ray direction
+    rayDirection =  rotateY(rayDirection,u_cameraAngle); // Transformed ray direction
     
     // Ceiling/floor Texture Rendering
 
@@ -119,7 +198,7 @@ void main() {
     vec2 texCoord = vec2(textureCoord.x,textureCoord.z);
     vec4 texColor = texture2D(sampler, texCoord);
 
-    vec4 mixed  = mix(texColor, vec4(vec3(255, 180, 0) / 255.0, 0.01),0.5);
+    vec4 mixed  = mix(texColor, vec4(vec3(255, 180, 0) / 255.0, 0.01),0.1);
     vec4 shaded = mix(vec4(0,0,0,1), mixed, lightLevel);
 
     shaded.w = 0.99;
@@ -130,15 +209,16 @@ void main() {
         gl_FragColor = shaded;
         return;
     }
+
     // Background Ambientation (RayMarching)
 
     vec3 col;
     float t = 0.0;
     float d;
 
-    for(int i = 0; i < 80; i++){
+    for(float i = 0.0; i < 80.0; i++){
 
-        vec3  p = u_cameraPosition + rayDirection * t; 
+        vec3  p = u_cameraPosition + rayDirection * t;
 
         p.y /= 1.5;
 
@@ -146,12 +226,12 @@ void main() {
 
         t += d;
 
-        if (d < .001){
-            col = vec3(2,2,2) * t * .02;   
-            gl_FragColor = vec4(col, 1);
+        if (d <= 0.1){
+            col = vec3(mod(t/30.0,3.0),mod(t/30.0,2.0),1) / t * 20.2;   
+            gl_FragColor = vec4(col, 0.05 *i);
             break;
         }
-        if (t > 200.) break;      // early stop if too far
+        if (t > 500.) break;      // early stop if too far
     }
 
 }

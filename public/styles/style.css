@@ -14,7 +14,6 @@
     margin: 0;
     font-family: 'Courier New', Courier, monospace;
     font-size: 15px;
-    cursor: none
 }
 
 body{
@@ -60,7 +59,7 @@ header{
     position: absolute;
     width: 100%;
     min-height: 100vh;
-    background: radial-gradient(transparent, rgba(0, 0, 0,1));
+    /*background: radial-gradient(transparent, rgba(0, 0, 0,1));*/
     /*backdrop-filter: blur(0px);*/
 }
 
@@ -70,9 +69,9 @@ header{
     top: 0;
     width: 100%;
     min-height: 1000px;
-    background-color: rgba(0, 255, 238, 0.01);
-    /*background: linear-gradient(0deg, rgba(0,0,0,0.2) 0%, rgba(9,50,9,0.2) 34%, rgba(33, 214, 251, 0.8) 100%);
-    */padding: 50px;
+    /*background-color: rgba(0, 255, 238, 0.01);
+    background: linear-gradient(0deg, rgba(0,0,0,0.2) 0%, rgba(9,50,9,0.2) 34%, rgba(33, 214, 251, 0.5) 100%);*/
+    padding: 50px;
 }
 
 
@@ -81,7 +80,7 @@ header{
     text-align: center;
     color: white;
     font-size: 100px;
-    font-family: PoiretOne;
+    font-family: Pixeloid;
     font-weight: lighter;
     text-shadow: 1px 1px 10px white;
 }

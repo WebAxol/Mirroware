@@ -8,14 +8,15 @@ const canvases :CanvasDictionary = {
     
     canvas3d : CanvasManager.createCanvas({
         id : 'canvas3d',
-        width : 300 * 2 * 5,
-        height : 170 * 2 * 5,
+        width : 300 * 2 * 2,
+        height : 170 * 2 * 2,
         style : {
             width: '100%',
             zIndex : 2,
-            //background: "black",
-            background: 'linear-gradient(180deg, rgba(125,213,205,1) 0%, rgba(155,100,50,0.9836309523809523) 50%)',
-            'image-rendering': 'pixelated'
+            background: "black",
+            //background: 'linear-gradient(180deg, #FF7E5F 0%, #FEB47B 50%, skyblue 80%);',
+            'image-rendering': 'pixelated',
+            //transform: 'rotate(5deg) scale(1.1)'
         }
     }),
     
@@ -27,6 +28,17 @@ const canvases :CanvasDictionary = {
             zIndex : 1,
             width  : '100%',
             background: 'linear-gradient(180deg, rgba(125,213,205,1) 0%, rgba(155,100,50,0.9836309523809523) 50%)'
+        }
+    }),
+
+    front : CanvasManager.createCanvas({
+        id : 'background',
+        width : 3000 / 4,
+        height : 1700 / 4,
+        style : {
+            zIndex : 3,
+            width  : '100%',
+            background: "radial-gradient(circle, rgba(0, 217, 255, 0.1) 0%, rgba(0, 255, 242, 0.2) 100%)"
         }
     }),
     
@@ -42,7 +54,7 @@ const canvases :CanvasDictionary = {
             right: '5px',
             width: '20%',
             height: 'auto',
-            opacity: '0.9',
+            opacity: '0.7',
             'image-rendering': 'pixelated'
         }
     })
