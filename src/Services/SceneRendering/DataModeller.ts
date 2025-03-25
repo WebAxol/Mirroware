@@ -71,7 +71,7 @@ class DataModeller extends Service{
             node.y      = [NaN,NaN]; 
             node.z      = [NaN,NaN];
             node.t      = [NaN,NaN];
-            node.l      = [NaN,NaN];
+            node.l      = [1,1];
             node.child  = undefined
             node.stripped = false;
 
@@ -87,7 +87,6 @@ class DataModeller extends Service{
 
         this.chief.world.pauseExecution();
     }
-
 
     /**
     * @description Initializes memory buffers after WebGL is ready 
@@ -118,8 +117,6 @@ class DataModeller extends Service{
         }
     }
 
-    // Texture mapping functions - return number within [0,1]
-
     private mapTexture(collidesAt : Vector2D, item : any){
 
         if(collidesAt == null) return 0;
@@ -129,6 +126,11 @@ class DataModeller extends Service{
         return this.mapLinearTexture(collidesAt,item);
     }
 
+    /**
+     * @param collidesAt Point of collision at horizontal or vertical line segment
+     * @param wall       Horizontal or vertical line segment object
+     * @returns          Integer between 0 and 1 corresponding to the normalized x position of the texture
+     */
     private mapLinearTexture(collidesAt : Vector2D, wall : any) : number {
         
         let percentage :number = 0;
@@ -148,6 +150,11 @@ class DataModeller extends Service{
         return percentage;
     }
 
+    /**
+     * @param collidesAt Point of collision at the circumference of the circle
+     * @param cyl        Object containing a radius and a position vector 
+     * @returns          Integer between 0 and 1 corresponding to the normalized x position of the texture
+     */
     private mapCylindricalTexture(collidesAt : Vector2D, cyl : Circle) : number {
 
         let _angle = Math.ceil(this.chief.world.frame / 1) / 50;
@@ -172,20 +179,28 @@ class DataModeller extends Service{
         const znear      = 1 / Math.tan(camera.FOV * Math.PI / 360);
         const deltaAngle = (camera.FOV / CONFIG.resolution) * (Math.PI / 180) * -1;
 
-        var depth = 0;
-        var itemID = -1, currentX, currentY, nt;
-        var mi = 1;
-        var mf = 1;
-        var color, darkness;
+        var cache :Cache | undefined = this.cache;
+
+        var itemID :number = -1; 
+
+        // Current values are the values at the current iteration, depending on the properties of the element in contact with the ray
+
+        var depth : number = 0;
+        var currentX, currentY, currentT, currentL = 1;
+        var currentColor;
         
+        // The following arrays store a subset or all of data passed to WebGL buffers
+
         var lyingSurf    :any[] = [];
         var frontSurf    :any[] = [];
         var lyingElement :any[] = [];
         var frontElement :any[] = [];
         
-        var cache :Cache | undefined = this.cache;
-        var cut = false, stripped = false;
-        var level = -1;
+        var cut   :boolean = false, stripped : boolean = false;
+        var level :number = -1;
+
+        // Hierarchical modelling starts from level 0 to the maximum level containing information
+        // Reflections are modelled within the context of mirror surfaces, so whatever is reflected is bounded to the limits of the parent element
 
         while(cache){
 
@@ -200,14 +215,11 @@ class DataModeller extends Service{
                 stripped = ray.collidesWith.getType() == "Circle";
 
                 depth +=  ray.lambda * Math.cos(Math.abs(angle));
-                darkness = Math.pow(1 + (depth * depth / 20), 1); 
 
                 currentY = 0.01 + znear / depth;
                 currentX = Math.tan(angle - deltaAngle) * znear * ((index <= CONFIG.resolution / 2) ? -1 : 1);
-
-                nt = this.mapTexture(ray.collidesAt, ray.collidesWith);
-
-                color = (ray.collidesWith ?  ray.collidesWith.color + `,${ray.collidesWith.opacity}` : "0,0,0,1")
+                currentT = this.mapTexture(ray.collidesAt, ray.collidesWith);
+                currentColor = (ray.collidesWith ?  ray.collidesWith.color + `,${ray.collidesWith.opacity}` : "0,0,0,1")
                     .split(',')
                     .map((component, i) => {  return i < 3 ? parseFloat(component) / 255 : parseFloat(component); });
 
@@ -221,13 +233,12 @@ class DataModeller extends Service{
             if(cut){
                 
                 this.memoryIndex++; // tracks current buffer index
-
+                
                 level++;
 
-                let { x, y , z, t } = cache; 
+                let { x, y , z, t, l } = cache; 
                             
                 frontSurf = [
-
                     //          Position              |       Color      |    Texturing
                     //  x           y           z     |  r   g   b   a   | U   V
                     x[0] * z[0] , y[0] * z[0] , z[0] , ...cache.color[0], t[0],0,
@@ -247,15 +258,15 @@ class DataModeller extends Service{
 
                 lyingSurf = [
                     //  Ceiling
-                    x[0] * z[0] , mi   * z[0] ,z[0],  1,
-                    x[1] * z[1] , mf   * z[1] ,z[1],  1,
+                    x[0] * z[0] , l[0] * z[0] ,z[0],  1,
+                    x[1] * z[1] , l[1] * z[1] ,z[1],  1,
                     x[1] * z[0] , y[1] * z[0] ,z[0],  1,
                     x[0] * z[1] , y[0] * z[1] ,z[1],  1, 
                     //  Floor
                     x[0] * z[0] ,-y[0] * z[0] ,z[0], -1,
                     x[1] * z[1] ,-y[1] * z[1] ,z[1], -1,
-                    x[1] * z[1] ,-mf   * z[1] ,z[1], -1,
-                    x[0] * z[0] ,-mi   * z[0] ,z[0], -1,
+                    x[1] * z[1] ,-l[1] * z[1] ,z[1], -1,
+                    x[0] * z[0] ,-l[0] * z[0] ,z[0], -1,
                 ]
                 .concat(lyingSurf);    
 
@@ -272,11 +283,12 @@ class DataModeller extends Service{
                 // Set first edge after cut
 
                 cache.itemID = itemID; 
-                cache.color[0]  = color; 
+                cache.color[0]  = currentColor; 
                 cache.x[0] = x[1]; 
                 cache.y[0] = currentY;
+                cache.l[0] = currentL;
                 cache.z[0] = depth;
-                cache.t[0] = nt;    // First texture edge is undefined as it depends on the next geometry the ray collides with
+                cache.t[0] = currentT;    // First texture edge is undefined as it depends on the next geometry the ray collides with
                 cache.stripped = stripped;
             }
 
@@ -284,25 +296,28 @@ class DataModeller extends Service{
             
             if(cache.itemID < 0 && ray){
                 cache.itemID = itemID;
-                cache.color[0] = color;
-                cache.color[1] = color;
+                cache.color[0] = currentColor;
+                cache.color[1] = currentColor;
                 cache.x[0]     = currentX;
                 cache.y[0]     = currentY;
-                cache.t[0]     = nt;
-                mi = 1;
+                cache.t[0]     = currentT;
+                cache.l[0]     = currentL;
             } 
 
             // Update second edge
-            
-            cache.x[1] = currentX;
-            cache.y[1] = currentY;
-            cache.color[1] = color;
-            cache.z[1] = depth;
-            cache.t[1] = nt;
+
+            cache.color[1] = currentColor;            
+            cache.x[1]     = currentX;
+            cache.y[1]     = currentY;
+            cache.t[1]     = currentT;
+            cache.l[1]     = currentL;
+            cache.z[1]     = depth;
             
             ray = (ray && ray.reflected && ray.reflected.active) ? ray.reflected : null;
 
             // Go to next sub-element (if exists, implies an element is rendered within the context of the current one)
+
+            currentL = currentY
 
             cache = cache.child;
         }

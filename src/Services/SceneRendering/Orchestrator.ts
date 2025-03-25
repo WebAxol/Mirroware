@@ -34,7 +34,7 @@ class RenderingPipeline extends Service {
         this.renderer      = new Renderer(this);
     }
 
-    __debugRay__(ray : Ray){
+    private __debugRay__(ray : Ray){
 
         if(!camera.castCenter) return;
 
@@ -63,7 +63,7 @@ class RenderingPipeline extends Service {
 
     }
 
-    execute(){
+    public execute(){
 
         if(!this.locator)                                     return false;
         if(!camera || !camera.castEdge || !camera.castCenter) return false;

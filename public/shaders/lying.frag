@@ -170,7 +170,7 @@ void main() {
     vec3 color = vec3(1.0,1.0,1.0);
 
     vec2 fragCoordPixels = gl_FragCoord.xy;
-    vec2 resolution      = vec2(600 * 2,340 * 2);
+    vec2 resolution      = vec2(600 * 1,340 * 1);
     vec2 normalizedCoord = (2.0 * fragCoordPixels - resolution) / resolution;
     
     rayDirection  =   vec3(normalizedCoord.xy, znear);
