@@ -1,22 +1,22 @@
 import Service            from "../Service.js";
 import { gl }             from "../../setUp/webGL.js";
 import LocatorGL          from "../../utils/rendering/LocatorGL.js";
-import CONFIG             from "../../config.js";
 import { camera }         from "../../utils/scene/Camera.js";
-import Vector2D           from "../../utils/physics/Vector2D.js";
+import canvases           from "../../setUp/canvases.js";
 
+const ctx = canvases.canvas3d;
 
 class Renderer extends Service {
 
     private chief;
     private initialized :boolean = false;
 
-    private frontBuffer         :WebGLBuffer  = gl.createBuffer()  as WebGLBuffer;
-    private frontElementBuffer  :WebGLBuffer  = gl.createBuffer()  as WebGLBuffer;
-    private lyingBuffer         :WebGLBuffer  = gl.createBuffer()  as WebGLBuffer;
-    private lyingElementBuffer  :WebGLBuffer  = gl.createBuffer()  as WebGLBuffer;
-    private frontProgram        :WebGLProgram = gl.createProgram() as WebGLProgram;
-    private lyingProgram        :WebGLProgram = gl.createProgram() as WebGLProgram;
+    private frontBuffer!         :WebGLBuffer;
+    private frontElementBuffer!  :WebGLBuffer;
+    private lyingBuffer!         :WebGLBuffer;
+    private lyingElementBuffer!  :WebGLBuffer;
+    private frontProgram!        :WebGLProgram;
+    private lyingProgram!        :WebGLProgram;
 
     constructor(chief){
         super();
@@ -93,24 +93,26 @@ class Renderer extends Service {
 
         // Uniforms
 
+        gl.uniform2f(
+            gl.getUniformLocation(this.lyingProgram, 'u_resolution'),
+            ctx.width,
+            ctx.height
+        ); 
 
-        const timeUniform = gl.getUniformLocation(this.lyingProgram, 'u_time');
         gl.uniform1f(
-            timeUniform,
+            gl.getUniformLocation(this.lyingProgram, 'u_time'),
             this.chief.world.frame / 10
         );    
 
-        const cameraPositionUniform = gl.getUniformLocation(this.lyingProgram, 'u_cameraPosition');
         gl.uniform3f(
-            cameraPositionUniform, 
+            gl.getUniformLocation(this.lyingProgram, 'u_cameraPosition'), 
             camera.pos.x,
             0,
             camera.pos.y
         );
 
-        const cameraAngleUniform = gl.getUniformLocation(this.lyingProgram, 'u_cameraAngle');
         gl.uniform1f(
-            cameraAngleUniform,
+            gl.getUniformLocation(this.lyingProgram, 'u_cameraAngle'),
             camera.castCenter.direction.angle() 
         )    
 
@@ -171,6 +173,13 @@ class Renderer extends Service {
             7 * Float32Array.BYTES_PER_ELEMENT
         );
 
+        // Uniforms
+
+        gl.uniform2f(
+            gl.getUniformLocation(this.frontProgram, 'u_resolution'),
+            ctx.width,
+            ctx.height
+        ); 
 
         // Draw Walls
 

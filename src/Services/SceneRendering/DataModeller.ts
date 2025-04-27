@@ -44,13 +44,11 @@ class DataModeller extends Service{
 
     public memoryIndex : number = 0;
 
-    // Empty dummy WebGLBuffer instances used before initialization
-
-    private initialized : boolean = false;
-    private frontBuffer         :WebGLBuffer  = gl.createBuffer() as WebGLBuffer;
-    private frontElementBuffer  :WebGLBuffer  = gl.createBuffer() as WebGLBuffer;
-    private lyingBuffer         :WebGLBuffer  = gl.createBuffer() as WebGLBuffer;
-    private lyingElementBuffer  :WebGLBuffer  = gl.createBuffer() as WebGLBuffer;
+    private initialized         :boolean = false;
+    private frontBuffer!        :WebGLBuffer;
+    private frontElementBuffer! :WebGLBuffer;
+    private lyingBuffer!        :WebGLBuffer;
+    private lyingElementBuffer! :WebGLBuffer;
 
     private cache :Cache;
 
@@ -101,7 +99,6 @@ class DataModeller extends Service{
         this.lyingElementBuffer = locator.getBuffer("ELEMENT_ARRAY_BUFFER","lyingBuffer");
 
         this.initialized = true;
-
     }
 
     public reset() :void {

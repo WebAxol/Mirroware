@@ -8,8 +8,8 @@ const canvases :CanvasDictionary = {
     
     canvas3d : CanvasManager.createCanvas({
         id : 'canvas3d',
-        width : 300 * 2 * 1,
-        height : 170 * 2 * 1,
+        width : 300 * 4 * 1,
+        height : 170 * 4 * 1,
         style : {
             width: '100%',
             zIndex : 2,
@@ -27,7 +27,7 @@ const canvases :CanvasDictionary = {
         style : {
             zIndex : 1,
             width  : '100%',
-            background: 'linear-gradient(180deg, rgba(125,213,205,1) 0%, rgba(155,100,50,0.9836309523809523) 50%)'
+            //background: 'linear-gradient(180deg, rgba(125,213,205,1) 0%, rgba(155,100,50,0.9836309523809523) 50%)'
         }
     }),
 
@@ -38,7 +38,7 @@ const canvases :CanvasDictionary = {
         style : {
             zIndex : 3,
             width  : '100%',
-            background: "radial-gradient(circle, rgba(0, 217, 255, 0.1) 0%, rgba(0, 255, 242, 0.2) 100%)"
+            //ackground: "radial-gradient(circle, rgba(0, 217, 255, 0.1) 0%, rgba(0, 255, 242, 0.2) 100%)"
         }
     }),
     

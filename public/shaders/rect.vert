@@ -6,6 +6,7 @@ attribute float a_height;
 varying vec4  v_color;
 varying float v_height;
 varying vec2 v_texCoord;
+varying vec3 v_position;
 
 void main() {
 
@@ -15,6 +16,6 @@ void main() {
 
     v_color  = a_color;
     v_height = a_height;
-    
     v_texCoord = a_texCoord;
+    v_position = a_position;
 }

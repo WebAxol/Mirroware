@@ -4,6 +4,7 @@ uniform sampler2D sampler;
 uniform vec3  u_cameraPosition;
 uniform float u_cameraAngle;
 uniform float u_time;
+uniform vec2  u_resolution;
 
 varying float v_height; 
 
@@ -169,9 +170,7 @@ void main() {
     const float znear = 1.0 / tan(radians(50.0));
     vec3 color = vec3(1.0,1.0,1.0);
 
-    vec2 fragCoordPixels = gl_FragCoord.xy;
-    vec2 resolution      = vec2(600 * 1,340 * 1);
-    vec2 normalizedCoord = (2.0 * fragCoordPixels - resolution) / resolution;
+    vec2 normalizedCoord = (2.0 * gl_FragCoord.xy - u_resolution) / u_resolution;
     
     rayDirection  =   vec3(normalizedCoord.xy, znear);
 
@@ -191,9 +190,14 @@ void main() {
 
     float lambda = abs(1.0 / rayDirection.y);
 
-    vec3  textureCoord = u_cameraPosition + (rayDirection * lambda);
+    vec3  textureCoord = (u_cameraPosition) + (rayDirection * lambda) + vec3(900.0,900.0,1.0) * 0.5;
 
-    float lightLevel = min(5.0 / pow(lambda,2.0), 1.0);
+    float minLight = 0.2;
+    float maxLight = 3.0;
+    float lightIndex = 5.0;
+    float depth = gl_FragCoord.w;
+
+    float lightLevel = min(max(lightIndex / pow(lambda,2.0),minLight), maxLight);
     
     vec2 texCoord = vec2(textureCoord.x,textureCoord.z);
     vec4 texColor = texture2D(sampler, texCoord);
@@ -205,7 +209,7 @@ void main() {
 
     if(v_height > 0.0) gl_FragColor = vec4(0,0.2,0.5, 0);
 
-    else{ 
+    else{
         gl_FragColor = shaded;
         return;
     }
